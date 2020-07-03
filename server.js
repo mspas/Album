@@ -9,11 +9,8 @@ const cloudinary = require("cloudinary").v2;
 const app = express();
 const port = process.env.PORT || 5000;
 const db_uri =
-  "mongodb+srv://MongoDbAdmin:brakoadmin@cluster0.lz0ei.azure.mongodb.net/albumParadyz?retryWrites=true&w=majority";
+  "mongodb+srv://";
 cloudinary.config({
-  cloud_name: "mspas",
-  api_key: "427459526345436",
-  api_secret: "UyBgooJb0ldnf3XwAPYIfeStElA",
 });
 
 const mongoClient = new MongoClient(db_uri, {
