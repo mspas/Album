@@ -7,7 +7,10 @@ function AdminPanel() {
 
   const imageSelectedHandler = async (event) => {
     let temp = images;
-    let image = await addImageBase64(event.target.files[0]);
+    let image = {
+      imageData: await addImageBase64(event.target.files[0]),
+      description: "React description",
+    };
     temp.push(image);
     setImages(temp);
   };

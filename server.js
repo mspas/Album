@@ -8,10 +8,8 @@ const cloudinary = require("cloudinary").v2;
 
 const app = express();
 const port = process.env.PORT || 5000;
-const db_uri =
-  "mongodb+srv://";
-cloudinary.config({
-});
+const db_uri = "mongodb+srv://majority";
+cloudinary.config({});
 
 const mongoClient = new MongoClient(db_uri, {
   useNewUrlParser: true,
@@ -31,48 +29,51 @@ app.use(
 
 app.get("/api/get-all-images", async (req, res) => {
   await mongoClient.connect();
-  const result = mongoClient
+  mongoClient
     .db("albumParadyz")
     .collection("images")
-    .insertOne(
-      {
-        url: "https://i.imgur.com/DuZ4uiQ.jpg?fb",
-        description: "Wide hardo",
-      },
-      (err, res) => {
-        if (err) throw err;
-        console.log("1 document inserted", res.insertedId);
+    .find({})
+    .toArray((err, result) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.send(JSON.stringify(result));
       }
-    );
-  console.log(result);
-  res.send();
+    });
 });
 
-app.post("/api/upload-images", (req, res) => {
-  let image = req.body.imagesArray[0];
-  cloudinary.uploader.upload(image, async (error, result) => {
-    console.log(result, error);
-    if (error) res.status(400).send(error);
+app.post("/api/upload-images", async (req, res) => {
+  let success = true;
+  let errorInfo = "";
 
-    await mongoClient.connect();
-    const resultMongo = mongoClient
-      .db("albumParadyz")
-      .collection("images")
-      .insertOne(
-        {
-          url: result.url,
-          description: "Test description",
-        },
-        (err, resM) => {
-          if (err) {
-            res.status(400).send(err);
-            throw err;
+  await mongoClient.connect();
+
+  req.body.imagesArray.forEach((image) => {
+    cloudinary.uploader.upload(image.imageData, (error, result) => {
+      if (error) errorInfo = error;
+
+      mongoClient
+        .db("albumParadyz")
+        .collection("images")
+        .insertOne(
+          {
+            url: result.url,
+            description: image.description,
+          },
+          (err, res) => {
+            if (err) errorInfo = err;
+            console.log(`1 document inserted id = ${res.insertedId}`);
           }
-          console.log("1 document inserted");
-          res.send(resM.insertedId);
-        }
-      );
+        );
+    });
   });
+
+  if (!success) res.status(400).send(errorInfo);
+  res
+    .status(200)
+    .send(
+      `Zdjęcia zostały dodane poprawnie! Ilość dodanych zdjęć: ${req.body.imagesArray.length}`
+    );
 });
 
 if (process.env.NODE_ENV === "production") {
