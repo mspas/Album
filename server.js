@@ -5,6 +5,7 @@ const dotenv = require("dotenv").config();
 const nodemailer = require("nodemailer");
 const rateLimit = require("express-rate-limit");
 const MongoClient = require("mongodb").MongoClient;
+var ObjectId = require("mongodb").ObjectId;
 const cloudinary = require("cloudinary").v2;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -122,11 +123,17 @@ app.post("/api/upload-images", async (req, res) => {
         .collection("images")
         .insertOne(
           {
+            public_id: result.public_id,
             url: result.url,
             description: image.description,
+            year: image.year,
+            isHighlighted: image.isHighlighted,
           },
           (err, res) => {
-            if (err) errorInfo = err;
+            if (err) {
+              errorInfo = err;
+              success = false;
+            }
             console.log(`1 document inserted id = ${res.insertedId}`);
           }
         );
@@ -140,6 +147,76 @@ app.post("/api/upload-images", async (req, res) => {
       `Zdjęcia zostały dodane poprawnie! Ilość dodanych zdjęć: ${req.body.imagesArray.length}`
     );
 });
+
+app.post("/api/delete-images", async (req, res) => {
+  let successCheck = [];
+
+  await mongoClient.connect();
+
+  let i = 0;
+  req.body.imagesArray.forEach(async (imageId) => {
+    let objectId = "";
+    let result = {
+      id: imageId,
+      success: false,
+      errorInfo: "Nie znaleziono zdjęcia! Niepoprawny format identyfikatora ID",
+    };
+    try {
+      objectId = new ObjectId(imageId);
+      result = await deleteImage(objectId);
+    } catch (error) {
+      console.log(error);
+    }
+    successCheck.push(result);
+    if (i === req.body.imagesArray.length - 1) {
+      res.send({ result: successCheck });
+    }
+    i++;
+  });
+});
+
+deleteImage = (objectId) => {
+  return new Promise((resolve, reject) => {
+    mongoClient
+      .db("albumParadyz")
+      .collection("images")
+      .findOne(
+        {
+          _id: objectId,
+        },
+        (err, result) => {
+          if (err) {
+            resolve({ id: objectId, success: false, errorInfo: err });
+          }
+          if (!result) {
+            errorInfo = err;
+            resolve({
+              id: objectId,
+              success: false,
+              errorInfo: "Nie znaleziono zdjęcia!",
+            });
+          } else {
+            cloudinary.uploader.destroy(result.public_id);
+
+            mongoClient
+              .db("albumParadyz")
+              .collection("images")
+              .deleteOne(
+                {
+                  _id: objectId,
+                },
+                (err, res) => {
+                  if (err) {
+                    resolve({ id: objectId, success: false, errorInfo: err });
+                  }
+                }
+              );
+          }
+          resolve({ id: objectId, success: true, errorInfo: "" });
+        }
+      );
+  });
+};
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
