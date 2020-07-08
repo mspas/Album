@@ -10,6 +10,8 @@ function AdminPanel() {
     let image = {
       imageData: await addImageBase64(event.target.files[0]),
       description: "React description",
+      year: "1930",
+      isHighlighted: false,
     };
     temp.push(image);
     setImages(temp);

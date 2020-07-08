@@ -211,8 +211,20 @@ app.patch("/api/edit-image", async (req, res) => {
 });
 
 app.post("/api/send-email", limiter, (req, res) => {
-  let mailSubject = req.body.mailSubject;
-  let mailText = req.body.mailText;
+  let images = req.body.imagesArray;
+  let contactMail = req.body.contactMail;
+  let senderName = contactMail.split("@")[0];
+  let mailText = `Email do kontaktu: ${contactMail}<br>`;
+
+  let i = 0;
+  let attachments = images.map((image) => {
+    i++;
+    mailText += `<br>Zdjęcie ${i}<br>Opis: ${image.description}<br>Rok: ${image.year}<br>`;
+    return {
+      filename: `image${i}.jpg`,
+      path: image.imageData,
+    };
+  });
 
   mongoClient
     .db("albumParadyz")
@@ -230,8 +242,9 @@ app.post("/api/send-email", limiter, (req, res) => {
           let mailOptions = {
             from: process.env.MAIL_BOT,
             to: user.email,
-            subject: mailSubject,
-            text: mailText,
+            subject: `Zgłoszenie zdjęć do albumu Paradyż od ${senderName}`,
+            html: mailText,
+            attachments: attachments,
           };
 
           transporter.sendMail(mailOptions, (error, info) => {
@@ -246,7 +259,7 @@ app.post("/api/send-email", limiter, (req, res) => {
               res.status(200).send({
                 success: true,
                 message:
-                  "Zdjęcią wysłane! Dziękujemy za wkład. Zdjęcia pojawią się w albumie po zweryfikowaniu przez administratora.",
+                  "Zdjęcią wysłane! Zdjęcia pojawią się w albumie po zweryfikowaniu przez administratora. Dziękujemy za wkład w projekt albumu!",
               });
             i++;
           });

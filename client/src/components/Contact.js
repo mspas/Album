@@ -10,6 +10,8 @@ function Contact() {
     let image = {
       imageData: await addImageBase64(event.target.files[0]),
       description: "React description",
+      year: "1930",
+      isHighlighted: false,
     };
     temp.push(image);
     setImages(temp);
@@ -31,12 +33,13 @@ function Contact() {
   };
 
   const imagesUploadHandler = () => {
-    fetch("/api/send-mail", {
+    fetch("/api/send-email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        contactMail: "marcin123@onet.pl",
         imagesArray: images,
       }),
     })
@@ -51,7 +54,7 @@ function Contact() {
       siema Contact
       <input type="file" onChange={imageSelectedHandler} />
       <input type="file" onChange={imageSelectedHandler} />
-      <button onClick={imagesUploadHandler}>Upload</button>
+      <button onClick={imagesUploadHandler}>Send</button>
     </div>
   );
 }
