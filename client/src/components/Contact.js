@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import "../styles/AdminPanel.sass";
+import "../styles/Contact.sass";
 
-function AdminPanel() {
+function Contact() {
   const [images, setImages] = useState([]);
 
   const imageSelectedHandler = async (event) => {
@@ -31,7 +31,7 @@ function AdminPanel() {
   };
 
   const imagesUploadHandler = () => {
-    fetch("/api/upload-images", {
+    fetch("/api/send-mail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ function AdminPanel() {
 
   return (
     <div className="App">
-      siema AdminPanel
+      siema Contact
       <input type="file" onChange={imageSelectedHandler} />
       <input type="file" onChange={imageSelectedHandler} />
       <button onClick={imagesUploadHandler}>Upload</button>
@@ -56,4 +56,4 @@ function AdminPanel() {
   );
 }
 
-export default AdminPanel;
+export default Contact;

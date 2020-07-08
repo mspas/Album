@@ -36,11 +36,31 @@ app.use(
   })
 );
 
+const minutesTimeout = 2;
+const limiter = rateLimit({
+  windowMs: minutesTimeout * 60 * 1000,
+  max: 1, // limit when timeout fires
+  handler: (req, res) => {
+    res.status(429).send({
+      statusCode: "429",
+      message: `Przepraszamy! Filtr antyspamowy wymaga ${minutesTimeout} minutowej przerwy między kolejnymi zgłoszeniami!`,
+    });
+  },
+});
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.MAIL_BOT,
+    pass: process.env.MAIL_BOT_PASS,
+  },
+});
+
+mongoClient.connect();
+
 app.post("/api/login", async (req, res) => {
   let token = "";
   let password = req.body.password;
-
-  await mongoClient.connect();
 
   mongoClient
     .db("albumParadyz")
@@ -58,14 +78,18 @@ app.post("/api/login", async (req, res) => {
           bcrypt.compare(password, user.hash, (err, result) => {
             if (result) {
               token = jwt.sign(user.email, process.env.TOKEN_SECRET);
-              res.status(200).send(
-                JSON.stringify({
-                  token: token,
-                })
-              );
+              res.status(200).send({
+                success: true,
+                message: "Zalogowano",
+                token: token,
+              });
             }
-            if (i > users.length - 2 && !token)
-              res.status(400).send("Hasło niepoprawne");
+            if (i === users.length - 1 && !token)
+              res.status(400).send({
+                success: true,
+                message: "Hasło niepoprawne",
+                token: null,
+              });
             i++;
           });
         });
@@ -74,7 +98,6 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.get("/api/create", async (req, res) => {
-  await mongoClient.connect();
   bcrypt.hash("albumParadyz", 10, (err, hash) => {
     mongoClient
       .db("albumParadyz")
@@ -94,7 +117,6 @@ app.get("/api/create", async (req, res) => {
 });
 
 app.get("/api/get-all-images", async (req, res) => {
-  await mongoClient.connect();
   mongoClient
     .db("albumParadyz")
     .collection("images")
@@ -109,49 +131,21 @@ app.get("/api/get-all-images", async (req, res) => {
 });
 
 app.post("/api/upload-images", async (req, res) => {
-  let success = true;
-  let errorInfo = "";
+  let successCheck = [];
 
-  await mongoClient.connect();
-
-  req.body.imagesArray.forEach((image) => {
-    cloudinary.uploader.upload(image.imageData, (error, result) => {
-      if (error) errorInfo = error;
-
-      mongoClient
-        .db("albumParadyz")
-        .collection("images")
-        .insertOne(
-          {
-            public_id: result.public_id,
-            url: result.url,
-            description: image.description,
-            year: image.year,
-            isHighlighted: image.isHighlighted,
-          },
-          (err, res) => {
-            if (err) {
-              errorInfo = err;
-              success = false;
-            }
-            console.log(`1 document inserted id = ${res.insertedId}`);
-          }
-        );
-    });
+  let i = 0;
+  req.body.imagesArray.forEach(async (image) => {
+    let result = await uploadImage(image);
+    successCheck.push(result);
+    if (i === req.body.imagesArray.length - 1) {
+      res.send({ result: successCheck });
+    }
+    i++;
   });
-
-  if (!success) res.status(400).send(errorInfo);
-  res
-    .status(200)
-    .send(
-      `Zdjęcia zostały dodane poprawnie! Ilość dodanych zdjęć: ${req.body.imagesArray.length}`
-    );
 });
 
 app.post("/api/delete-images", async (req, res) => {
   let successCheck = [];
-
-  await mongoClient.connect();
 
   let i = 0;
   req.body.imagesArray.forEach(async (imageId) => {
@@ -174,6 +168,127 @@ app.post("/api/delete-images", async (req, res) => {
     i++;
   });
 });
+
+app.patch("/api/edit-image", async (req, res) => {
+  let successCheck = true;
+  let errorInfo = "Zdjęcie zmodyfikowane poprawnie!";
+  let objectId = null;
+
+  try {
+    objectId = new ObjectId(req.body.image._id);
+  } catch (error) {
+    console.log(error);
+    res.send({
+      result: false,
+      errorInfo: "Nie znaleziono zdjęcia! Niepoprawny format identyfikatora ID",
+    });
+  }
+
+  if (objectId) {
+    mongoClient
+      .db("albumParadyz")
+      .collection("images")
+      .updateOne(
+        {
+          public_id: req.body.image.public_id,
+        },
+        {
+          $set: {
+            description: req.body.image.description,
+            year: req.body.image.year,
+            isHighlighted: req.body.image.isHighlighted,
+          },
+        },
+        (err, result) => {
+          if (err) {
+            errorInfo = err;
+            successCheck = false;
+          }
+          res.send({ result: true, errorInfo: errorInfo });
+        }
+      );
+  }
+});
+
+app.post("/api/send-email", limiter, (req, res) => {
+  let mailSubject = req.body.mailSubject;
+  let mailText = req.body.mailText;
+
+  mongoClient
+    .db("albumParadyz")
+    .collection("users")
+    .find({
+      type: "admin",
+    })
+    .toArray((err, result) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        let i = 0;
+        let users = result;
+        users.forEach((user) => {
+          let mailOptions = {
+            from: process.env.MAIL_BOT,
+            to: user.email,
+            subject: mailSubject,
+            text: mailText,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              res.status(400).send({
+                success: false,
+                message:
+                  "Przepraszamy, zgłoszenie nie zostało wysłane! Prosimy spróbować później.",
+              });
+            }
+            if (i === users.length - 1)
+              res.status(200).send({
+                success: true,
+                message:
+                  "Zdjęcią wysłane! Dziękujemy za wkład. Zdjęcia pojawią się w albumie po zweryfikowaniu przez administratora.",
+              });
+            i++;
+          });
+        });
+      }
+    });
+});
+
+uploadImage = (image) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(image.imageData, (error, result) => {
+      if (error) errorInfo = error;
+
+      mongoClient
+        .db("albumParadyz")
+        .collection("images")
+        .insertOne(
+          {
+            public_id: result.public_id,
+            url: result.url,
+            description: image.description,
+            year: image.year,
+            isHighlighted: image.isHighlighted,
+          },
+          (err, res) => {
+            if (err)
+              resolve({
+                imageDescription: image.description,
+                result: null,
+                errorInfo: err,
+              });
+            else
+              resolve({
+                imageDescription: image.description,
+                result: result,
+                errorInfo: "",
+              });
+          }
+        );
+    });
+  });
+};
 
 deleteImage = (objectId) => {
   return new Promise((resolve, reject) => {
@@ -217,6 +332,12 @@ deleteImage = (objectId) => {
       );
   });
 };
+
+process.on("SIGINT", () => {
+  mongoClient.close();
+  console.log("Mongoose disconnected on app termination");
+  process.exit(0);
+});
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
