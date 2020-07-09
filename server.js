@@ -61,6 +61,7 @@ mongoClient.connect();
 app.post("/api/login", async (req, res) => {
   let token = "";
   let password = req.body.password;
+  console.log(password);
 
   mongoClient
     .db("albumParadyz")
@@ -77,7 +78,7 @@ app.post("/api/login", async (req, res) => {
         users.forEach((user) => {
           bcrypt.compare(password, user.hash, (err, result) => {
             if (result) {
-              token = jwt.sign(user.email, process.env.TOKEN_SECRET);
+              token = jwt.sign({ email: user.email }, process.env.TOKEN_SECRET);
               res.status(200).send({
                 success: true,
                 message: "Zalogowano",

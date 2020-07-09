@@ -1,9 +1,9 @@
 import React from "react";
 
-import "../styles/Album.sass";
+import "../styles/Album.module.sass";
 
 function Album() {
-  return <div className="App">siema</div>;
+  return <div>siema</div>;
 }
 
 export default Album;

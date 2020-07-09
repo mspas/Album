@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-
-import "../styles/AdminPanel.sass";
+import "../styles/AdminPanel.module.sass";
+import withAuth from "../services/auth-guard.service";
 
 function AdminPanel() {
   const [images, setImages] = useState([]);
@@ -49,7 +49,7 @@ function AdminPanel() {
   };
 
   return (
-    <div className="App">
+    <div className="adminPanel">
       siema AdminPanel
       <input type="file" onChange={imageSelectedHandler} />
       <input type="file" onChange={imageSelectedHandler} />
@@ -58,4 +58,4 @@ function AdminPanel() {
   );
 }
 
-export default AdminPanel;
+export default withAuth(AdminPanel);
