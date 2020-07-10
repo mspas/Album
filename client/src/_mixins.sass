@@ -1,0 +1,28 @@
+@mixin linear-gradient($direction, $color-list) 
+    background: linear-gradient($direction, $color-list) 
+
+@mixin radial-gradient($position, $color1, $percentage1, $color2, $percentage2) 
+    background: radial-gradient(circle at $position, $color1 $percentage1, $color2 $percentage2)
+
+@mixin radial-gradient3($position, $color1, $percentage1, $color2_prctg, $color3_prctg) 
+    background: radial-gradient(circle at $position, $color1 $percentage1, $color2_prctg, $color3_prctg)
+
+@mixin linear-gradient($position, $color1, $percentage1, $color2, $percentage2) 
+    background: linear-gradient(to $position, $color1 $percentage1, $color2 $percentage2)
+
+@mixin border-shadow($x, $y, $radius, $color)
+    border-radius: $radius
+    box-shadow: 0px 0px $x $y $color
+
+@mixin scrollbar($width, $bg-track, $bg-thumb)
+    &::-webkit-scrollbar
+        width: $width
+        background: $bg-track
+    &::-webkit-scrollbar-thumb
+        background-color: $bg-thumb
+        border-radius: 6px
+        //border: 3px solid $primary
+    
+@mixin color-opacity-bg($color, $opacity)
+    background: $color
+    background: rgba($color, $opacity)
