@@ -1,0 +1,27 @@
+@import '../_variables'
+
+.uploadImages
+    min-height: 100px
+    .box
+        padding: 0 5% 50px 5%
+        input
+            width: 0.1px
+            height: 0.1px
+            opacity: 0
+            overflow: hidden
+            position: absolute
+            z-index: -1
+        label
+            padding: 10px
+            background: $umber
+            cursor: pointer
+            user-select: none
+            transition: 0.2s
+            &:hover
+                background: #62584bcb
+        .icon
+            margin-right: 10px
+    button
+        display: block
+        margin-left: auto
+        margin-right: 5%

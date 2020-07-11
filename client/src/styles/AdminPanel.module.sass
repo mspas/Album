@@ -1,0 +1,31 @@
+@import '../_variables'
+
+.adminPanelWrap
+    height: 100vh
+    width: 100vw
+    padding-top: 100px
+    .adminPanel
+        width: 70%
+        margin-left: auto
+        margin-right: auto
+        background: #ffffff0a
+        border-radius: 10px
+        .header, .row
+            border-bottom: 2px solid $logoBlue
+            margin-left: auto
+            margin-right: auto
+            height: 60px
+            .col
+                text-align: center
+                padding: 15px 0 
+                border-radius: 10px 10px 0 0
+                cursor: pointer
+                transition: 0.2s
+                &:hover
+                    background: #ffffff07
+            .active
+                background: #ffffff18
+                &:hover
+                    background: #ffffff18
+        .content
+            padding: 50px 20px
