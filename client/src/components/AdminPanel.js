@@ -4,12 +4,16 @@ import { Col, Row } from "react-bootstrap";
 import withAuth from "../services/auth-guard.service";
 import UploadImages from "./UploadImages";
 import ManageImages from "./ManageImages";
+import logo from "../assets/logo-text.png";
 
 function AdminPanel() {
   const [optionPanel, setOptionPanel] = useState(true);
 
   return (
     <div className={styles.adminPanelWrap}>
+      <div className={styles.logoWrap}>
+        <img src={logo} alt="Logo" />
+      </div>
       <div className={styles.adminPanel}>
         <Row className={styles.header}>
           <Col
@@ -30,7 +34,7 @@ function AdminPanel() {
             }
             onClick={() => setOptionPanel(false)}
           >
-            Zarządaj zdjęciami
+            Zarządzaj albumem
           </Col>
         </Row>
         <div className={styles.content}>

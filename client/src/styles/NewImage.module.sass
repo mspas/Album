@@ -1,7 +1,107 @@
 @import '../_variables'
+@import '../_animations'
+
+$size: 200px
 
 .newImagePanel
+    width: 100%
+    margin-bottom: 40px
+    color: $brown
+    border-radius: 3px
+    background: $dirtyWhite
+    padding: 10px
+    animation: fadeIn 0.3s ease-in forwards
+    input, textarea
+        border-radius: 5px
+        border-style: none
+        box-shadow: 0px 0px 2px 1px #00000042
+    .checkboxInput
+        box-shadow: none
     img 
-        height: 200px
-        width: 200px
+        height: $size
+        width: $size
         object-fit: cover
+        @media screen and ( max-width: 343px )
+            height: 100%
+            width: 100%
+    .mediaBody
+        min-height: $size
+        @media screen and ( max-width: 730px )
+            margin-top: 20px
+        .mediaBodyHeading
+            margin-bottom: 10px
+            .yearInput
+                width: 100%
+                min-width: 55px
+            .highlight
+                text-align: center
+                label
+                    margin-right: 7px
+                    margin-bottom: 0
+            .closeWrap
+                position: relative
+                .closeIcon
+                    position: absolute
+                    right: 20px
+                    font-size: 22px
+                    transition: 0.1s
+                    cursor: pointer
+                    &:hover
+                        color: #ff5b5b
+        .description
+            width: 100%
+            line-height: 23px
+            resize: none
+    .addNewPanel
+        color: $logoBlue
+        input
+            width: 0.1px
+            height: 0.1px
+            opacity: 0
+            overflow: hidden
+            position: absolute
+            z-index: -1
+        .box
+            display: inline-block
+            div
+                height: 100%
+                width: 100%
+                p
+                    text-align: center
+                    width: 100%
+            @media screen and ( max-width: 343px )
+                height: 100%
+                width: 100%
+        label
+            @media screen and ( max-width: 900px )
+                width: 100%
+            .addNewBox
+                width: $size
+                height: 100px
+                background: #00000023
+                cursor: pointer
+                transition: 1s
+                &:hover
+                    background: #00000017
+                    .addIcon
+                        transform: rotate(180deg)
+                        font-size: 40px
+                @media screen and ( max-width: 900px )
+                    width: 100%
+                .addIcon
+                    cursor: pointer
+                    font-size: 30px
+                    transition: transform 1s, font-size 1s
+        .text
+            width: calc( 100% - 200px )
+            height: 100%
+            @media screen and ( max-width: 900px )
+                width: 100%
+            p
+                margin: 0
+                font-size: 30px
+                letter-spacing: 1vw
+                user-select: none
+                @media screen and ( max-width: 900px )
+                    font-size: 20px
+                    

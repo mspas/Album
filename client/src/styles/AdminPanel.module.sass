@@ -1,21 +1,30 @@
 @import '../_variables'
 
 .adminPanelWrap
-    height: 100vh
+    min-height: 100vh
     width: 100vw
-    padding-top: 100px
+    padding-top: 50px
+    .logoWrap
+        display: flex
+        justify-content: center
+        align-items: center
+        margin-bottom: 20px
+        img 
+            height: 70px
+            @media screen and ( max-width: 393px )
+                height: auto
+                width: 70%
     .adminPanel
         width: 70%
-        margin-left: auto
-        margin-right: auto
-        background: #ffffff0a
+        margin: 0 auto
+        background: $whiteBg
         border-radius: 10px
         .header, .row
             border-bottom: 2px solid $logoBlue
-            margin-left: auto
-            margin-right: auto
+            margin: 0 auto
             height: 60px
             .col
+                font-size: 1.2em
                 text-align: center
                 padding: 15px 0 
                 border-radius: 10px 10px 0 0
@@ -23,9 +32,14 @@
                 transition: 0.2s
                 &:hover
                     background: #ffffff07
+                @media screen and ( max-width: 512px )
+                    font-size: 0.9em
+                @media screen and ( max-width: 360px )
+                    padding: 5px 0
             .active
                 background: #ffffff18
                 &:hover
                     background: #ffffff18
         .content
             padding: 50px 20px
+            background: #ffffffb2

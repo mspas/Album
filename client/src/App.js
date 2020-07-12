@@ -20,6 +20,7 @@ function App() {
           </Switch>
         </BrowserRouter>
       </main>
+      <footer>MSpas @2020</footer>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/UploadImages.module.sass";
 import NewImage from "./NewImage";
 
@@ -32,6 +32,10 @@ function UploadImages() {
     };
     temp.push(image);
     setImages(temp);
+  };
+
+  const nullifySelector = async (event) => {
+    event.target.value = "";
   };
 
   const descriptionChangeHandler = (event) => {
@@ -91,11 +95,16 @@ function UploadImages() {
   return (
     <div className={styles.uploadImages}>
       <div className={styles.box}>
-        <input type="file" id="inputfile" onChange={imageSelectedHandler} />
+        <input
+          type="file"
+          id="inputfile"
+          onChange={imageSelectedHandler}
+          onClick={nullifySelector}
+        />
         <label htmlFor="inputfile">
           <FontAwesomeIcon
             className={`panel-icon ${styles.icon}`}
-            icon={faUpload}
+            icon={faPlus}
           />
           <span>Dodaj zdjęcie...</span>
         </label>
@@ -113,6 +122,12 @@ function UploadImages() {
           />
         );
       })}
+      <NewImage
+        image={null}
+        id={-1}
+        imageSelectedHandler={imageSelectedHandler}
+        nullifySelector={nullifySelector}
+      />
       <button onClick={imagesUploadHandler}>Wyślij</button>
     </div>
   );
