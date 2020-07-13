@@ -56,6 +56,11 @@ function NewImage(props) {
               placeholder="Opis zdjęcia - może zawierać: data, miejscowość, dokładne miejsce, osoby."
               onChange={props.descriptionChangeHandler}
             />
+            {props.alert && (
+              <div className={styles.mediaFooter}>
+                <p className={styles.alert}>{props.alert}</p>
+              </div>
+            )}
           </div>
         </div>
       ) : (

@@ -57,7 +57,7 @@ function SignIn(props) {
             </InputGroup>
           </Form.Group>
 
-          <Button variant="primary" type="submit">
+          <Button className="button" variant="primary" type="submit">
             Zaloguj
           </Button>
         </Form>

@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/UploadImages.module.sass";
 import NewImage from "./NewImage";
+import AuthService from "../services/auth.service";
 
 function UploadImages() {
   const [images, setImages] = useState([]);
+  const _auth = new AuthService();
 
   const imageSelectedHandler = async (event) => {
     const addImageBase64 = async (fileData) => {
@@ -25,10 +27,12 @@ function UploadImages() {
 
     let temp = [...images];
     let image = {
+      index: temp.length,
       imageData: await addImageBase64(event.target.files[0]),
-      description: "",
-      year: 0,
+      description: null,
+      year: null,
       isHighlighted: false,
+      alertText: null,
     };
     temp.push(image);
     setImages(temp);
@@ -76,20 +80,39 @@ function UploadImages() {
     setImages(temp);
   };
 
-  const imagesUploadHandler = () => {
-    fetch("/api/upload-images", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        imagesArray: images,
-      }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-      });
+  const imagesUploadHandler = async () => {
+    let check = true;
+
+    await new Promise((resolve, reject) => {
+      let temp = [...images];
+      for (let index = 0; index < temp.length; index++) {
+        const image = temp[index];
+        if (image.year === null || image.year > 2020 || image.year < 1800) {
+          image.alertText = "Error! Brak poprawnej daty!";
+          check = false;
+        }
+        if (image.description === null || image.description.length < 1) {
+          image.alertText = "Error! Opis nie może być pusty!";
+          check = false;
+        }
+        setImages(temp);
+      }
+      resolve(images);
+    });
+    if (check)
+      _auth
+        .fetch("/api/upload-images", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            imagesArray: images,
+          }),
+        })
+        .then((json) => {
+          console.log(json);
+        });
   };
 
   return (
@@ -114,6 +137,7 @@ function UploadImages() {
           <NewImage
             key={index}
             image={image}
+            alert={image.alertText}
             id={index}
             descriptionChangeHandler={descriptionChangeHandler}
             yearChangeHandler={yearChangeHandler}
