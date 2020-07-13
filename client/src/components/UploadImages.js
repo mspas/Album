@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/UploadImages.module.sass";
@@ -7,6 +8,7 @@ import AuthService from "../services/auth.service";
 
 function UploadImages() {
   const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const _auth = new AuthService();
 
   const imageSelectedHandler = async (event) => {
@@ -33,6 +35,7 @@ function UploadImages() {
       year: null,
       isHighlighted: false,
       alertText: null,
+      alertType: true,
     };
     temp.push(image);
     setImages(temp);
@@ -81,22 +84,11 @@ function UploadImages() {
   };
 
   const imagesUploadHandler = async () => {
+    setIsLoading(true);
     let check = true;
 
     await new Promise((resolve, reject) => {
-      let temp = [...images];
-      for (let index = 0; index < temp.length; index++) {
-        const image = temp[index];
-        if (image.year === null || image.year > 2020 || image.year < 1800) {
-          image.alertText = "Error! Brak poprawnej daty!";
-          check = false;
-        }
-        if (image.description === null || image.description.length < 1) {
-          image.alertText = "Error! Opis nie może być pusty!";
-          check = false;
-        }
-        setImages(temp);
-      }
+      check = validateData([...images]);
       resolve(images);
     });
     if (check)
@@ -112,7 +104,48 @@ function UploadImages() {
         })
         .then((json) => {
           console.log(json);
+          console.log(json.resultArray);
+          let temp = setUploadResult(json.resultArray);
+          setIsLoading(false);
+          setImages(temp);
         });
+    else setIsLoading(false);
+  };
+
+  const validateData = (array) => {
+    let check = true;
+    for (let index = 0; index < array.length; index++) {
+      const image = array[index];
+      if (image.year === null || image.year > 2020 || image.year < 1800) {
+        image.alertText = "Error! Brak poprawnej daty!";
+        image.alertType = false;
+        check = false;
+      }
+      if (image.description === null || image.description.length < 1) {
+        image.alertText = "Error! Opis nie może być pusty!";
+        image.alertType = false;
+        check = false;
+      }
+      setImages(array);
+      return check;
+    }
+  };
+
+  const setUploadResult = (resultArray) => {
+    console.log(resultArray);
+    let temp = [...images];
+    for (let index = 0; index < temp.length; index++) {
+      const image = temp[index];
+      let errorInfo = resultArray[index].resultData.errorInfo;
+      if (errorInfo.length < 1) {
+        image.alertText = "Zdjęcie dodano poprawnie!";
+        image.alertType = true;
+      } else {
+        image.alertText = `Error! ${errorInfo}`;
+        image.alertType = false;
+      }
+    }
+    return temp;
   };
 
   return (
@@ -131,13 +164,21 @@ function UploadImages() {
           />
           <span>Dodaj zdjęcie...</span>
         </label>
+        {isLoading && (
+          <div className={styles.spinner}>
+            <Spinner
+              animation="border"
+              variant="primary"
+              role="status"
+            ></Spinner>
+          </div>
+        )}
       </div>
       {images.map((image, index) => {
         return (
           <NewImage
             key={index}
             image={image}
-            alert={image.alertText}
             id={index}
             descriptionChangeHandler={descriptionChangeHandler}
             yearChangeHandler={yearChangeHandler}

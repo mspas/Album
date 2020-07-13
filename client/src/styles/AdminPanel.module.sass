@@ -1,4 +1,5 @@
 @import '../_variables'
+@import '../_mixins'
 
 .adminPanelWrap
     min-height: 100vh
@@ -17,8 +18,8 @@
     .adminPanel
         width: 70%
         margin: 0 auto
-        background: #ffffff04
         border-radius: 10px
+        @include color-opacity-bg($color: #fff, $opacity: 0.1)
         .header, .row
             border-bottom: 2px solid $lighterBlue
             margin: 0 auto
@@ -31,15 +32,16 @@
                 cursor: pointer
                 transition: 0.2s
                 &:hover
-                    background: #ffffff07
+                    @include color-opacity-bg($color: #fff, $opacity: 0.02)
                 @media screen and ( max-width: 512px )
                     font-size: 0.9em
                 @media screen and ( max-width: 360px )
                     padding: 5px 0
             .active
-                background: #ffffff18
+                cursor: default
+                @include color-opacity-bg($color: #fff, $opacity: 0.1)
                 &:hover
-                    background: #ffffff18
+                    @include color-opacity-bg($color: #fff, $opacity: 0.1)
         .content
             padding: 50px 20px
-            background: #ffffff04
+            @include color-opacity-bg($color: #fff, $opacity: 0.001)

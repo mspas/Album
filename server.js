@@ -137,9 +137,9 @@ app.post("/api/upload-images", async (req, res) => {
   let i = 0;
   req.body.imagesArray.forEach(async (image) => {
     let result = await uploadImage(image);
-    successCheck.push({ image: image, result: result });
+    successCheck.push({ image: image, resultData: result });
     if (i === req.body.imagesArray.length - 1) {
-      res.send({ result: successCheck });
+      res.send({ resultArray: successCheck });
     }
     i++;
   });

@@ -9,17 +9,19 @@ function NewImage(props) {
   return (
     <div className={styles.wrap}>
       {props.image !== null ? (
-        <div className={`${styles.newImagePanel} media`}>
-          <img
-            id={`i-${props.id}`}
-            className="mr-3"
-            src={props.image.imageData}
-            alt={`New id = ${props.id}`}
-          />
-          <label className={styles.imageOverview} htmlFor={`i-${props.id}`}>
-            Podgląd
-          </label>
-          <div className={`${styles.mediaBody} media-body`}>
+        <div className={`${styles.newImagePanel}`}>
+          <div className={`${styles.imageWrap}`}>
+            <img
+              id={`i-${props.id}`}
+              className="mr-3"
+              src={props.image.imageData}
+              alt={`New id = ${props.id}`}
+            />
+            <label className={styles.imageOverview} htmlFor={`i-${props.id}`}>
+              Podgląd
+            </label>
+          </div>
+          <div className={`${styles.mediaBody}`}>
             <Row className={`${styles.mediaBodyHeading} mt-0`}>
               <Col>
                 <input
@@ -56,9 +58,17 @@ function NewImage(props) {
               placeholder="Opis zdjęcia - może zawierać: data, miejscowość, dokładne miejsce, osoby."
               onChange={props.descriptionChangeHandler}
             />
-            {props.alert && (
+            {props.image.alertText && (
               <div className={styles.mediaFooter}>
-                <p className={styles.alert}>{props.alert}</p>
+                <p
+                  className={
+                    props.image.alertType
+                      ? `${styles.alert} ${styles.success}`
+                      : `${styles.alert} ${styles.error}`
+                  }
+                >
+                  {props.image.alertText}
+                </p>
               </div>
             )}
           </div>

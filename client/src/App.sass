@@ -6,12 +6,13 @@
   background-image: radial-gradient(circle at 0% 0%, #373b52, #252736 51%, $darkBlue)
   color: #fff
   footer
-    position: absolute
-    bottom: 0
+    position: fixed
+    bottom: 1px
     width: 100%
-    font-size: 11px
+    font-size: 9px
     letter-spacing: 3px
     text-align: center
+    @include color-opacity-font($color: #fff, $opacity: 0.5)
 
 .center
   display: flex
