@@ -1,4 +1,6 @@
 @import '../_variables'
+@import '../_mixins'
+@import '../_animations'
 
 .uploadImages
     min-height: 100px
@@ -13,14 +15,15 @@
             z-index: -1
         label
             padding: 10px
-            background: $umber
             cursor: pointer
             user-select: none
             transition: 0.2s
             &:hover
-                background: #62584bcb
+                .icon
+                    transform: rotate(90deg)
         .icon
             margin-right: 10px
+            transition: transform 1s, font-size 1s
     button
         display: block
         margin-left: auto

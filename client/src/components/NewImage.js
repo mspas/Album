@@ -11,10 +11,14 @@ function NewImage(props) {
       {props.image !== null ? (
         <div className={`${styles.newImagePanel} media`}>
           <img
+            id={`i-${props.id}`}
             className="mr-3"
             src={props.image.imageData}
             alt={`New id = ${props.id}`}
           />
+          <label className={styles.imageOverview} htmlFor={`i-${props.id}`}>
+            Podgląd
+          </label>
           <div className={`${styles.mediaBody} media-body`}>
             <Row className={`${styles.mediaBodyHeading} mt-0`}>
               <Col>
@@ -26,8 +30,8 @@ function NewImage(props) {
                   onChange={props.yearChangeHandler}
                 />
               </Col>
-              <Col xs={6} className={styles.highlight}>
-                <label htmlFor={`checkbox${props.id}`}>Wyróżnione?</label>
+              <Col xs={6} className={`${styles.highlight} center`}>
+                <label htmlFor={`h${props.id}`}>Wyróżnione?</label>
                 <input
                   id={`h-${props.id}`}
                   className={styles.checkboxInput}
@@ -48,7 +52,7 @@ function NewImage(props) {
               id={`d-${props.id}`}
               className={styles.description}
               type="textarea"
-              rows="7"
+              rows="6"
               placeholder="Opis zdjęcia - może zawierać: data, miejscowość, dokładne miejsce, osoby."
               onChange={props.descriptionChangeHandler}
             />

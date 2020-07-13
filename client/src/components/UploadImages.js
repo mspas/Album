@@ -101,7 +101,7 @@ function UploadImages() {
           onChange={imageSelectedHandler}
           onClick={nullifySelector}
         />
-        <label htmlFor="inputfile">
+        <label className="button" htmlFor="inputfile">
           <FontAwesomeIcon
             className={`panel-icon ${styles.icon}`}
             icon={faPlus}
@@ -128,7 +128,9 @@ function UploadImages() {
         imageSelectedHandler={imageSelectedHandler}
         nullifySelector={nullifySelector}
       />
-      <button onClick={imagesUploadHandler}>Wyślij</button>
+      <button className="button" onClick={imagesUploadHandler}>
+        Wyślij
+      </button>
     </div>
   );
 }
