@@ -1,0 +1,19 @@
+@import '../../../_variables'
+@import '../../../_mixins'
+
+.modal
+    border: none
+    color: $lighterBlue
+    @include color-opacity-bg($color: $darkBlue, $opacity: 1)
+img 
+    display: block
+    max-width: 100%
+
+.closeIcon
+    position: absolute
+    right: 20px
+    font-size: 22px
+    transition: 0.1s
+    cursor: pointer
+    &:hover
+        color: $error

@@ -6,7 +6,7 @@ import styles from "./styles/UploadImages.module.sass";
 import NewImage from "../NewImage";
 import AuthService from "../../services/auth.service";
 
-function UploadImages() {
+function UploadImages(props) {
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const _auth = new AuthService();
@@ -45,9 +45,7 @@ function UploadImages() {
     event.target.value = "";
   };
 
-  const descriptionChangeHandler = (event) => {
-    let id = event.target.id.split("-")[1];
-    let index = parseInt(id);
+  const descriptionChangeHandler = (event, index) => {
     let temp = [...images];
     let image = { ...temp[index] };
     image.description = event.target.value;
@@ -55,17 +53,13 @@ function UploadImages() {
     setImages(temp);
   };
 
-  const deleteImageHandler = (event) => {
-    let id = event.target.id.split("-")[1];
-    let index = parseInt(id);
+  const deleteImageHandler = (event, index) => {
     let temp = [...images];
     temp.splice(index, 1);
     setImages(temp);
   };
 
-  const yearChangeHandler = (event) => {
-    let id = event.target.id.split("-")[1];
-    let index = parseInt(id);
+  const yearChangeHandler = (event, index) => {
     let temp = [...images];
     let image = { ...temp[index] };
     image.year = event.target.value;
@@ -73,9 +67,7 @@ function UploadImages() {
     setImages(temp);
   };
 
-  const highlightChangeHandler = (event) => {
-    let id = event.target.id.split("-")[1];
-    let index = parseInt(id);
+  const highlightChangeHandler = (event, index) => {
     let temp = [...images];
     let image = { ...temp[index] };
     image.isHighlighted = event.target.value;
@@ -95,9 +87,6 @@ function UploadImages() {
       _auth
         .fetch("/api/upload-images", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
           body: JSON.stringify({
             imagesArray: images,
           }),
@@ -108,6 +97,7 @@ function UploadImages() {
           let temp = setUploadResult(json.resultArray);
           setIsLoading(false);
           setImages(temp);
+          props.fetchData();
         });
     else setIsLoading(false);
   };
@@ -178,7 +168,9 @@ function UploadImages() {
         return (
           <NewImage
             key={index}
-            image={image}
+            imageURL={image.imageData}
+            alertType={image.alertType}
+            alertText={image.alertText}
             id={index}
             descriptionChangeHandler={descriptionChangeHandler}
             yearChangeHandler={yearChangeHandler}

@@ -1,13 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles/AdminPanel.module.sass";
 import { Col, Row } from "react-bootstrap";
 import withAuth from "../../services/auth-guard.service";
+import AuthService from "../../services/auth.service";
+import logo from "../../assets/logo-text.png";
 import UploadImages from "./UploadImages";
 import ManageImages from "./ManageImages";
-import logo from "../../assets/logo-text.png";
 
 function AdminPanel() {
   const [optionPanel, setOptionPanel] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
+    const _auth = new AuthService();
+    setIsLoading(true);
+    _auth
+      .fetch("/api/get-all-images", {
+        method: "GET",
+      })
+      .then((json) => {
+        console.log(json);
+        setImages(json);
+        setIsLoading(false);
+      });
+  };
 
   return (
     <div className={styles.adminPanelWrap}>
@@ -38,8 +59,11 @@ function AdminPanel() {
           </Col>
         </Row>
         <div className={styles.content}>
-          {optionPanel && <UploadImages />}
-          {!optionPanel && <ManageImages />}
+          <button className={`button ${styles.logout}`}>Wyloguj</button>
+          {optionPanel && <UploadImages fetchData={fetchData} />}
+          {!optionPanel && (
+            <ManageImages isLoading={isLoading} images={images} />
+          )}
         </div>
       </div>
     </div>

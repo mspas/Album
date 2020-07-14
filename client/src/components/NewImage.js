@@ -8,13 +8,13 @@ import styles from "./NewImage.module.sass";
 function NewImage(props) {
   return (
     <div className={styles.wrap}>
-      {props.image !== null ? (
+      {props.id > -1 ? (
         <div className={`${styles.newImagePanel}`}>
           <div className={`${styles.imageWrap}`}>
             <img
               id={`i-${props.id}`}
               className="mr-3"
-              src={props.image.imageData}
+              src={props.imageURL}
               alt={`New id = ${props.id}`}
             />
             <label className={styles.imageOverview} htmlFor={`i-${props.id}`}>
@@ -25,11 +25,12 @@ function NewImage(props) {
             <Row className={`${styles.mediaBodyHeading} mt-0`}>
               <Col>
                 <input
-                  id={`y-${props.id}`}
                   className={styles.yearInput}
                   type="number"
                   placeholder="Rok"
-                  onChange={props.yearChangeHandler}
+                  onChange={(event) => {
+                    props.yearChangeHandler(event, props.id);
+                  }}
                 />
               </Col>
               <Col xs={6} className={`${styles.highlight} center`}>
@@ -38,36 +39,40 @@ function NewImage(props) {
                   id={`h-${props.id}`}
                   className={styles.checkboxInput}
                   type="checkbox"
-                  onChange={props.highlightChangeHandler}
+                  onChange={(event) => {
+                    props.highlightChangeHandler(event, props.id);
+                  }}
                 />
               </Col>
               <Col className={styles.closeWrap}>
                 <FontAwesomeIcon
-                  id={`c-${props.id}`}
                   className={`${styles.closeIcon} panel-icon`}
                   icon={faTimes}
-                  onClick={props.deleteImageHandler}
+                  onClick={(event) => {
+                    props.deleteImageHandler(event, props.id);
+                  }}
                 />
               </Col>
             </Row>
             <textarea
-              id={`d-${props.id}`}
               className={styles.description}
               type="textarea"
               rows="6"
               placeholder="Opis zdjęcia - może zawierać: data, miejscowość, dokładne miejsce, osoby."
-              onChange={props.descriptionChangeHandler}
+              onChange={(event) => {
+                props.descriptionChangeHandler(event, props.id);
+              }}
             />
-            {props.image.alertText && (
+            {props.alertText && (
               <div className={styles.mediaFooter}>
                 <p
                   className={
-                    props.image.alertType
+                    props.alertType
                       ? `${styles.alert} ${styles.success}`
                       : `${styles.alert} ${styles.error}`
                   }
                 >
-                  {props.image.alertText}
+                  {props.alertText}
                 </p>
               </div>
             )}

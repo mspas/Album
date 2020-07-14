@@ -43,5 +43,18 @@
                 &:hover
                     @include color-opacity-bg($color: #fff, $opacity: 0.1)
         .content
+            position: relative
             padding: 50px 20px
             @include color-opacity-bg($color: #fff, $opacity: 0.001)
+            .logout
+                position: absolute
+                top: 50px
+                right: 20px
+                @media screen and ( max-width: 565px )
+                    position: relative
+                    top: auto
+                    right: auto
+                    max-width: 100%
+                    margin-bottom: 10px
+                @media screen and ( max-width: 256px )
+                    padding: 6px 10px
