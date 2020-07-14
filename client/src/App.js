@@ -1,10 +1,10 @@
 import React from "react";
 import { Route, BrowserRouter, Redirect, Switch } from "react-router-dom";
 import "./App.sass";
-import AdminPanel from "./components/AdminPanel";
-import Album from "./components/Album";
-import Contact from "./components/Contact";
-import SignIn from "./components/SignIn";
+import AdminPanel from "./components/AdminPanel/AdminPanel";
+import Album from "./components/Album/Album";
+import Contact from "./components/Album/Contact";
+import SignIn from "./components/AdminPanel/SignIn";
 
 function App() {
   return (

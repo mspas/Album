@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Form, Button, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
-import AuthService from "../services/auth.service";
-import styles from "../styles/SignIn.module.sass";
-import logo from "../assets/logo-text.png";
+import AuthService from "../../services/auth.service";
+import styles from "./styles/SignIn.module.sass";
+import logo from "../../assets/logo-text.png";
 
 function SignIn(props) {
   const [password, setPassword] = useState("");

@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import styles from "../styles/NewImage.module.sass";
+import styles from "./NewImage.module.sass";
 
 function NewImage(props) {
   return (

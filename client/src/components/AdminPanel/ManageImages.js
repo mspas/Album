@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "../styles/ManageImages.module.sass";
-import NewImage from "./NewImage";
+import "./styles/ManageImages.module.sass";
+import NewImage from "../NewImage";
 
 function ManageImages() {
   const [images, setImages] = useState([]);

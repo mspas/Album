@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import styles from "../styles/AdminPanel.module.sass";
+import styles from "./styles/AdminPanel.module.sass";
 import { Col, Row } from "react-bootstrap";
-import withAuth from "../services/auth-guard.service";
+import withAuth from "../../services/auth-guard.service";
 import UploadImages from "./UploadImages";
 import ManageImages from "./ManageImages";
-import logo from "../assets/logo-text.png";
+import logo from "../../assets/logo-text.png";
 
 function AdminPanel() {
-  const [optionPanel, setOptionPanel] = useState(true);
+  const [optionPanel, setOptionPanel] = useState(false);
 
   return (
     <div className={styles.adminPanelWrap}>

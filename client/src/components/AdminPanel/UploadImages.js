@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import styles from "../styles/UploadImages.module.sass";
-import NewImage from "./NewImage";
-import AuthService from "../services/auth.service";
+import styles from "./styles/UploadImages.module.sass";
+import NewImage from "../NewImage";
+import AuthService from "../../services/auth.service";
 
 function UploadImages() {
   const [images, setImages] = useState([]);

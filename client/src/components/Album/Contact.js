@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import "../styles/Contact.module.sass";
+import "./styles/Contact.module.sass";
 
 function Contact() {
   const [images, setImages] = useState([]);
