@@ -10,6 +10,7 @@ import ManageImages from "./ManageImages";
 function AdminPanel(props) {
   const [optionPanel, setOptionPanel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHiddenBtn, setIsHiddenBtn] = useState(false);
   const [images, setImages] = useState([]);
 
   useEffect(() => {
@@ -33,6 +34,14 @@ function AdminPanel(props) {
   const logout = () => {
     _auth.logout();
     props.history.replace("/login");
+  };
+
+  const hideLogout = (check) => {
+    setIsHiddenBtn(check);
+  };
+
+  const weNeedToGoDeeper = {
+    zIndex: "0",
   };
 
   return (
@@ -64,12 +73,20 @@ function AdminPanel(props) {
           </Col>
         </Row>
         <div className={styles.content}>
-          <button className={`button ${styles.logout}`} onClick={logout}>
+          <button
+            className={`button ${styles.logout}`}
+            onClick={logout}
+            style={isHiddenBtn ? weNeedToGoDeeper : {}}
+          >
             Wyloguj
           </button>
           {optionPanel && <UploadImages fetchData={fetchData} />}
           {!optionPanel && (
-            <ManageImages isLoading={isLoading} images={images} />
+            <ManageImages
+              isLoading={isLoading}
+              images={images}
+              hideLogout={hideLogout}
+            />
           )}
         </div>
       </div>
