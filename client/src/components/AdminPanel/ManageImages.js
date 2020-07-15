@@ -3,7 +3,7 @@ import styles from "./styles/ManageImages.module.sass";
 import { Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import ImageOverviewModal from "./ImageOverviewModal";
+import ImageModal from "./ImageModal";
 
 function ManageImages(props) {
   const [modalShow, setModalShow] = useState(false);
@@ -58,7 +58,7 @@ function ManageImages(props) {
             </div>
           );
         })}
-        <ImageOverviewModal
+        <ImageModal
           show={modalShow}
           onHide={() => {
             setModalShow(false);

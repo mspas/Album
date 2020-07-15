@@ -7,7 +7,7 @@ import logo from "../../assets/logo-text.png";
 import UploadImages from "./UploadImages";
 import ManageImages from "./ManageImages";
 
-function AdminPanel() {
+function AdminPanel(props) {
   const [optionPanel, setOptionPanel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState([]);
@@ -24,10 +24,15 @@ function AdminPanel() {
         method: "GET",
       })
       .then((json) => {
-        console.log(json);
         setImages(json);
         setIsLoading(false);
       });
+  };
+  const _auth = new AuthService();
+
+  const logout = () => {
+    _auth.logout();
+    props.history.replace("/login");
   };
 
   return (
@@ -59,7 +64,9 @@ function AdminPanel() {
           </Col>
         </Row>
         <div className={styles.content}>
-          <button className={`button ${styles.logout}`}>Wyloguj</button>
+          <button className={`button ${styles.logout}`} onClick={logout}>
+            Wyloguj
+          </button>
           {optionPanel && <UploadImages fetchData={fetchData} />}
           {!optionPanel && (
             <ManageImages isLoading={isLoading} images={images} />
