@@ -17,7 +17,6 @@ function EditImage(props) {
   const descriptionChangeHandler = (event) => {
     let image = imageData;
     image.description = event.target.value;
-    console.log(image.description);
     setImageData(image);
   };
 

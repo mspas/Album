@@ -41,7 +41,12 @@ function ImageList(props) {
                       icon={faEdit}
                     />
                   </div>
-                  <div className={`${styles.iconWrap} center`}>
+                  <div
+                    className={`${styles.iconWrap} center`}
+                    onClick={(event) => {
+                      props.onDeleteImage(event, index);
+                    }}
+                  >
                     <FontAwesomeIcon
                       className={`panel-icon ${styles.icon}`}
                       icon={faTrashAlt}

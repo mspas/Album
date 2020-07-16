@@ -86,6 +86,7 @@ function AdminPanel(props) {
               isLoading={isLoading}
               images={images}
               hideLogout={hideLogout}
+              fetchData={fetchData}
             />
           )}
         </div>
