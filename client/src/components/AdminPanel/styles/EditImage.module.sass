@@ -1,3 +1,174 @@
 @import '../../../_variables'
-@import '../../../_mixins'
 @import '../../../_animations'
+
+$size: 200px
+
+.wrap
+    .buttonSend
+        display: block
+        margin-left: auto
+        border-radius: 0px        
+    .spinner
+        position: absolute
+        bottom: 0
+        right: 45%
+    .newImagePanel
+        position: relative
+        width: 100%
+        margin: 20px 0
+        color: $brown
+        border-radius: 5px
+        background: white
+        padding: 10px
+        animation: fadeIn 0.3s ease-in forwards
+        .checkboxInput
+            box-shadow: none
+        .imageWrap
+            position: relative
+            display: inline-block
+            vertical-align: top
+            img 
+                height: $size
+                width: $size
+                object-fit: cover
+                @media screen and ( max-width: 343px )
+                    height: 100%
+                    width: 100%
+            .imageOverview
+                position: absolute
+                top: 0
+                left: 0
+                background: white
+                font-family: Courier, monospace
+                padding: 0 5px
+                border-radius: 0 0 12px 0
+        .mediaBody
+            display: inline-block
+            width: calc( 100% - 220px )
+            min-height: $size
+            @media screen and ( max-width: 770px )
+                display: block
+                width: 100%
+                margin-top: 20px
+            .mediaBodyHeading
+                margin-bottom: 10px
+                .yearInput
+                    width: 100%
+                    min-width: 55px
+                    outline: none
+                    border: none
+                    font-family: Courier, monospace
+                    background-color: transparent
+                    border-bottom: 2px solid $darkBlue
+                    color: $darkBlue
+                    font-size: 18px
+                    height: 28px
+                .highlight
+                    text-align: center
+                    font-family: Courier, monospace
+                    label
+                        margin-right: 7px
+                        margin-bottom: 0
+                .backWrap
+                    font-family: Courier, monospace
+                    .button
+                        position: relative
+                        background: transparent
+                        border: none
+                        color: $darkBlue
+                        transition: 0.1s
+                        &:hover
+                            color: $error
+                        .backIcon
+                            vertical-align: middle
+                            font-size: 12px
+                            margin-right: 5px
+                            cursor: pointer
+                        span 
+                            position: absolute
+                            top: 7px
+            .description
+                width: 100%
+                overflow-y: auto
+                outline: none
+                border: none
+                background-color: #FFF
+                color: #222
+                font-family: Courier, monospace
+                font-weight: normal
+                font-size: 18px
+                resize: none
+                line-height: 19px
+                padding: 20px
+                background-image: url(https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png)
+                background-repeat: repeat
+                border-radius: 7px
+                box-shadow: 1px 1px 14px #0000006c
+                border-top: 1px solid #FFF
+                border-bottom: 1px solid #FFF
+            ::-webkit-scrollbar 
+                width: 3px
+            ::-webkit-scrollbar-track 
+                background: #f1f1f1
+            ::-webkit-scrollbar-thumb 
+                background: $darkBlue
+        .mediaFooter
+            .alert
+                text-align: center
+                animation: fadeIn 0.3s ease-in forwards
+            .success
+                background: $success
+            .error
+                background: $error
+        .addNewPanel
+            color: $logoBlue
+            input
+                width: 0.1px
+                height: 0.1px
+                opacity: 0
+                overflow: hidden
+                position: absolute
+                z-index: -1
+            .box
+                display: inline-block
+                div
+                    height: 100%
+                    width: 100%
+                    p
+                        text-align: center
+                        width: 100%
+                @media screen and ( max-width: 343px )
+                    height: 100%
+                    width: 100%
+            label
+                @media screen and ( max-width: 900px )
+                    width: 100%
+                .addNewBox
+                    width: $size
+                    height: 100px
+                    background: #00000023
+                    cursor: pointer
+                    transition: 1s
+                    &:hover
+                        background: #00000017
+                        .addIcon
+                            transform: rotate(90deg)
+                    @media screen and ( max-width: 900px )
+                        width: 100%
+                    .addIcon
+                        cursor: pointer
+                        font-size: 30px
+                        transition: transform 1s
+            .text
+                width: calc( 100% - 200px )
+                height: 100%
+                @media screen and ( max-width: 900px )
+                    width: 100%
+                p
+                    margin: 0
+                    font-size: 30px
+                    letter-spacing: 1vw
+                    user-select: none
+                    @media screen and ( max-width: 900px )
+                        font-size: 20px
+                        

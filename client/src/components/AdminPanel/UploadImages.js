@@ -92,8 +92,6 @@ function UploadImages(props) {
           }),
         })
         .then((json) => {
-          console.log(json);
-          console.log(json.resultArray);
           let temp = setUploadResult(json.resultArray);
           setIsLoading(false);
           setImages(temp);

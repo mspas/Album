@@ -61,7 +61,6 @@ mongoClient.connect();
 app.post("/api/login", async (req, res) => {
   let token = "";
   let password = req.body.password;
-  console.log(password);
 
   mongoClient
     .db("albumParadyz")
@@ -171,7 +170,6 @@ app.post("/api/delete-images", async (req, res) => {
 });
 
 app.patch("/api/edit-image", async (req, res) => {
-  let successCheck = true;
   let errorInfo = "Zdjęcie zmodyfikowane poprawnie!";
   let objectId = null;
 
@@ -201,10 +199,7 @@ app.patch("/api/edit-image", async (req, res) => {
           },
         },
         (err, result) => {
-          if (err) {
-            errorInfo = err;
-            successCheck = false;
-          }
+          if (err) errorInfo = err;
           res.send({ result: true, errorInfo: errorInfo });
         }
       );

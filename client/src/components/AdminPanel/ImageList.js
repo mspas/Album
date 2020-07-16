@@ -30,7 +30,12 @@ function ImageList(props) {
                       icon={faEye}
                     />
                   </div>
-                  <div className={`${styles.iconWrap} center`}>
+                  <div
+                    className={`${styles.iconWrap} center`}
+                    onClick={(event) => {
+                      props.setImageEdit(event, index);
+                    }}
+                  >
                     <FontAwesomeIcon
                       className={`panel-icon ${styles.icon}`}
                       icon={faEdit}
