@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 import styles from "./styles/ManageImages.module.sass";
 import ImageModal from "./ImageModal";
@@ -6,21 +6,30 @@ import ConfirmModal from "../ConfirmModal";
 import ImageList from "./ImageList";
 import EditImage from "./EditImage";
 import AuthService from "../../services/auth.service";
+import ChangeAdminDetails from "./ChangeAdminDetails";
 
 function ManageImages(props) {
   const [editShow, setEditShow] = useState(false);
-  const [listShow, setListShow] = useState(true);
+  const [listShow, setListShow] = useState(false);
   const [modalShow, setModalShow] = useState(false);
+  const [changeAdminShow, setChangeAdminShow] = useState(true);
   const [modalConfirmShow, setModalConfirmShow] = useState(false);
   const [selectedImage, setSelectedImage] = useState({});
   const [editImage, setEditImage] = useState({});
   const [deleteImagesId, setDeleteImagesId] = useState([]);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [email, setEmail] = useState("");
   const [alert, setAlert] = useState({
     imageId: -1,
     alertType: true,
     alertText: true,
   });
+
+  const _auth = new AuthService();
+
+  useEffect(() => {
+    setEmail(_auth.getEmail(_auth.getToken()));
+  }, []);
 
   const setModal = (event, index) => {
     setSelectedImage(props.images[index]);
@@ -33,12 +42,18 @@ function ManageImages(props) {
     setListShow(false);
   };
 
+  const onChangeDetails = (event) => {
+    setListShow(false);
+    setChangeAdminShow(true);
+  };
+
   const onDeleteImage = (event, index) => {
     setModalConfirmShow(true);
     setDeleteImagesId([index]);
   };
 
   const onBack = () => {
+    setChangeAdminShow(false);
     setEditShow(false);
     setListShow(true);
   };
@@ -51,7 +66,6 @@ function ManageImages(props) {
   };
 
   const deleteImages = async (array) => {
-    const _auth = new AuthService();
     let deleteArray = deleteImagesId;
 
     if (array && array.length > 0) deleteArray = array;
@@ -93,8 +107,8 @@ function ManageImages(props) {
 
   return (
     <div className={styles.manageAlbum}>
-      <button className={`${styles.btnEmail} button`}>
-        Zmień adres e-mail
+      <button className={`${styles.btnEmail} button`} onClick={onChangeDetails}>
+        Zmień dane admina
       </button>
       {deleteLoading && (
         <div className={styles.spinner}>
@@ -118,6 +132,7 @@ function ManageImages(props) {
           onBack={onBack}
         />
       )}
+      {changeAdminShow && <ChangeAdminDetails email={email} onBack={onBack} />}
       <ImageModal
         show={modalShow}
         onHide={() => {

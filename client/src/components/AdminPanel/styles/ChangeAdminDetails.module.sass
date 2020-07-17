@@ -1,0 +1,60 @@
+@import '../../../_variables'
+@import ../../../_mixins
+
+.panelDetails
+    margin-top: 20px
+    padding: 20px
+    background: #ffffff0a
+    border-radius: 10px
+    .header
+        border-bottom: 2px solid $logoBlue
+        max-height: 60px
+        width: 90%
+        margin-left: auto
+        margin-right: auto
+        padding-bottom: 10px
+        span
+            transition: 0.4s
+            @include color-opacity-font($color: $lighterBlue, $opacity: 0.4)
+        .active
+            color: $lighterBlue !important
+        .switch
+            position: relative
+            display: inline-block
+            width: 60px
+            height: 34px
+            margin: 0 10px
+        .switch input
+            opacity: 0
+            width: 0
+            height: 0
+        .slider
+            position: absolute
+            cursor: pointer
+            top: 0
+            left: 0
+            right: 0
+            bottom: 0
+            border-radius: 34px
+            background-color: #ccc
+            -webkit-transition: 0.4s
+            transition: 0.4s
+        .slider:before
+            position: absolute
+            content: ""
+            height: 26px
+            width: 26px
+            left: 4px
+            bottom: 4px
+            border-radius: 50%
+            background-color: white
+            -webkit-transition: 0.4s
+            transition: 0.4s
+        input:checked + .slider:before
+            -webkit-transform: translateX(26px)
+            -ms-transform: translateX(26px)
+            transform: translateX(26px)
+    .button
+        padding: 6px 20px
+        .backIcon
+            margin-right: 5px
