@@ -10,9 +10,9 @@ import ChangeAdminDetails from "./ChangeAdminDetails";
 
 function ManageImages(props) {
   const [editShow, setEditShow] = useState(false);
-  const [listShow, setListShow] = useState(false);
+  const [listShow, setListShow] = useState(true);
   const [modalShow, setModalShow] = useState(false);
-  const [changeAdminShow, setChangeAdminShow] = useState(true);
+  const [changeAdminShow, setChangeAdminShow] = useState(false);
   const [modalConfirmShow, setModalConfirmShow] = useState(false);
   const [selectedImage, setSelectedImage] = useState({});
   const [editImage, setEditImage] = useState({});

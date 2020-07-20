@@ -10,7 +10,7 @@ const ChangeEmail = (props) => {
       <div className={styles.header}>
         <p className={styles.info}>
           Album Paradyż - zmiana adresu email administratora (obecnie:{" "}
-          {props.email})
+          <span>{props.email}</span>)
         </p>
         <p className={styles.info}>
           Na ten adres przychodzą zgloszenia użytkowników z nowymi zdjęciami!

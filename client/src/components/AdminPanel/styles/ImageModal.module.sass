@@ -20,7 +20,7 @@
         position: fixed
         margin: 0 auto
         background-color: $lighterBlue
-        color: $darkBlue
+        color: $lighterBlue
         z-index: 2
         .heading
             position: absolute
@@ -30,15 +30,16 @@
             .closeIcon
                 display: block
                 margin-left: auto
-                padding: 0 5px
-                font-size: 32px
-                background-color: $lighterBlue
+                font-size: 25px
+                padding: 2px
+                background-color: #ffffff0a
                 border-radius: 3px
-                border: 1px solid #00000093
+                border: 1px solid $lighterBlue
                 transition: 0.1s
                 cursor: pointer
                 &:hover
                     color: $error
+                    border: 1px solid $error
         .body
             img
                 display: block

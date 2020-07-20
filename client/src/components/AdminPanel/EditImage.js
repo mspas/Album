@@ -83,6 +83,17 @@ function EditImage(props) {
 
   return (
     <div className={styles.wrap}>
+      <Button
+        variant="light"
+        onClick={props.onBack}
+        className={`${styles.button} button center`}
+      >
+        <FontAwesomeIcon
+          className={`${styles.backIcon} panel-icon`}
+          icon={faArrowLeft}
+        />
+        <span>Wstecz</span>
+      </Button>
       <div className={`${styles.newImagePanel}`}>
         <div className={`${styles.imageWrap}`}>
           <img
@@ -114,18 +125,6 @@ function EditImage(props) {
                 type="checkbox"
                 onChange={highlightChangeHandler}
               />
-            </Col>
-            <Col className={styles.backWrap}>
-              <Button
-                onClick={props.onBack}
-                className={`${styles.button} center`}
-              >
-                <FontAwesomeIcon
-                  className={`${styles.backIcon} panel-icon`}
-                  icon={faArrowLeft}
-                />
-                <span>Wstecz</span>
-              </Button>
             </Col>
           </Row>
           <textarea

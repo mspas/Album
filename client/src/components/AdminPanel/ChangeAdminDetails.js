@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +13,7 @@ function ChangeAdminDetails(props) {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState("");
   const [swtichValue, setSwtichValue] = useState(true);
+
   const _auth = new AuthService();
 
   const inputChangeHandler = (event) => {
@@ -32,22 +33,46 @@ function ChangeAdminDetails(props) {
       });*/
   };
 
+  const onSwitchName = (check) => {
+    setSwtichValue(check);
+  };
+
   return (
     <div className={styles.panelDetails}>
       <div className={`${styles.header} center`}>
-        <span className={swtichValue ? styles.active : ""}>Zmień e-mail</span>
-        <label className={styles.switch}>
+        <span
+          className={
+            !swtichValue ? `${styles.active} ${styles.col}` : styles.col
+          }
+          onClick={() => {
+            setSwtichValue(!swtichValue);
+          }}
+        >
+          Zmień e-mail
+        </span>
+        <label className={`${styles.switch} ${styles.col}`}>
           <input
             type="checkbox"
+            checked={swtichValue}
             onChange={() => {
               setSwtichValue(!swtichValue);
             }}
           />
           <span className={styles.slider}></span>
         </label>
-        <span className={!swtichValue ? styles.active : ""}>Zmień hasło</span>
+        <span
+          className={
+            swtichValue ? `${styles.active} ${styles.col}` : styles.col
+          }
+          onClick={() => {
+            setSwtichValue(!swtichValue);
+          }}
+        >
+          Zmień hasło
+        </span>
       </div>
       <Button
+        variant="light"
         onClick={props.onBack}
         className={`${styles.button} button center`}
       >
@@ -57,7 +82,7 @@ function ChangeAdminDetails(props) {
         />
         <span>Wstecz</span>
       </Button>
-      {swtichValue ? (
+      {!swtichValue ? (
         <ChangeEmail
           email={props.email}
           onChangeEmail={(event) => {

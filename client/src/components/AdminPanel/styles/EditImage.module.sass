@@ -1,9 +1,16 @@
 @import '../../../_variables'
 @import '../../../_animations'
+@import '../../../_mixins'
 
 $size: 200px
 
 .wrap
+    margin-top: 20px
+    @include default-box()    
+    .button
+        padding: 6px 20px
+        .backIcon
+            margin-right: 5px
     .buttonSend
         display: block
         margin-left: auto
@@ -55,6 +62,7 @@ $size: 200px
                 .yearInput
                     width: 100%
                     min-width: 55px
+                    max-width: 100px
                     outline: none
                     border: none
                     font-family: Courier, monospace
