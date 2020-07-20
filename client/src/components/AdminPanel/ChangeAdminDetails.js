@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +8,12 @@ import ChangeEmail from "./ChangeEmail";
 import ChangePassword from "./ChangePassword";
 
 function ChangeAdminDetails(props) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState({
+    alertType: false,
+    alertText: "",
+  });
+  const [showError, setShowError] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -16,25 +22,64 @@ function ChangeAdminDetails(props) {
 
   const _auth = new AuthService();
 
-  const inputChangeHandler = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const onSubmit = (event) => {
+  const onSubmitEmail = (event) => {
     event.preventDefault();
-    console.log(password);
-    /*_auth
-      .login(password)
-      .then((res) => {
-        props.history.replace("/admin");
+    let oldEmail = _auth.getEmail(_auth.getToken());
+
+    setIsLoading(true);
+
+    _auth
+      .fetch("/api/change-email", {
+        method: "PATCH",
+        body: JSON.stringify({
+          password: password,
+          oldEmail: oldEmail,
+          newEmail: email,
+        }),
       })
-      .catch((err) => {
-        alert(err);
-      });*/
+      .then((json) => {
+        setIsLoading(false);
+        console.log(json);
+        setError({
+          alertType: json.result.success,
+          alertText: json.result.errorInfo,
+        });
+        setShowError(true);
+        _auth.setToken(json.token);
+      });
   };
 
-  const onSwitchName = (check) => {
-    setSwtichValue(check);
+  const onSubmitPassword = (event) => {
+    event.preventDefault();
+    let email = _auth.getEmail(_auth.getToken());
+
+    setIsLoading(true);
+
+    if (newPassword !== newPasswordConfirmation) {
+      setIsLoading(false);
+      setError({
+        alertType: false,
+        alertText:
+          "Wpisane nowe hasło różni się do tego wpisanego w pole potwierdzenia!",
+      });
+    } else
+      _auth
+        .fetch("/api/change-password", {
+          method: "PATCH",
+          body: JSON.stringify({
+            email: email,
+            oldPassword: password,
+            newPassword: newPassword,
+          }),
+        })
+        .then((json) => {
+          setIsLoading(false);
+          setShowError(true);
+          setError({
+            alertType: json.result.success,
+            alertText: json.result.errorInfo,
+          });
+        });
   };
 
   return (
@@ -45,7 +90,8 @@ function ChangeAdminDetails(props) {
             !swtichValue ? `${styles.active} ${styles.col}` : styles.col
           }
           onClick={() => {
-            setSwtichValue(!swtichValue);
+            setSwtichValue(false);
+            setShowError(false);
           }}
         >
           Zmień e-mail
@@ -56,6 +102,7 @@ function ChangeAdminDetails(props) {
             checked={swtichValue}
             onChange={() => {
               setSwtichValue(!swtichValue);
+              setShowError(false);
             }}
           />
           <span className={styles.slider}></span>
@@ -65,7 +112,8 @@ function ChangeAdminDetails(props) {
             swtichValue ? `${styles.active} ${styles.col}` : styles.col
           }
           onClick={() => {
-            setSwtichValue(!swtichValue);
+            setSwtichValue(true);
+            setShowError(false);
           }}
         >
           Zmień hasło
@@ -82,6 +130,24 @@ function ChangeAdminDetails(props) {
         />
         <span>Wstecz</span>
       </Button>
+      {isLoading && (
+        <div className={styles.spinner}>
+          <Spinner animation="border" variant="primary" role="status"></Spinner>
+        </div>
+      )}
+      {showError && (
+        <div className={styles.alert}>
+          <p
+            className={
+              error.alertType
+                ? `${styles.alert} ${styles.success}`
+                : `${styles.alert} ${styles.error}`
+            }
+          >
+            {error.alertText}
+          </p>
+        </div>
+      )}
       {!swtichValue ? (
         <ChangeEmail
           email={props.email}
@@ -91,7 +157,7 @@ function ChangeAdminDetails(props) {
           onChangePassword={(event) => {
             setPassword(event.target.value);
           }}
-          onSubmit={onSubmit}
+          onSubmit={onSubmitEmail}
         />
       ) : (
         <ChangePassword
@@ -104,7 +170,7 @@ function ChangeAdminDetails(props) {
           onChangeNewPasswordConfirmation={(event) => {
             setNewPasswordConfirmation(event.target.value);
           }}
-          onSubmit={onSubmit}
+          onSubmit={onSubmitPassword}
         />
       )}
     </div>

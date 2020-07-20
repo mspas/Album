@@ -29,7 +29,7 @@ function ManageImages(props) {
 
   useEffect(() => {
     setEmail(_auth.getEmail(_auth.getToken()));
-  }, []);
+  }, [_auth]);
 
   const setModal = (event, index) => {
     setSelectedImage(props.images[index]);

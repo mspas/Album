@@ -86,7 +86,7 @@ app.post("/api/login", async (req, res) => {
             }
             if (i === users.length - 1 && !token)
               res.status(400).send({
-                success: true,
+                success: false,
                 message: "Hasło niepoprawne",
                 token: null,
               });
@@ -114,6 +114,95 @@ app.get("/api/create", async (req, res) => {
         }
       );
   });
+});
+
+app.patch("/api/change-email", async (req, res) => {
+  let token = "";
+  let password = req.body.password;
+  let oldEmail = req.body.oldEmail;
+  let newEmail = req.body.newEmail;
+
+  mongoClient
+    .db("albumParadyz")
+    .collection("users")
+    .findOne(
+      {
+        email: oldEmail,
+      },
+      (err, result) => {
+        if (err) {
+          res.status(400).send(err);
+        } else {
+          let user = result;
+          bcrypt.compare(password, user.hash, async (err, result) => {
+            if (!result) {
+              res.status(400).send({
+                result: {
+                  success: false,
+                  result: null,
+                  errorInfo: "Hasło niepoprawne",
+                },
+                token: null,
+              });
+            } else {
+              let resultUpdate = await updateEmail(oldEmail, newEmail);
+              if (resultUpdate.success)
+                token = jwt.sign({ email: newEmail }, process.env.TOKEN_SECRET);
+              res.status(200).send({
+                result: resultUpdate,
+                token: token,
+              });
+            }
+          });
+        }
+      }
+    );
+});
+
+app.patch("/api/change-password", async (req, res) => {
+  let email = req.body.email;
+  let oldPassword = req.body.oldPassword;
+  let newPassword = req.body.newPassword;
+
+  mongoClient
+    .db("albumParadyz")
+    .collection("users")
+    .findOne(
+      {
+        email: email,
+      },
+      (err, result) => {
+        if (err) {
+          res.status(400).send(err);
+        } else {
+          let user = result;
+          bcrypt.compare(oldPassword, user.hash, (err, result) => {
+            if (!result) {
+              res.status(400).send({
+                success: false,
+                result: null,
+                errorInfo: "Hasło niepoprawne",
+              });
+            } else {
+              bcrypt.hash(newPassword, 10, async (err, hash) => {
+                if (err) {
+                  res.status(400).send({
+                    success: false,
+                    result: null,
+                    errorInfo: "Błąd serwera!",
+                  });
+                } else {
+                  let resultUpdate = await updatePassword(email, hash);
+                  res.status(200).send({
+                    result: resultUpdate,
+                  });
+                }
+              });
+            }
+          });
+        }
+      }
+    );
 });
 
 app.get("/api/get-all-images", async (req, res) => {
@@ -335,6 +424,62 @@ deleteImage = (objectId) => {
               );
           }
           resolve({ id: objectId, success: true, errorInfo: "" });
+        }
+      );
+  });
+};
+
+updateEmail = (oldEmail, newEmail) => {
+  let errorInfo = "Poprawnie zmieniono email!";
+
+  return new Promise((resolve, reject) => {
+    mongoClient
+      .db("albumParadyz")
+      .collection("users")
+      .updateOne(
+        {
+          email: oldEmail,
+        },
+        {
+          $set: {
+            email: newEmail,
+          },
+        },
+        (err, result) => {
+          let check = true;
+          if (err) {
+            errorInfo = err;
+            check = false;
+          }
+          resolve({ success: check, result: result, errorInfo: errorInfo });
+        }
+      );
+  });
+};
+
+updatePassword = (email, hash) => {
+  let errorInfo = "Poprawnie zmieniono hasło!";
+
+  return new Promise((resolve, reject) => {
+    mongoClient
+      .db("albumParadyz")
+      .collection("users")
+      .updateOne(
+        {
+          email: email,
+        },
+        {
+          $set: {
+            hash: hash,
+          },
+        },
+        (err, result) => {
+          let check = true;
+          if (err) {
+            errorInfo = err;
+            check = false;
+          }
+          resolve({ success: check, result: result, errorInfo: errorInfo });
         }
       );
   });

@@ -2,6 +2,7 @@
 @import ../../../_mixins
 
 .panelDetails
+    position: relative
     margin-top: 20px
     @include default-box()
     @media screen and ( max-width: 530px)
@@ -64,3 +65,16 @@
         padding: 6px 20px
         .backIcon
             margin-right: 5px
+    .spinner
+        position: absolute
+        top: 80px
+        right: 50%
+    .alert
+        margin: 10px 3vw
+        padding: 10px
+        text-align: center
+        animation: fadeIn 0.3s ease-in forwards
+        .success
+            background: $success
+        .error
+            background: $error

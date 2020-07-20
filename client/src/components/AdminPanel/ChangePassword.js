@@ -37,7 +37,7 @@ const ChangePassword = (props) => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group controlId="formPassword">
+        <Form.Group controlId="formNewPassword">
           <InputGroup className={styles.input}>
             <InputGroup.Prepend>
               <InputGroup.Text id="inputGroupPrepend">
@@ -58,7 +58,7 @@ const ChangePassword = (props) => {
           </InputGroup>
         </Form.Group>
 
-        <Form.Group controlId="formPassword">
+        <Form.Group controlId="formConfirmPassword">
           <InputGroup className={styles.input}>
             <InputGroup.Prepend>
               <InputGroup.Text id="inputGroupPrepend">
