@@ -120,7 +120,7 @@ function EditImage(props) {
               <label htmlFor={`h${props.id}`}>Wyróżnione?</label>
               <input
                 id={`h-${props.id}`}
-                value={imageData.isHighlighted}
+                defaultValue={imageData.isHighlighted}
                 className={styles.checkboxInput}
                 type="checkbox"
                 onChange={highlightChangeHandler}

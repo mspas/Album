@@ -2,7 +2,12 @@ import React from "react";
 import styles from "./styles/ImageList.module.sass";
 import { Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEdit,
+  faTrashAlt,
+  faCheckCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 function ImageList(props) {
   return (
@@ -15,8 +20,27 @@ function ImageList(props) {
         <div className={styles.imagesWrap}>
           {props.images.map((image, index) => {
             return (
-              <div key={index} className={styles.imageBox}>
+              <div
+                key={index}
+                className={
+                  props.selectedImages[index]
+                    ? `${styles.imageBox} ${styles.selected}`
+                    : styles.imageBox
+                }
+              >
                 <div className={styles.iconsBox}>
+                  <div
+                    className={`${styles.iconWrap} center`}
+                    onClick={(event) => {
+                      props.selectImage(event, index);
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      id={`select-${index}`}
+                      className={`panel-icon ${styles.icon}`}
+                      icon={faCheckCircle}
+                    />
+                  </div>
                   <div
                     className={`${styles.iconWrap} center`}
                     onClick={(event) => {
@@ -44,7 +68,7 @@ function ImageList(props) {
                   <div
                     className={`${styles.iconWrap} center`}
                     onClick={(event) => {
-                      props.onDeleteImage(event, index);
+                      props.deleteImage(event, index);
                     }}
                   >
                     <FontAwesomeIcon

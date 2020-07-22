@@ -14,11 +14,12 @@ function ManageImages(props) {
   const [modalShow, setModalShow] = useState(false);
   const [changeAdminShow, setChangeAdminShow] = useState(false);
   const [modalConfirmShow, setModalConfirmShow] = useState(false);
+  const [modalConfirmText, setModalConfirmText] = useState("");
   const [selectedImage, setSelectedImage] = useState({});
   const [editImage, setEditImage] = useState({});
-  const [deleteImagesId, setDeleteImagesId] = useState([]);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [selectedImages, setSelectedImages] = useState([]);
   const [alert, setAlert] = useState({
     imageId: -1,
     alertType: true,
@@ -28,8 +29,20 @@ function ManageImages(props) {
   const _auth = new AuthService();
 
   useEffect(() => {
+    const _auth = new AuthService();
     setEmail(_auth.getEmail(_auth.getToken()));
-  }, [_auth]);
+    let array = [];
+    for (let i = 0; i < props.images.length; i++) {
+      array.push(false);
+    }
+    setSelectedImages(array);
+  }, [props.images]);
+
+  const selectImage = (event, index) => {
+    let array = [...selectedImages];
+    array[index] = !array[index];
+    setSelectedImages(array);
+  };
 
   const setModal = (event, index) => {
     setSelectedImage(props.images[index]);
@@ -42,73 +55,95 @@ function ManageImages(props) {
     setListShow(false);
   };
 
-  const onChangeDetails = (event) => {
-    setListShow(false);
-    setChangeAdminShow(true);
-  };
-
-  const onDeleteImage = (event, index) => {
-    setModalConfirmShow(true);
-    setDeleteImagesId([index]);
-  };
-
   const onBack = () => {
     setChangeAdminShow(false);
     setEditShow(false);
     setListShow(true);
   };
 
-  const deleteImage = () => {
-    let array = [];
-    array.push(deleteImagesId[0]);
-    setDeleteImagesId(array);
-    deleteImages(array);
+  const deleteImage = (event, index) => {
+    setModalConfirmText("Czy na pewno usunąć zdjęcie?");
+    setModalConfirmShow(true);
+
+    let array = makeItFalse([...selectedImages]);
+    array[index] = !array[index];
+    setSelectedImages(array);
+
+    deleteImages();
   };
 
-  const deleteImages = async (array) => {
-    let deleteArray = deleteImagesId;
+  const makeItFalse = (array) => {
+    for (let i = 0; i < array.length; i++) array[i] = false;
+    return array;
+  };
 
-    if (array && array.length > 0) deleteArray = array;
+  const countSelected = () => {
+    let count = 0;
+    selectedImages.forEach((element) => {
+      if (element) count++;
+    });
+    return count;
+  };
 
-    if (deleteArray.length > 0) {
-      let images = [];
-      setDeleteLoading(true);
+  const deleteImages = async () => {
+    let selectedIdArray = [];
+    setDeleteLoading(true);
 
-      await new Promise((resolve, reject) => {
-        deleteArray.forEach((id) => {
-          images.push(props.images[id]._id);
-          console.log(props.images[id], id);
-        });
-        resolve(images);
-      });
-      _auth
-        .fetch("/api/delete-images", {
-          method: "POST",
-          body: JSON.stringify({
-            imagesArray: images,
-          }),
-        })
-        .then((json) => {
-          let id = -1;
-          if (!json.result[0].success) id = json.result[0].id;
-          setAlert({
-            imageId: id,
-            alertType: json.result[0].success,
-            alertText: json.result[0].errorInfo,
+    await new Promise((resolve, reject) => {
+      for (let i = 0; i < selectedImages.length; i++) {
+        const element = selectedImages[i];
+        if (!element) continue;
+        selectedIdArray.push(props.images[i]._id);
+      }
+      resolve(selectedIdArray);
+    }).then(() => {
+      if (selectedIdArray.length > 0)
+        _auth
+          .fetch("/api/delete-images", {
+            method: "POST",
+            body: JSON.stringify({
+              imagesArray: selectedIdArray,
+            }),
+          })
+          .then((json) => {
+            let id = -1;
+            if (!json.result[0].success) id = json.result[0].id;
+            setAlert({
+              imageId: id,
+              alertType: json.result[0].success,
+              alertText: json.result[0].errorInfo,
+            });
+            setDeleteLoading(false);
+            if (json.result[0].success) {
+              setModalConfirmShow(false);
+              props.fetchData();
+            }
           });
-          setDeleteLoading(false);
-          if (json.result[0].success) {
-            setModalConfirmShow(false);
-            props.fetchData();
-          }
-        });
-    } else setDeleteLoading(false);
+      else setDeleteLoading(false);
+    });
   };
 
   return (
     <div className={styles.manageAlbum}>
-      <button className={`${styles.btnEmail} button`} onClick={onChangeDetails}>
+      <button
+        className={`${styles.btnEmail} button`}
+        onClick={() => {
+          setListShow(false);
+          setChangeAdminShow(true);
+        }}
+      >
         Zmień dane admina
+      </button>
+      <button
+        className="button"
+        onClick={() => {
+          setModalConfirmText(
+            `Czy na pewno usunąć zaznaczone zdjęcia? (${countSelected()} zaznaczono)`
+          );
+          setModalConfirmShow(true);
+        }}
+      >
+        Usuń zaznaczone
       </button>
       {deleteLoading && (
         <div className={styles.spinner}>
@@ -119,10 +154,12 @@ function ManageImages(props) {
         <ImageList
           isLoading={props.isLoading}
           images={props.images}
+          selectedImages={selectedImages}
           setModal={setModal}
           hideLogout={props.hideLogout}
           setImageEdit={setImageEdit}
-          onDeleteImage={onDeleteImage}
+          deleteImage={deleteImage}
+          selectImage={selectImage}
         />
       )}
       {editShow && (
@@ -146,8 +183,8 @@ function ManageImages(props) {
       />
       <ConfirmModal
         show={modalConfirmShow}
-        text="Czy na pewno usunąć zdjęcie?"
-        accept={deleteImage}
+        text={modalConfirmText}
+        accept={deleteImages}
         onHide={() => {
           setModalConfirmShow(false);
         }}
