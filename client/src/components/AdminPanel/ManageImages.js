@@ -23,7 +23,7 @@ function ManageImages(props) {
   const [alert, setAlert] = useState({
     imageId: -1,
     alertType: true,
-    alertText: true,
+    alertText: "",
   });
 
   const _auth = new AuthService();
@@ -50,6 +50,7 @@ function ManageImages(props) {
   };
 
   const setImageEdit = (event, index) => {
+    setSelectedImages([]);
     setEditImage(props.images[index]);
     setEditShow(true);
     setListShow(false);
@@ -141,6 +142,18 @@ function ManageImages(props) {
             `Czy na pewno usunąć zaznaczone zdjęcia? (${countSelected()} zaznaczono)`
           );
           setModalConfirmShow(true);
+          if (countSelected() < 1)
+            setAlert({
+              imageId: -1,
+              alertType: false,
+              alertText: "Nie zaznaczono żadnego zdjęcia!",
+            });
+          else
+            setAlert({
+              imageId: -1,
+              alertType: true,
+              alertText: "",
+            });
         }}
       >
         Usuń zaznaczone

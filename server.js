@@ -235,7 +235,7 @@ app.patch("/api/change-password", async (req, res) => {
                   res.status(400).send({
                     success: false,
                     result: null,
-                    errorInfo: "Błąd serwera!",
+                    errorInfo: "Błąd kodowania hasła!",
                   });
                 } else {
                   let resultUpdate = await updatePassword(email, hash);
