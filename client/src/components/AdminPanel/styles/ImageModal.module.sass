@@ -24,22 +24,23 @@
         z-index: 2
         .heading
             position: absolute
-            top: 0
+            top: 5px
             width: 100%
-            padding: 10px
-            .closeIcon
+            .btnClose
                 display: block
                 margin-left: auto
-                font-size: 25px
-                padding: 2px
+                margin-bottom: 0
+                padding: 2px 5px 0px 5px
+                font-size: 16px
                 background-color: #ffffff0a
                 border-radius: 3px
-                border: 1px solid $lighterBlue
+                border: 1px solid $error
+                color: $error
                 transition: 0.1s
                 cursor: pointer
                 &:hover
-                    color: $error
-                    border: 1px solid $error
+                    color: $darkBlue
+                    border: 1px solid $darkBlue
         .body
             img
                 display: block

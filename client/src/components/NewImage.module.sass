@@ -1,17 +1,21 @@
 @import '../_variables'
 @import '../_animations'
+@import '../_mixins'
 
 $size: 200px
 
+::placeholder
+    color: white
+    letter-spacing: 1px
 .newImagePanel
     position: relative
     width: 100%
     margin: 20px 0
-    color: $brown
+    color: white
     border-radius: 5px
-    background: white
     padding: 10px
     animation: fadeIn 0.3s ease-in forwards
+    @include default-box()
     .checkboxInput
         box-shadow: none
     .imageWrap
@@ -22,6 +26,7 @@ $size: 200px
             height: $size
             width: $size
             object-fit: cover
+            border-radius: 5px
             @media screen and ( max-width: 343px )
                 height: 100%
                 width: 100%
@@ -29,10 +34,11 @@ $size: 200px
             position: absolute
             top: 0
             left: 0
-            background: white
-            font-family: Courier, monospace
+            color: $brown
+            font-size: 12px
             padding: 0 5px
             border-radius: 0 0 12px 0
+            @include color-opacity-bg(white, 0.7)
     .mediaBody
         display: inline-block
         width: calc( 100% - 220px )
@@ -49,9 +55,9 @@ $size: 200px
                 outline: none
                 border: none
                 font-family: Courier, monospace
+                color: white
                 background-color: transparent
-                border-bottom: 2px solid $darkBlue
-                color: $darkBlue
+                border-bottom: 1px solid white
                 font-size: 18px
                 height: 28px
             .highlight
@@ -75,20 +81,13 @@ $size: 200px
             overflow-y: auto
             outline: none
             border: none
-            background-color: #FFF
-            color: #222
-            font-family: Courier, monospace
-            font-weight: normal
-            font-size: 18px
+            color: #fff
+            font-size: 15px
             resize: none
-            line-height: 19px
+            line-height: 20px
             padding: 20px
-            background-image: url(https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png)
-            background-repeat: repeat
             border-radius: 7px
-            box-shadow: 1px 1px 14px #0000006c
-            border-top: 1px solid #FFF
-            border-bottom: 1px solid #FFF
+            @include color-opacity-bg(white, 0.2)
         ::-webkit-scrollbar 
             width: 3px
         ::-webkit-scrollbar-track 
@@ -128,14 +127,16 @@ $size: 200px
                 height: 100%
                 width: 100%
         label
+            margin: 0
             @media screen and ( max-width: 900px )
                 width: 100%
             .addNewBox
                 width: $size
                 height: 100px
-                background: #00000023
                 cursor: pointer
                 transition: 1s
+                border-radius: 10px
+                @include color-opacity-bg(white, 0.8)
                 &:hover
                     background: #00000017
                     .addIcon
@@ -149,6 +150,7 @@ $size: 200px
         .text
             width: calc( 100% - 200px )
             height: 100%
+            @include color-opacity-font(white, 0.8)
             @media screen and ( max-width: 900px )
                 width: 100%
             p

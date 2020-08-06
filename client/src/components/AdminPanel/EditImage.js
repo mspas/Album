@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Col, Row, Button, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import styles from "./styles/EditImage.module.sass";
+import styles from "../NewImage.module.sass";
 import AuthService from "../../services/auth.service";
 
 function EditImage(props) {
