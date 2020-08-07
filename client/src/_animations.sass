@@ -26,9 +26,9 @@
 
 @keyframes spin 
     from 
-        transform: rotate(0deg)
+    transform: rotate(0deg)
     to 
-        transform: rotate(90deg)
+    transform: rotate(90deg)
 
 @keyframes shake
     0% 
@@ -41,3 +41,10 @@
         transform: translate(-1px, 2px) rotate(-1deg)
     100% 
         transform: translate(3px, 1px) rotate(-1deg)
+
+
+@keyframes blur 
+    0% 
+        backdrop-filter: opacity(1) blur(0px)
+    100% 
+        backdrop-filter: opacity(0.6) blur(3px)

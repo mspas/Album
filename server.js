@@ -13,14 +13,13 @@ const jwt = require("jsonwebtoken");
 const app = express();
 const port = process.env.PORT || 5000;
 
-const db_uri = process.env.DB_URI;
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
 });
 
-const mongoClient = new MongoClient(db_uri, {
+const mongoClient = new MongoClient(process.env.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -73,6 +72,23 @@ const verifyToken = (authHeader) => {
     });
   });
 };
+
+async function authenticate(req, res, next) {
+  const authHeader = req.get("X-Authorization");
+  if (!authHeader) {
+    return res.status(404).send({
+      error: "Token is missing",
+    });
+  } else {
+    let check = await verifyToken(authHeader);
+    if (!check) {
+      return res.status(404).send({
+        error: "Token is invalid",
+      });
+    }
+  }
+  next();
+}
 
 app.post("/api/login", async (req, res) => {
   let token = "";
@@ -132,22 +148,7 @@ app.get("/api/create", async (req, res) => {
   });
 });
 
-app.patch("/api/change-email", async (req, res) => {
-  const authHeader = req.get("X-Authorization");
-
-  if (!authHeader) {
-    return res.status(401).send({
-      error: "Token is missing",
-    });
-  } else {
-    let check = await verifyToken(authHeader);
-    if (!check) {
-      return res.status(401).send({
-        error: "Token is invalid",
-      });
-    }
-  }
-
+app.patch("/api/change-email", authenticate, async (req, res) => {
   let token = "";
   let password = req.body.password;
   let oldEmail = req.body.oldEmail;
@@ -190,22 +191,7 @@ app.patch("/api/change-email", async (req, res) => {
     );
 });
 
-app.patch("/api/change-password", async (req, res) => {
-  const authHeader = req.get("X-Authorization");
-
-  if (!authHeader) {
-    return res.status(401).send({
-      error: "Token is missing",
-    });
-  } else {
-    let check = await verifyToken(authHeader);
-    if (!check) {
-      return res.status(401).send({
-        error: "Token is invalid",
-      });
-    }
-  }
-
+app.patch("/api/change-password", authenticate, async (req, res) => {
   let email = req.body.email;
   let oldPassword = req.body.oldPassword;
   let newPassword = req.body.newPassword;
@@ -265,22 +251,7 @@ app.get("/api/get-all-images", (req, res) => {
     });
 });
 
-app.post("/api/upload-images", async (req, res) => {
-  const authHeader = req.get("X-Authorization");
-
-  if (!authHeader) {
-    return res.status(401).send({
-      error: "Token is missing",
-    });
-  } else {
-    let check = await verifyToken(authHeader);
-    if (!check) {
-      return res.status(401).send({
-        error: "Token is invalid",
-      });
-    }
-  }
-
+app.post("/api/upload-images", authenticate, async (req, res) => {
   let successCheck = [];
 
   let i = 0;
@@ -294,22 +265,7 @@ app.post("/api/upload-images", async (req, res) => {
   });
 });
 
-app.post("/api/delete-images", async (req, res) => {
-  const authHeader = req.get("X-Authorization");
-
-  if (!authHeader) {
-    return res.status(401).send({
-      error: "Token is missing",
-    });
-  } else {
-    let check = await verifyToken(authHeader);
-    if (!check) {
-      return res.status(401).send({
-        error: "Token is invalid",
-      });
-    }
-  }
-
+app.post("/api/delete-images", authenticate, async (req, res) => {
   let successCheck = [];
 
   let i = 0;
@@ -334,22 +290,7 @@ app.post("/api/delete-images", async (req, res) => {
   });
 });
 
-app.patch("/api/edit-image", async (req, res) => {
-  const authHeader = req.get("X-Authorization");
-
-  if (!authHeader) {
-    return res.status(401).send({
-      error: "Token is missing",
-    });
-  } else {
-    let check = await verifyToken(authHeader);
-    if (!check) {
-      return res.status(401).send({
-        error: "Token is invalid",
-      });
-    }
-  }
-
+app.patch("/api/edit-image", authenticate, async (req, res) => {
   let errorInfo = "Zdjęcie zmodyfikowane poprawnie!";
   let objectId = null;
 
