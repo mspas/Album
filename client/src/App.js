@@ -2,6 +2,7 @@ import React from "react";
 import { Route, BrowserRouter, Redirect, Switch } from "react-router-dom";
 import "./App.sass";
 import AdminPanel from "./components/AdminPanel/AdminPanel";
+import Home from "./components/Album/Home";
 import Album from "./components/Album/Album";
 import Contact from "./components/Album/Contact";
 import SignIn from "./components/AdminPanel/SignIn";
@@ -12,11 +13,12 @@ function App() {
       <main>
         <BrowserRouter basename={process.env.PUBLIC_URL}>
           <Switch>
+            <Route path="/home" component={Home} />
             <Route path="/album" component={Album} />
             <Route path="/login" component={SignIn} />
             <Route path="/admin" component={AdminPanel} />
-            <Route path="/contact" component={Contact} />
-            <Route render={() => <Redirect to="/album" />} />
+            <Route path="/kontakt" component={Contact} />
+            <Route render={() => <Redirect to="/home" />} />
           </Switch>
         </BrowserRouter>
       </main>

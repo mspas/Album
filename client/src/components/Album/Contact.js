@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-
 import "./styles/Contact.module.sass";
+import Header from "../Header";
 
 function Contact() {
   const [images, setImages] = useState([]);
@@ -51,6 +51,7 @@ function Contact() {
 
   return (
     <div>
+      <Header showBtns={true} showLogo={true} />
       siema Contact
       <input type="file" onChange={imageSelectedHandler} />
       <input type="file" onChange={imageSelectedHandler} />
