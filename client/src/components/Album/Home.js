@@ -1,11 +1,21 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./styles/Home.module.sass";
 import stylesHeader from "../Header.module.sass";
+import AuthService from "../../services/auth.service";
 import Header from "../Header";
+import HighlightedImagesList from "./HighlightedImagesList";
 
 function Home() {
+  const [images, setImages] = useState([]);
+  const [welcomeArticle, setWelcomeArticle] = useState({
+    _id: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
+    fetchData();
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -14,8 +24,31 @@ function Home() {
 
   const containerRef = useRef(null);
 
+  const fetchData = () => {
+    const _auth = new AuthService();
+    setIsLoading(true);
+
+    _auth
+      .fetch("/api/get-welcome-article", {
+        method: "GET",
+      })
+      .then((json) => {
+        console.log(json);
+        setWelcomeArticle(json);
+      });
+
+    _auth
+      .fetch("/api/get-highlighted-images", {
+        method: "GET",
+      })
+      .then((json) => {
+        setImages(json);
+        setIsLoading(false);
+      });
+  };
+
   const handleScroll = (event) => {
-    let startingPos = 15;
+    let startingPos = 0;
     let value = window.scrollY;
     let bgPos = `0% ${startingPos + value * -0.1}%`;
 
@@ -38,7 +71,7 @@ function Home() {
           </p>
         </div>
       </div>
-      <header>
+      <header className={styles.header}>
         <ul>
           <li>
             <NavLink className={stylesHeader.link} to="/album">
@@ -52,7 +85,13 @@ function Home() {
           </li>
         </ul>
       </header>
-      <div className={styles.content}></div>
+      <div className={styles.content}>
+        <HighlightedImagesList
+          isLoading={isLoading}
+          welcomeArticle={welcomeArticle}
+          images={images}
+        />
+      </div>
     </div>
   );
 }

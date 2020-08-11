@@ -1,3 +1,5 @@
+@import '../_variables'
+    
 .visible
     visibility: visible
 .hidden
@@ -17,7 +19,7 @@ ul
             border-bottom: solid 2px white
             span
                 position: relative
-                z-index: 5
+                z-index: 2
                 color: white
             &::before
                 content: ''
@@ -26,7 +28,7 @@ ul
                 left: 0
                 height: calc( 100% + 5px )
                 width: 100px
-                background: #101118
+                background: $primary
                 transition: 0.3s ease-in-out
             &:hover::before
                 width: 0px
@@ -37,7 +39,7 @@ ul
                 right: 0
                 height: calc( 100% + 5px )
                 width: 100px
-                background: #101118
+                background: $primary
                 transition: 0.3s ease-in-out
             &:hover::after
                 width: 0px

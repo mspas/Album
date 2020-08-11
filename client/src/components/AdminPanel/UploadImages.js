@@ -70,7 +70,7 @@ function UploadImages(props) {
   const highlightChangeHandler = (event, index) => {
     let temp = [...images];
     let image = { ...temp[index] };
-    image.isHighlighted = event.target.value;
+    image.isHighlighted = event.target.checked;
     temp[index] = image;
     setImages(temp);
   };

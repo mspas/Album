@@ -28,7 +28,8 @@ function EditImage(props) {
 
   const highlightChangeHandler = (event) => {
     let image = imageData;
-    image.isHighlighted = event.target.value;
+    console.log(event.target.checked);
+    image.isHighlighted = event.target.checked;
     setImageData(image);
   };
 
@@ -120,7 +121,7 @@ function EditImage(props) {
               <label htmlFor={`h${props.id}`}>Wyróżnione?</label>
               <input
                 id={`h-${props.id}`}
-                defaultValue={imageData.isHighlighted}
+                defaultChecked={imageData.isHighlighted}
                 className={styles.checkboxInput}
                 type="checkbox"
                 onChange={highlightChangeHandler}

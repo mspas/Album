@@ -251,6 +251,33 @@ app.get("/api/get-all-images", (req, res) => {
     });
 });
 
+app.get("/api/get-welcome-article", (req, res) => {
+  mongoClient
+    .db("albumParadyz")
+    .collection("articles")
+    .findOne({ type: "welcome" }, (err, result) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.send(JSON.stringify(result));
+      }
+    });
+});
+
+app.get("/api/get-highlighted-images", (req, res) => {
+  mongoClient
+    .db("albumParadyz")
+    .collection("images")
+    .find({ isHighlighted: true })
+    .toArray((err, result) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.send(JSON.stringify(result));
+      }
+    });
+});
+
 app.post("/api/upload-images", authenticate, async (req, res) => {
   let successCheck = [];
 

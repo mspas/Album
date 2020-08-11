@@ -1,0 +1,61 @@
+@import '../../../_variables'
+@import '../../../_mixins'
+@import '../../../_animations'
+
+$width: 350px
+$height: 450px
+$size: 200px
+
+.imagesContainer
+    position: relative
+    width: 100%
+    height: 100%
+    .spinner
+        position: absolute
+        top: 0
+        left: 49%
+    .content
+        .welcomeText
+            padding: 15px 50px !important
+            text-align: justify
+            border: solid 3px #ffffff10
+            @include default-box()
+            @media screen and ( max-width: 500px )
+                text-align: left
+                padding: 15px 25px !important
+            .subtitle
+                font-family: CountrysideTwo, Arial, serif
+                font-size: 35px
+                margin-right: 15px
+                vertical-align: bottom
+            .bodyText
+                line-height: 2em
+            .sign
+                font-family: CountrysideTwo, Arial, serif
+                text-align: right
+            .origin
+                text-align: right
+        .list
+            margin-top: 50px
+            display: flex
+            flex-wrap: wrap
+            padding: 0
+            .imageBox
+                flex: 1
+                box-sizing: border-box
+                position: relative
+                display: inline-block
+                margin: 50px 10px
+                img 
+                    display: block
+                    margin: 0 auto
+                    height: $height
+                    width: $width
+                    object-fit: cover
+                    cursor: pointer
+                    border-radius: 5px
+                    border: solid 3px white
+                    transition: 0.3s
+                &:last-child
+                    flex: 1
+
