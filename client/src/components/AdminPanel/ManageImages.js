@@ -7,6 +7,7 @@ import ImageList from "./ImageList";
 import EditImage from "./EditImage";
 import AuthService from "../../services/auth.service";
 import ChangeAdminDetails from "./ChangeAdminDetails";
+import EditWelcomeText from "./EditWelcomeText";
 
 function ManageImages(props) {
   const [editShow, setEditShow] = useState(false);
@@ -25,11 +26,24 @@ function ManageImages(props) {
     alertType: true,
     alertText: "",
   });
+  const [welcomeArticle, setWelcomeArticle] = useState({
+    _id: "",
+  });
+  const [changeWelcomeTextShow, setChangeWelcomeTextShow] = useState(false);
 
   const _auth = new AuthService();
 
   useEffect(() => {
     const _auth = new AuthService();
+
+    _auth
+      .fetch("/api/get-welcome-article", {
+        method: "GET",
+      })
+      .then((json) => {
+        setWelcomeArticle(json);
+      });
+
     setEmail(_auth.getEmail(_auth.getToken()));
     let array = [];
     for (let i = 0; i < props.images.length; i++) {
@@ -131,9 +145,20 @@ function ManageImages(props) {
         onClick={() => {
           setListShow(false);
           setChangeAdminShow(true);
+          setChangeWelcomeTextShow(false);
         }}
       >
         Zmień dane admina
+      </button>
+      <button
+        className={`${styles.btnEmail} button`}
+        onClick={() => {
+          setListShow(false);
+          setChangeAdminShow(false);
+          setChangeWelcomeTextShow(true);
+        }}
+      >
+        Zmień wstępny tekst
       </button>
       <button
         className="button"
@@ -183,6 +208,9 @@ function ManageImages(props) {
         />
       )}
       {changeAdminShow && <ChangeAdminDetails email={email} onBack={onBack} />}
+      {changeWelcomeTextShow && (
+        <EditWelcomeText welcomeArticle={welcomeArticle} onBack={onBack} />
+      )}
       <ImageModal
         show={modalShow}
         onHide={() => {

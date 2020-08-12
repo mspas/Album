@@ -39,7 +39,6 @@ function ChangeAdminDetails(props) {
       })
       .then((json) => {
         setIsLoading(false);
-        console.log(json);
         setError({
           alertType: json.result.success,
           alertText: json.result.errorInfo,

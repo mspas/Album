@@ -264,6 +264,44 @@ app.get("/api/get-welcome-article", (req, res) => {
     });
 });
 
+app.patch("/api/edit-welcome-article", authenticate, (req, res) => {
+  let errorInfo = "Tekst zmodyfikowany poprawnie!";
+  let objectId = null;
+
+  try {
+    objectId = new ObjectId(req.body._id);
+  } catch (error) {
+    console.log(error);
+    res.send({
+      result: false,
+      errorInfo:
+        "Nie znaleziono artykułu! Niepoprawny format identyfikatora ID",
+    });
+  }
+
+  if (objectId) {
+    mongoClient
+      .db("albumParadyz")
+      .collection("articles")
+      .updateOne(
+        {
+          type: "welcome",
+        },
+        {
+          $set: {
+            text: req.body.text,
+            sign: req.body.sign,
+            origin: req.body.origin,
+          },
+        },
+        (err, result) => {
+          if (err) errorInfo = err;
+          res.send({ result: true, errorInfo: errorInfo });
+        }
+      );
+  }
+});
+
 app.get("/api/get-highlighted-images", (req, res) => {
   mongoClient
     .db("albumParadyz")
