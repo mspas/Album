@@ -5,6 +5,7 @@ import stylesHeader from "../Header.module.sass";
 import AuthService from "../../services/auth.service";
 import Header from "../Header";
 import HighlightedImagesList from "./HighlightedImagesList";
+import ImageSlider from "./ImageSlider";
 
 function Home() {
   const [images, setImages] = useState([]);
@@ -12,10 +13,15 @@ function Home() {
     _id: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [subtitle, setSubtitle] = useState("");
+  const [bodyText, setBodyText] = useState("");
+  const [modalShow, setModalShow] = useState(false);
+  const [headerShow, setHeaderShow] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const headerRef = useRef(null);
 
   useEffect(() => {
     fetchData();
-
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -33,8 +39,9 @@ function Home() {
         method: "GET",
       })
       .then((json) => {
-        console.log(json);
         setWelcomeArticle(json);
+        setSubtitle(json.text.substr(0, json.text.indexOf(" ")));
+        setBodyText(json.text.substr(json.text.indexOf(" ") + 1));
       });
 
     _auth
@@ -58,12 +65,20 @@ function Home() {
     }
   };
 
+  const handleImageClick = (index) => {
+    setActiveIndex(index);
+    setModalShow(true);
+    setHeaderShow(false);
+    headerRef.current.style.zIndex = 0;
+    headerRef.current.style.visibility = "hidden";
+  };
+
   return (
     <div className={styles.homePage}>
-      <Header showBtns={false} showLogo={true} />
+      <Header showBtns={false} showLogo={true} show={headerShow} />
       <span className={styles.cityTitle}>Paradyż</span>
       <div className={styles.welcomePanel} ref={containerRef}>
-        <div className={styles.headerContent}>
+        <div className={styles.welcomeContent}>
           <p className={styles.subtitle}>
             <span>Miejsca</span>
             <span>Ludzie</span>
@@ -71,7 +86,7 @@ function Home() {
           </p>
         </div>
       </div>
-      <header className={styles.header}>
+      <header ref={headerRef} className={styles.header}>
         <ul>
           <li>
             <NavLink className={stylesHeader.link} to="/album">
@@ -85,13 +100,34 @@ function Home() {
           </li>
         </ul>
       </header>
+      <article className={styles.welcomeText}>
+        <p>
+          <span className={styles.subtitle}>{subtitle}</span>
+          <span className={styles.bodyText}>{bodyText}</span>
+        </p>
+        <p className={styles.sign}>{welcomeArticle.sign}</p>
+        <p className={styles.origin}>{welcomeArticle.origin}</p>
+      </article>
       <div className={styles.content}>
         <HighlightedImagesList
           isLoading={isLoading}
           welcomeArticle={welcomeArticle}
           images={images}
+          onImageClick={handleImageClick}
         />
       </div>
+      <ImageSlider
+        show={modalShow}
+        onHide={() => {
+          setModalShow(false);
+          setHeaderShow(true);
+          setActiveIndex(-1);
+          headerRef.current.style.zIndex = 3;
+          headerRef.current.style.visibility = "visible";
+        }}
+        images={images}
+        activeIndex={activeIndex}
+      />
     </div>
   );
 }

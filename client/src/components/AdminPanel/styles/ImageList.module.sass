@@ -8,31 +8,20 @@ $size: 200px
     position: relative
     z-index: 0
     margin: 20px 0
-    padding: 20px 0
+    padding: 20px
     background: #ffffff0a
     border-radius: 10px
     .imagesWrap
-        margin: 20px auto
-        width: 85%
-        @media screen and ( max-width: 1850px )
-            width: 100%
-        @media screen and ( max-width: 1630px )
-            width: 90%
-        @media screen and ( max-width: 1450px )
-            width: 95%
-        @media screen and ( max-width: 1310px )
-            width: 80%
-        @media screen and ( max-width: 1240px )
-            width: 90%
+        display: flex
+        flex-flow: wrap
         .imageBox
+            flex: 1
+            box-sizing: border-box
             position: relative
             display: inline-block
+            flex-basis: $size
             height: $size
-            width: $size
             margin: 10px
-            @media screen and ( max-width: 410px )
-                width: 90%
-                height: auto
             &:hover
                 img 
                     border: 5px solid $darkBlue
@@ -43,7 +32,7 @@ $size: 200px
                 width: 100%
                 object-fit: cover
                 cursor: pointer
-                border-radius: 5px
+                border-radius: 2px
                 transition: 0.3s
             .iconsBox
                 visibility: hidden

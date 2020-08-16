@@ -1,0 +1,95 @@
+@import '../../../_variables'
+@import '../../../_mixins'
+
+.modal
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    .overlay
+        position: fixed
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        background-color: #0000008f
+        z-index: 0
+    .content
+        position: relative
+        max-height: 95vh
+        margin: 0 auto
+        background-color: $lighterBlue
+        color: $lighterBlue
+        z-index: 2
+        border-radius: 5px
+        @include gradient-bg($color1: #1c1e29, $color2: $primary, $color3: $darkBlue)
+        .heading
+            position: relative
+            top: 0
+            right: 0
+            width: 100%
+            padding: 10px
+            box-shadow: 0 10px 45px -8px #24222259
+            background: #22232c
+            .btnClose
+                display: block
+                margin-left: auto
+                margin-bottom: 0
+                padding: 2px 5px 0px 5px
+                font-size: 16px
+                background-color: #ffffff0a
+                border-radius: 3px
+                border: 1px solid white
+                color: white
+                transition: 0.3s
+                cursor: pointer
+                &:hover
+                    color: #ffffff59
+                    border: 1px solid #ffffff59
+        .body
+            ::-webkit-scrollbar
+                width: 8px
+            ::-webkit-scrollbar-thumb
+                background: #2e2e2e
+            .sliderBox
+                display: flex
+                flex-flow: wrap
+                height: 90vh
+                width: 70vw
+                overflow-y: auto
+                .imgWrap
+                    flex: 1
+                    box-sizing: border-box
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                    max-height: calc( 100% - 40px )
+                    padding-top: 20px
+                    img
+                        max-height: 100%
+                        width: auto
+                        border-radius: 5px
+                .descriptionWrap 
+                    flex: 2
+                    box-sizing: border-box
+                    display: flex
+                    align-items: center
+                    justify-content: center
+                    max-height: calc( 100% - 40px )
+                    min-width: 30%
+                    p
+                        text-align: justify
+                        margin: 20px 40px 
+                        padding: 40px 60px !important
+                        @include default-box()
+            .btn
+                position: absolute
+                top: 45%
+                padding: 6px
+                font-size: 2em
+                &:first-child
+                    left: -60px
+                &:last-child
+                    right: -60px
+
