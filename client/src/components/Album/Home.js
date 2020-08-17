@@ -17,7 +17,7 @@ function Home() {
   const [bodyText, setBodyText] = useState("");
   const [modalShow, setModalShow] = useState(false);
   const [headerShow, setHeaderShow] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const [activeIndex, setActiveIndex] = useState(1);
   const headerRef = useRef(null);
 
   useEffect(() => {
@@ -121,7 +121,7 @@ function Home() {
         onHide={() => {
           setModalShow(false);
           setHeaderShow(true);
-          setActiveIndex(-1);
+          setActiveIndex(1);
           headerRef.current.style.zIndex = 3;
           headerRef.current.style.visibility = "visible";
         }}
