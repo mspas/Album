@@ -17,6 +17,19 @@ const ImageSlider = (props) => {
     if (props.activeIndex > -1) setActiveIndex(props.activeIndex);
   }, [props.activeIndex]);
 
+  const moveSlide = (direction) => {
+    let value = 100 * direction;
+    sliderRef.current.style.transitionDuration = "1s";
+    sliderRef.current.style.transform = `translate( ${value}vw,0)`;
+    setBtnsDisabled(true);
+  };
+
+  const setStartingPos = () => {
+    sliderRef.current.style.transitionDuration = "0s";
+    sliderRef.current.style.transform = "translate(0,0)";
+    setBtnsDisabled(false);
+  };
+
   return (
     <div>
       {props.show && (
@@ -31,19 +44,18 @@ const ImageSlider = (props) => {
             </button>
           </div>
           <button
-            className={`${styles.btn} button`}
+            className={
+              activeIndex > 0
+                ? `${styles.btn} button`
+                : `${styles.btn} ${styles.btnDisabled} button`
+            }
             disabled={btnsDisabled}
             onClick={() => {
-              if (activeIndex < props.images.length - 1) {
-                sliderRef.current.style.transitionDuration = "1s";
-                sliderRef.current.style.transform = "translate(100vw,0)";
-                setBtnsDisabled(true);
-
+              if (activeIndex > 0) {
+                moveSlide(1);
                 setTimeout(() => {
                   setActiveIndex(activeIndex - 1);
-                  sliderRef.current.style.transitionDuration = "0s";
-                  sliderRef.current.style.transform = "translate(0,0)";
-                  setBtnsDisabled(false);
+                  setStartingPos();
                 }, 1000);
               }
             }}
@@ -51,45 +63,46 @@ const ImageSlider = (props) => {
             <FontAwesomeIcon className={styles.abc} icon={faChevronLeft} />
           </button>
           <button
-            className={`${styles.btn} button`}
+            className={
+              activeIndex < props.images.length - 1
+                ? `${styles.btn} button`
+                : `${styles.btn} ${styles.btnDisabled} button`
+            }
             disabled={btnsDisabled}
             onClick={() => {
               if (activeIndex < props.images.length - 1) {
-                sliderRef.current.style.transitionDuration = "1s";
-                sliderRef.current.style.transform = "translate(-100vw,0)";
-                setBtnsDisabled(true);
-
+                moveSlide(-1);
                 setTimeout(() => {
                   setActiveIndex(activeIndex + 1);
-                  sliderRef.current.style.transitionDuration = "0s";
-                  sliderRef.current.style.transform = "translate(0,0)";
-                  setBtnsDisabled(false);
+                  setStartingPos();
                 }, 1000);
               }
             }}
           >
             <FontAwesomeIcon className={styles.abc} icon={faChevronRight} />
           </button>
-          <div className={styles.slider} ref={sliderRef}>
-            <div className={styles.content}>
-              <div className={styles.slide}>
-                <Slide
-                  image={props.images[activeIndex - 1]}
-                  i={activeIndex - 1}
-                />
+          <div className={styles.sliderWrap}>
+            <div className={styles.slider} ref={sliderRef}>
+              <div className={styles.content}>
+                <div className={styles.slide}>
+                  <Slide
+                    image={props.images[activeIndex - 1]}
+                    i={activeIndex - 1}
+                  />
+                </div>
               </div>
-            </div>
-            <div className={styles.content}>
-              <div className={styles.slide}>
-                <Slide image={props.images[activeIndex]} i={activeIndex} />
+              <div className={styles.content}>
+                <div className={styles.slide}>
+                  <Slide image={props.images[activeIndex]} i={activeIndex} />
+                </div>
               </div>
-            </div>
-            <div className={styles.content}>
-              <div className={styles.slide}>
-                <Slide
-                  image={props.images[activeIndex + 1]}
-                  i={activeIndex + 1}
-                />
+              <div className={styles.content}>
+                <div className={styles.slide}>
+                  <Slide
+                    image={props.images[activeIndex + 1]}
+                    i={activeIndex + 1}
+                  />
+                </div>
               </div>
             </div>
           </div>

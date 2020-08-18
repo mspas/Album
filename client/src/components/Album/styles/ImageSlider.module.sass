@@ -1,5 +1,6 @@
 @import '../../../_variables'
 @import '../../../_mixins'
+@import '../../../_animations'
 
 .modal
     position: fixed
@@ -27,13 +28,20 @@
             left: 50px
         &:last-of-type
             right: 50px
+    .btnDisabled
+        color: #ffffff59
+        border-color: #ffffff59
+        cursor: default
+        &:hover
+            color: #ffffff59
+            border-color: #ffffff59
+            background: transparent
     .header
         position: absolute
         top: 0
         right: 50px
         width: 100%
         padding: 10px
-        box-shadow: 0 10px 45px -8px #24222259
         .btnClose
             display: block
             margin-left: auto
@@ -49,29 +57,31 @@
             &:hover
                 color: #ffffff59
                 border: 1px solid #ffffff59
-    .slider
-        position: relative
-        height: 95vh
-        width: 70vw
-        margin: 0 auto
-        transition: all 1s ease-in-out
-        .content
-            position: absolute
-            top: 0
-            color: $lighterBlue
-            z-index: 2
-            border-radius: 5px
-            @include gradient-bg($color1: #1c1e29, $color2: $primary, $color3: $darkBlue)
-            &:first-of-type
-                left: -100vw
-            &:last-of-type
-                right: -100vw
+    .sliderWrap
+        animation: scaleFadeIn 0.5s ease-in-out forwards
+        .slider
+            position: relative
+            height: 95vh
+            width: 70vw
+            margin: 0 auto
+            transition: all 1s ease-in-out
+            .content
+                position: absolute
+                top: 0
+                color: $lighterBlue
+                z-index: 2
+                border-radius: 5px
+                @include gradient-bg($color1: #2b2d3a, $color2: #15161f, $color3: $darkBlue )
+                &:first-of-type
+                    left: -100vw
+                &:last-of-type
+                    right: -100vw
 
-        ::-webkit-scrollbar
-            width: 8px
-            height: 8px
-        ::-webkit-scrollbar-thumb
-            background: #2e2e2e
+            ::-webkit-scrollbar
+                width: 8px
+                height: 8px
+            ::-webkit-scrollbar-thumb
+                background: #2e2e2e
 
 
 .animationSlideLeft

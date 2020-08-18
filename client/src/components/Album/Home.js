@@ -76,7 +76,6 @@ function Home() {
   return (
     <div className={styles.homePage}>
       <Header showBtns={false} showLogo={true} show={headerShow} />
-      <span className={styles.cityTitle}>Paradyż</span>
       <div className={styles.welcomePanel} ref={containerRef}>
         <div className={styles.welcomeContent}>
           <p className={styles.subtitle}>
@@ -87,6 +86,7 @@ function Home() {
         </div>
       </div>
       <header ref={headerRef} className={styles.header}>
+        <span className={styles.cityTitle}>Paradyż</span>
         <ul>
           <li>
             <NavLink className={stylesHeader.link} to="/album">
