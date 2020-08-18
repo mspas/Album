@@ -14,15 +14,15 @@ function HighlightedImagesList(props) {
           <ul className={styles.list}>
             {props.images.map((image, index) => {
               return (
-                <li
-                  key={index}
-                  className={styles.imageBox}
-                  onClick={() => {
-                    props.onImageClick(index);
-                  }}
-                >
+                <li key={index} className={styles.imageBox}>
                   <div className={styles.imageWrap}>
-                    <img src={image.url} alt={image.public_id} />
+                    <img
+                      src={image.url}
+                      alt={image.public_id}
+                      onClick={() => {
+                        props.handleImageClick(index);
+                      }}
+                    />
                   </div>
                 </li>
               );

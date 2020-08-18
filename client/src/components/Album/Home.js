@@ -6,7 +6,7 @@ import stylesHeader from "../Header.module.sass";
 import AuthService from "../../services/auth.service";
 import HighlightedImagesList from "./HighlightedImagesList";
 import ImageSlider from "./ImageSlider";
-import { hideHeader } from "../../actions";
+import { hideHeader, showHeader, hideLogo, showLogo } from "../../actions";
 
 function Home() {
   const dispatch = useDispatch();
@@ -19,7 +19,6 @@ function Home() {
   const [subtitle, setSubtitle] = useState("");
   const [bodyText, setBodyText] = useState("");
   const [modalShow, setModalShow] = useState(false);
-  const [headerShow, setHeaderShow] = useState(true);
   const [activeIndex, setActiveIndex] = useState(1);
   const headerRef = useRef(null);
 
@@ -69,14 +68,6 @@ function Home() {
     }
   };
 
-  const handleImageClick = (index) => {
-    setActiveIndex(index);
-    setModalShow(true);
-    setHeaderShow(false);
-    headerRef.current.style.zIndex = 0;
-    headerRef.current.style.visibility = "hidden";
-  };
-
   return (
     <div className={styles.homePage}>
       <div className={styles.welcomePanel} ref={containerRef}>
@@ -116,16 +107,22 @@ function Home() {
           isLoading={isLoading}
           welcomeArticle={welcomeArticle}
           images={images}
-          onImageClick={handleImageClick}
+          handleImageClick={(index) => {
+            setActiveIndex(index);
+            setModalShow(true);
+            dispatch(hideLogo());
+            headerRef.current.style.zIndex = 0;
+            headerRef.current.style.visibility = "hidden";
+          }}
         />
       </div>
       <ImageSlider
         show={modalShow}
         onHide={() => {
           setModalShow(false);
-          setHeaderShow(true);
           setActiveIndex(1);
-          headerRef.current.style.zIndex = 3;
+          dispatch(showLogo());
+          headerRef.current.style.zIndex = 2;
           headerRef.current.style.visibility = "visible";
         }}
         images={images}

@@ -6,6 +6,10 @@
     visibility: hidden
 .transparentBg
     background: transparent
+    width: calc( 35% - 40px ) !important
+    height: 60px
+.hideBehind
+    z-index: 0 !important
 header
     background-image: linear-gradient(to right, transparent 0%, #101118f6 14%)
     ul
@@ -33,7 +37,7 @@ header
                     height: calc( 100% + 5px )
                     width: 100px
                     background: $primary
-                    transition: 0.3s ease-in-out
+                    transition: 0.3s ease-out
                 &:hover::before
                     width: 0px
                 &::after
@@ -44,7 +48,7 @@ header
                     height: calc( 100% + 5px )
                     width: 100px
                     background: $primary
-                    transition: 0.3s ease-in-out
+                    transition: 0.3s ease-out
                 &:hover::after
                     width: 0px
                         

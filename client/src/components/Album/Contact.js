@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import "./styles/Contact.module.sass";
-import { showHeader } from "../../actions";
+import { showHeader, showLogo } from "../../actions";
 
 function Contact() {
   const dispatch = useDispatch();
@@ -9,6 +9,7 @@ function Contact() {
 
   useEffect(() => {
     dispatch(showHeader());
+    dispatch(showLogo());
   }, []);
 
   const imageSelectedHandler = async (event) => {

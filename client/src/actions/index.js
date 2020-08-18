@@ -9,3 +9,15 @@ export const hideHeader = () => {
     type: "HIDE_HEADER",
   };
 };
+
+export const showLogo = () => {
+  return {
+    type: "SHOW_LOGO",
+  };
+};
+
+export const hideLogo = () => {
+  return {
+    type: "HIDE_LOGO",
+  };
+};

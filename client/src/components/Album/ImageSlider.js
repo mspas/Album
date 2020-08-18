@@ -83,7 +83,7 @@ const ImageSlider = (props) => {
           </button>
           <div className={styles.sliderWrap}>
             <div className={styles.slider} ref={sliderRef}>
-              <div className={styles.content}>
+              <div className={styles.sliderSection}>
                 <div className={styles.slide}>
                   <Slide
                     image={props.images[activeIndex - 1]}
@@ -91,12 +91,12 @@ const ImageSlider = (props) => {
                   />
                 </div>
               </div>
-              <div className={styles.content}>
+              <div className={styles.sliderSection}>
                 <div className={styles.slide}>
                   <Slide image={props.images[activeIndex]} i={activeIndex} />
                 </div>
               </div>
-              <div className={styles.content}>
+              <div className={styles.sliderSection}>
                 <div className={styles.slide}>
                   <Slide
                     image={props.images[activeIndex + 1]}
