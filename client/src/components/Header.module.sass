@@ -4,45 +4,49 @@
     visibility: visible
 .hidden
     visibility: hidden
-ul
-    margin: auto 0
-    margin-left: auto
-    list-style: none
-    li
-        display: inline
-        text-transform: uppercase
-        .link
-            position: relative
-            margin: 0 20px
-            padding: 5px
-            text-decoration: none
-            border-bottom: solid 2px white
-            span
+.transparentBg
+    background: transparent
+header
+    background-image: linear-gradient(to right, transparent 0%, #101118f6 14%)
+    ul
+        margin: auto 0
+        margin-left: auto
+        list-style: none
+        li
+            display: inline
+            text-transform: uppercase
+            .link
                 position: relative
-                z-index: 2
-                color: white
-            &::before
-                content: ''
-                position: absolute
-                top: 0
-                left: 0
-                height: calc( 100% + 5px )
-                width: 100px
-                background: $primary
-                transition: 0.3s ease-in-out
-            &:hover::before
-                width: 0px
-            &::after
-                content: ''
-                position: absolute
-                top: 0
-                right: 0
-                height: calc( 100% + 5px )
-                width: 100px
-                background: $primary
-                transition: 0.3s ease-in-out
-            &:hover::after
-                width: 0px
-                    
+                margin: 0 20px
+                padding: 5px
+                text-decoration: none
+                border-bottom: solid 2px white
+                span
+                    position: relative
+                    z-index: 2
+                    color: white
+                &::before
+                    content: ''
+                    position: absolute
+                    top: 0
+                    left: 0
+                    height: calc( 100% + 5px )
+                    width: 100px
+                    background: $primary
+                    transition: 0.3s ease-in-out
+                &:hover::before
+                    width: 0px
+                &::after
+                    content: ''
+                    position: absolute
+                    top: 0
+                    right: 0
+                    height: calc( 100% + 5px )
+                    width: 100px
+                    background: $primary
+                    transition: 0.3s ease-in-out
+                &:hover::after
+                    width: 0px
+                        
 
-                    
+                        

@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import "./styles/Contact.module.sass";
-import Header from "../Header";
+import { showHeader } from "../../actions";
 
 function Contact() {
+  const dispatch = useDispatch();
   const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    dispatch(showHeader());
+  }, []);
 
   const imageSelectedHandler = async (event) => {
     let temp = images;
@@ -51,7 +57,6 @@ function Contact() {
 
   return (
     <div>
-      <Header showBtns={true} showLogo={true} />
       siema Contact
       <input type="file" onChange={imageSelectedHandler} />
       <input type="file" onChange={imageSelectedHandler} />

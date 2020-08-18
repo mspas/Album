@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styles from "./styles/Album.module.sass";
-import Header from "../Header";
+import { showHeader } from "../../actions";
 
 function Album() {
-  return (
-    <div className={styles.welcomeWrap}>
-      <Header showBtns={true} showLogo={true} />
-      siema
-    </div>
-  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(showHeader());
+  }, []);
+
+  return <div className={styles.welcomeWrap}>siema</div>;
 }
 
 export default Album;

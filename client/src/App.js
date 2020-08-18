@@ -6,12 +6,14 @@ import Home from "./components/Album/Home";
 import Album from "./components/Album/Album";
 import Contact from "./components/Album/Contact";
 import SignIn from "./components/AdminPanel/SignIn";
+import Header from "./components/Header";
 
 function App() {
   return (
     <div className="App">
       <main>
         <BrowserRouter basename={process.env.PUBLIC_URL}>
+          <Header />
           <Switch>
             <Route path="/home" component={Home} />
             <Route path="/album" component={Album} />

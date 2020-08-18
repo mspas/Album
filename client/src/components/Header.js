@@ -1,36 +1,33 @@
 import React from "react";
-import { NavLink, withRouter } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styles from "./Header.module.sass";
 import logo from "../assets/logo.png";
+import { useSelector } from "react-redux";
 
 const Header = (props) => {
+  const showHeader = useSelector((state) => state.showHeader);
+
   return (
-    <div>
-      {props.show && (
-        <header className="header">
-          <NavLink to="/home">
-            <img
-              src={logo}
-              alt="Logo"
-              className={props.showLogo ? styles.visible : styles.hidden}
-            />
+    <header
+      className={showHeader ? "header" : `header ${styles.transparentBg}`}
+    >
+      <NavLink to="/home">
+        <img src={logo} alt="Logo" />
+      </NavLink>
+      <ul className={showHeader ? styles.visible : styles.hidden}>
+        <li>
+          <NavLink className={showHeader ? styles.link : ""} to="/album">
+            <span>Przglądaj album</span>
           </NavLink>
-          <ul className={props.showBtns ? styles.visible : styles.hidden}>
-            <li>
-              <NavLink className={styles.link} to="/album">
-                <span>Przglądaj album</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className={styles.link} to="/kontakt">
-                <span>Prześlij zdjęcia</span>
-              </NavLink>
-            </li>
-          </ul>
-        </header>
-      )}
-    </div>
+        </li>
+        <li>
+          <NavLink className={showHeader ? styles.link : ""} to="/kontakt">
+            <span>Prześlij zdjęcia</span>
+          </NavLink>
+        </li>
+      </ul>
+    </header>
   );
 };
 
-export default withRouter(Header);
+export default Header;

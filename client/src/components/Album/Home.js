@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styles from "./styles/Home.module.sass";
 import stylesHeader from "../Header.module.sass";
 import AuthService from "../../services/auth.service";
-import Header from "../Header";
 import HighlightedImagesList from "./HighlightedImagesList";
 import ImageSlider from "./ImageSlider";
+import { hideHeader } from "../../actions";
 
 function Home() {
+  const dispatch = useDispatch();
+
   const [images, setImages] = useState([]);
   const [welcomeArticle, setWelcomeArticle] = useState({
     _id: "",
@@ -22,6 +25,7 @@ function Home() {
 
   useEffect(() => {
     fetchData();
+    dispatch(hideHeader());
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -75,7 +79,6 @@ function Home() {
 
   return (
     <div className={styles.homePage}>
-      <Header showBtns={false} showLogo={true} show={headerShow} />
       <div className={styles.welcomePanel} ref={containerRef}>
         <div className={styles.welcomeContent}>
           <p className={styles.subtitle}>
