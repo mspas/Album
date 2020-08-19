@@ -13,7 +13,7 @@ function App() {
     <div className="App">
       <main>
         <BrowserRouter basename={process.env.PUBLIC_URL}>
-          <Header />
+          <Header sticky={false} />
           <Switch>
             <Route path="/home" component={Home} />
             <Route path="/album" component={Album} />

@@ -1,21 +1,40 @@
 @import '../_variables'
-    
-.visible
-    visibility: visible
-.hidden
-    visibility: hidden
-.transparentBg
-    background: transparent
-    width: calc( 35% - 40px ) !important
-    height: 60px
-.hideBehind
-    z-index: 0 !important
+@import '../_animations'
+
+.headerSticky
+    position: sticky
+    padding: 25px 10%
+    z-index: 2
+.header
+    position: fixed
+    padding: 20px 10%
+    z-index: 3
 header
+    position: relative
+    display: flex
+    flex-flow: row wrap
+    top: 0
+    width: 100%
     background-image: linear-gradient(to right, transparent 0%, #101118f6 14%)
-    ul
+    @media screen and ( max-width: 455px )
+        background: #101118f6
+    img
+        height: 40px
+    .cityTitle
+        position: absolute
+        top: 28px
+        left: calc( 10% + 50px )
+        font-family: CountrysideTwo, Arial, serif
+        font-size: 20px
+        user-select: none
+        @media screen and ( max-width: 455px )
+            display: none
+    .menu
         margin: auto 0
         margin-left: auto
         list-style: none
+        @media screen and ( max-width: 745px )
+            display: none            
         li
             display: inline
             text-transform: uppercase
@@ -51,6 +70,45 @@ header
                     transition: 0.3s ease-out
                 &:hover::after
                     width: 0px
-                        
-
-                        
+    .mobileNavBtn
+        margin: auto 0
+        margin-left: auto
+        padding: 6px 20px
+        @media screen and ( min-width: 745px )
+            display: none
+    .mobileNav
+        position: absolute
+        list-style: none
+        bottom: -40px
+        right: 0
+        width: 100%
+        height: 78px
+        background: #101118f6
+        animation: slideInDown 0.5s ease-out forwards
+        box-shadow: 0 9px 14px -4px #00000075
+        ul
+            position: absolute
+            right: 10%
+            bottom: 0
+            li
+                display: block
+                text-transform: uppercase
+                margin-top: 10px
+                .mobileLink
+                    position: relative
+                    padding: 5px
+                    text-decoration: none
+                    span
+                        position: relative
+                        z-index: 2
+                        color: white
+.visible
+    visibility: visible
+.hidden
+    visibility: hidden
+.transparentBg
+    background: transparent !important
+    width: calc( 35% - 40px ) !important
+    height: 60px !important
+.hideBehind
+    z-index: 0 !important

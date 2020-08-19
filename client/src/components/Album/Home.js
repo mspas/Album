@@ -6,7 +6,8 @@ import stylesHeader from "../Header.module.sass";
 import AuthService from "../../services/auth.service";
 import HighlightedImagesList from "./HighlightedImagesList";
 import ImageSlider from "./ImageSlider";
-import { hideHeader, showHeader, hideLogo, showLogo } from "../../actions";
+import { hideHeader, hideLogo, showLogo } from "../../actions";
+import Header from "../Header";
 
 function Home() {
   const dispatch = useDispatch();
@@ -79,21 +80,7 @@ function Home() {
           </p>
         </div>
       </div>
-      <header ref={headerRef} className={styles.header}>
-        <span className={styles.cityTitle}>Paradyż</span>
-        <ul>
-          <li>
-            <NavLink className={stylesHeader.link} to="/album">
-              <span>Przglądaj album</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className={stylesHeader.link} to="/kontakt">
-              <span>Prześlij zdjęcia</span>
-            </NavLink>
-          </li>
-        </ul>
-      </header>
+      <Header sticky={true} />
       <article className={styles.welcomeText}>
         <p>
           <span className={styles.subtitle}>{subtitle}</span>
@@ -111,8 +98,8 @@ function Home() {
             setActiveIndex(index);
             setModalShow(true);
             dispatch(hideLogo());
-            headerRef.current.style.zIndex = 0;
-            headerRef.current.style.visibility = "hidden";
+            //headerRef.current.style.zIndex = 0;
+            //headerRef.current.style.visibility = "hidden";
           }}
         />
       </div>
@@ -122,8 +109,8 @@ function Home() {
           setModalShow(false);
           setActiveIndex(1);
           dispatch(showLogo());
-          headerRef.current.style.zIndex = 2;
-          headerRef.current.style.visibility = "visible";
+          //headerRef.current.style.zIndex = 2;
+          //headerRef.current.style.visibility = "visible";
         }}
         images={images}
         activeIndex={activeIndex}
