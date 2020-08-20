@@ -5,10 +5,13 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styles from "./styles/UploadImages.module.sass";
 import NewImage from "../NewImage";
 import AuthService from "../../services/auth.service";
+import ImageSlider from "../Album/ImageSlider";
 
 function UploadImages(props) {
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSlider, setShowSlider] = useState(false);
+  const [sliderImages, setSliderImages] = useState({});
   const _auth = new AuthService();
 
   const imageSelectedHandler = async (event) => {
@@ -136,6 +139,23 @@ function UploadImages(props) {
     return temp;
   };
 
+  const handleShow = (index) => {
+    let temp = [...images];
+    let image = { ...temp[index] };
+    let img = [
+      {
+        _id: 0,
+        public_id: 0,
+        url: image.imageData,
+        description: image.description,
+        year: image.year,
+      },
+    ];
+    setSliderImages(img);
+    setShowSlider(true);
+    props.hideLogout(true);
+  };
+
   return (
     <div className={styles.uploadImages}>
       <div className={styles.box}>
@@ -174,6 +194,7 @@ function UploadImages(props) {
             yearChangeHandler={yearChangeHandler}
             deleteImageHandler={deleteImageHandler}
             highlightChangeHandler={highlightChangeHandler}
+            handleShow={handleShow}
           />
         );
       })}
@@ -182,6 +203,16 @@ function UploadImages(props) {
         id={-1}
         imageSelectedHandler={imageSelectedHandler}
         nullifySelector={nullifySelector}
+        handleShow={handleShow}
+      />
+      <ImageSlider
+        show={showSlider}
+        onHide={() => {
+          setShowSlider(false);
+          props.hideLogout(false);
+        }}
+        images={sliderImages}
+        activeIndex={0}
       />
       <button className="button" onClick={imagesUploadHandler}>
         Wyślij

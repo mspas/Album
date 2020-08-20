@@ -6,8 +6,11 @@ import AuthService from "../../services/auth.service";
 import logo from "../../assets/logo-text.png";
 import UploadImages from "./UploadImages";
 import ManageImages from "./ManageImages";
+import { useDispatch } from "react-redux";
+import { hideHeader, hideLogo } from "../../actions";
 
 function AdminPanel(props) {
+  const dispatch = useDispatch();
   const [optionPanel, setOptionPanel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isHiddenBtn, setIsHiddenBtn] = useState(false);
@@ -15,6 +18,8 @@ function AdminPanel(props) {
 
   useEffect(() => {
     fetchData();
+    dispatch(hideHeader());
+    dispatch(hideLogo());
   }, []);
 
   const fetchData = () => {
@@ -80,7 +85,9 @@ function AdminPanel(props) {
           >
             Wyloguj
           </button>
-          {optionPanel && <UploadImages fetchData={fetchData} />}
+          {optionPanel && (
+            <UploadImages hideLogout={hideLogout} fetchData={fetchData} />
+          )}
           {!optionPanel && (
             <ManageImages
               isLoading={isLoading}

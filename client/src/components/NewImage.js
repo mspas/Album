@@ -1,5 +1,4 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -22,8 +21,8 @@ function NewImage(props) {
             </label>
           </div>
           <div className={`${styles.mediaBody}`}>
-            <Row className={`${styles.mediaBodyHeading} mt-0`}>
-              <Col>
+            <div className={`${styles.mediaBodyHeading} mt-0`}>
+              <div>
                 <input
                   className={styles.yearInput}
                   type="number"
@@ -32,8 +31,8 @@ function NewImage(props) {
                     props.yearChangeHandler(event, props.id);
                   }}
                 />
-              </Col>
-              <Col xs={6} className={`${styles.highlight} center`}>
+              </div>
+              <div className={`${styles.highlight} center`}>
                 <label htmlFor={`h${props.id}`}>Wyróżnione?</label>
                 <input
                   id={`h-${props.id}`}
@@ -43,8 +42,8 @@ function NewImage(props) {
                     props.highlightChangeHandler(event, props.id);
                   }}
                 />
-              </Col>
-              <Col className={styles.closeWrap}>
+              </div>
+              <div className={styles.closeWrap}>
                 <FontAwesomeIcon
                   className={`${styles.closeIcon} panel-icon`}
                   icon={faTimes}
@@ -52,8 +51,8 @@ function NewImage(props) {
                     props.deleteImageHandler(event, props.id);
                   }}
                 />
-              </Col>
-            </Row>
+              </div>
+            </div>
             <textarea
               className={styles.description}
               type="textarea"
@@ -63,6 +62,14 @@ function NewImage(props) {
                 props.descriptionChangeHandler(event, props.id);
               }}
             />
+            <button
+              className={`${styles.btnShow} button`}
+              onClick={() => {
+                props.handleShow(props.id);
+              }}
+            >
+              Podgląd przed dodaniem
+            </button>
             {props.alertText && (
               <div className={styles.mediaFooter}>
                 <p

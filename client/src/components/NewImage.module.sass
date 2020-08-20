@@ -27,7 +27,7 @@ $size: 200px
             width: $size
             object-fit: cover
             border-radius: 5px
-            @media screen and ( max-width: 343px )
+            @media screen and ( max-width: 455px )
                 height: 100%
                 width: 100%
         .imageOverview
@@ -48,8 +48,11 @@ $size: 200px
             width: 100%
             margin-top: 20px
         .mediaBodyHeading
+            display: flex
+            flex-flow: wrap
             margin-bottom: 10px
             .yearInput
+                flex: 1
                 width: 100%
                 min-width: 55px
                 outline: none
@@ -61,16 +64,17 @@ $size: 200px
                 font-size: 18px
                 height: 28px
             .highlight
+                flex: 2
                 text-align: center
                 font-family: Courier, monospace
                 label
                     margin-right: 7px
                     margin-bottom: 0
             .closeWrap
-                position: relative
+                flex: 1
                 .closeIcon
-                    position: absolute
-                    right: 20px
+                    display: block
+                    margin-left: auto
                     font-size: 22px
                     transition: 0.1s
                     cursor: pointer
@@ -88,6 +92,9 @@ $size: 200px
             padding: 20px
             border-radius: 7px
             @include color-opacity-bg(white, 0.2)
+        .btnShow
+            display: block
+            margin: 10px 0 0 auto
     .spinner
         position: absolute
         top: 0

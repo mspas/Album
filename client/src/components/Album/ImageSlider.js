@@ -15,7 +15,8 @@ const ImageSlider = (props) => {
 
   useEffect(() => {
     if (props.activeIndex > -1) setActiveIndex(props.activeIndex);
-  }, [props.activeIndex]);
+    console.log(props.images[0]);
+  }, [props.activeIndex, props.images]);
 
   const moveSlide = (direction) => {
     let value = 100 * direction;
@@ -28,6 +29,19 @@ const ImageSlider = (props) => {
     sliderRef.current.style.transitionDuration = "0s";
     sliderRef.current.style.transform = "translate(0,0)";
     setBtnsDisabled(false);
+  };
+
+  const handleArrowClick = (direction) => {
+    if (
+      (activeIndex < 1 && direction > 0) ||
+      (activeIndex > props.images.length - 2 && direction < 0)
+    )
+      return false;
+    moveSlide(direction);
+    setTimeout(() => {
+      setActiveIndex(activeIndex - 1 * direction);
+      setStartingPos();
+    }, 1000);
   };
 
   return (
@@ -51,13 +65,7 @@ const ImageSlider = (props) => {
             }
             disabled={btnsDisabled}
             onClick={() => {
-              if (activeIndex > 0) {
-                moveSlide(1);
-                setTimeout(() => {
-                  setActiveIndex(activeIndex - 1);
-                  setStartingPos();
-                }, 1000);
-              }
+              handleArrowClick(1);
             }}
           >
             <FontAwesomeIcon className={styles.abc} icon={faChevronLeft} />
@@ -70,13 +78,7 @@ const ImageSlider = (props) => {
             }
             disabled={btnsDisabled}
             onClick={() => {
-              if (activeIndex < props.images.length - 1) {
-                moveSlide(-1);
-                setTimeout(() => {
-                  setActiveIndex(activeIndex + 1);
-                  setStartingPos();
-                }, 1000);
-              }
+              handleArrowClick(-1);
             }}
           >
             <FontAwesomeIcon className={styles.abc} icon={faChevronRight} />
@@ -111,4 +113,10 @@ const ImageSlider = (props) => {
     </div>
   );
 };
+
+ImageSlider.defaultProps = {
+  images: [],
+  show: false,
+};
+
 export default ImageSlider;
