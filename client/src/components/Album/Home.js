@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
 import styles from "./styles/Home.module.sass";
-import stylesHeader from "../Header.module.sass";
 import AuthService from "../../services/auth.service";
 import HighlightedImagesList from "./HighlightedImagesList";
 import ImageSlider from "./ImageSlider";
@@ -21,7 +19,6 @@ function Home() {
   const [bodyText, setBodyText] = useState("");
   const [modalShow, setModalShow] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
-  const headerRef = useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -98,8 +95,6 @@ function Home() {
             setActiveIndex(index);
             setModalShow(true);
             dispatch(hideLogo());
-            //headerRef.current.style.zIndex = 0;
-            //headerRef.current.style.visibility = "hidden";
           }}
         />
       </div>
@@ -109,8 +104,6 @@ function Home() {
           setModalShow(false);
           setActiveIndex(1);
           dispatch(showLogo());
-          //headerRef.current.style.zIndex = 2;
-          //headerRef.current.style.visibility = "visible";
         }}
         images={images}
         activeIndex={activeIndex}

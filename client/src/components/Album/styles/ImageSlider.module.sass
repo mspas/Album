@@ -20,7 +20,7 @@
         z-index: 0
     .btn
         position: absolute
-        top: 45%
+        bottom: 45%
         padding: 6px
         font-size: 2.5em
         z-index: 3
@@ -28,6 +28,14 @@
             left: 50px
         &:last-of-type
             right: 50px
+        @media screen and ( max-width: 800px )
+            bottom: 15%
+            &:first-of-type
+                left: 10px
+            &:last-of-type
+                right: 20px
+        @media screen and ( max-width: 600px )
+            font-size: 1.5em
     .btnDisabled
         color: #ffffff59
         border-color: #ffffff59
@@ -42,6 +50,9 @@
         right: 50px
         width: 100%
         padding: 10px
+        @media screen and ( max-width: 800px )
+            top: 10px
+            z-index: 111
         .btnClose
             display: block
             margin-left: auto
@@ -65,6 +76,9 @@
             width: 70vw
             margin: 0 auto
             transition: all 1s ease-in-out
+            @media screen and ( max-width: 800px )
+                height: 100vh
+                width: 100vw
             .sliderSection
                 position: absolute
                 top: 0
@@ -73,7 +87,6 @@
                     left: -100vw
                 &:last-of-type
                     right: -100vw
-
             ::-webkit-scrollbar
                 width: 8px
                 height: 8px
