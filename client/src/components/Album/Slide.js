@@ -7,7 +7,11 @@ const Slide = (props) => {
       {props.image ? (
         <div className={styles.slide}>
           <div className={styles.imgWrap}>
-            <img src={props.image.url} alt={props.image.public_id} />
+            <img
+              src={props.image.url}
+              alt={props.image.public_id}
+              onClick={props.handleImageClick}
+            />
           </div>
           <div className={styles.descriptionWrap}>
             <p>{props.image.description}</p>

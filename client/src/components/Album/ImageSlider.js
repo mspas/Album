@@ -15,7 +15,6 @@ const ImageSlider = (props) => {
 
   useEffect(() => {
     if (props.activeIndex > -1) setActiveIndex(props.activeIndex);
-    console.log(props.images[0]);
   }, [props.activeIndex, props.images]);
 
   const moveSlide = (direction) => {
@@ -42,6 +41,11 @@ const ImageSlider = (props) => {
       setActiveIndex(activeIndex - 1 * direction);
       setStartingPos();
     }, 1000);
+  };
+
+  const handleImageClick = () => {
+    let win = window.open(props.images[activeIndex].url, "_blank");
+    win.focus();
   };
 
   return (
@@ -90,12 +94,17 @@ const ImageSlider = (props) => {
                   <Slide
                     image={props.images[activeIndex - 1]}
                     i={activeIndex - 1}
+                    handleImageClick={handleImageClick}
                   />
                 </div>
               </div>
               <div className={styles.sliderSection}>
                 <div className={styles.slide}>
-                  <Slide image={props.images[activeIndex]} i={activeIndex} />
+                  <Slide
+                    image={props.images[activeIndex]}
+                    i={activeIndex}
+                    handleImageClick={handleImageClick}
+                  />
                 </div>
               </div>
               <div className={styles.sliderSection}>
@@ -103,6 +112,7 @@ const ImageSlider = (props) => {
                   <Slide
                     image={props.images[activeIndex + 1]}
                     i={activeIndex + 1}
+                    handleImageClick={handleImageClick}
                   />
                 </div>
               </div>

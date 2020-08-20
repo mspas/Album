@@ -1,5 +1,7 @@
 import React from "react";
 import { Spinner } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import styles from "./styles/HighlightedImagesList.module.sass";
 
 function HighlightedImagesList(props) {
@@ -15,14 +17,18 @@ function HighlightedImagesList(props) {
             {props.images.map((image, index) => {
               return (
                 <li key={index} className={styles.imageBox}>
-                  <div className={styles.imageWrap}>
-                    <img
-                      src={image.url}
-                      alt={image.public_id}
-                      onClick={() => {
-                        props.handleImageClick(index);
-                      }}
-                    />
+                  <div
+                    className={styles.imageBlock}
+                    onClick={() => {
+                      props.handleImageClick(index);
+                    }}
+                  >
+                    <div className={styles.imageWrap}>
+                      <img src={image.url} alt={image.public_id} />
+                      <span className={styles.detailsIcon}>
+                        <FontAwesomeIcon icon={faSearch} />
+                      </span>
+                    </div>
                   </div>
                 </li>
               );
