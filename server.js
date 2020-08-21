@@ -251,6 +251,16 @@ app.get("/api/get-all-images", (req, res) => {
     });
 });
 
+app.get("/api/get-images", async (req, res) => {
+  let years = req.body.years;
+  let limit = req.body.limit;
+
+  let results = await getImages(years, limit);
+
+  if (results.errorInfo != "") res.status(500).send(results);
+  res.send(results);
+});
+
 app.get("/api/get-welcome-article", (req, res) => {
   mongoClient
     .db("albumParadyz")
@@ -450,10 +460,65 @@ app.post("/api/send-email", limiter, (req, res) => {
     });
 });
 
+getImages = (years, limit) => {
+  return new Promise(async (resolve, reject) => {
+    let resultArray = [];
+    let resultCount = 0;
+    let errorInfo = "";
+    console.log("hello");
+
+    for (let i = 0; i < years.length; i++) {
+      const year = years[i];
+      let results = await getImagesForYear(year, limit);
+
+      if (results.errorInfo !== "")
+        resolve({
+          results: resultArray,
+          left: years.slice(i, years.length - 1),
+          errorInfo: err,
+        });
+
+      resultCount += results.results.length;
+      console.log(resultCount, year, i);
+      resultArray.push({ year: year, results: results.results });
+      if (resultCount >= limit || i > years.length - 2)
+        resolve({
+          results: resultArray,
+          left: years.slice(i + 1, years.length),
+          errorInfo: errorInfo,
+        });
+    }
+  });
+};
+
+getImagesForYear = (year, limit) => {
+  return new Promise((resolve, reject) => {
+    let errorInfo = "";
+    let db = mongoClient.db("albumParadyz").collection("images");
+    db.find({ category: year })
+      .limit(limit)
+      .toArray((err, result) => {
+        if (err) {
+          reject({
+            results: result,
+            errorInfo: err,
+          });
+        } else {
+          resolve({
+            results: result,
+            errorInfo: errorInfo,
+          });
+        }
+      });
+  });
+};
+
 uploadImage = (image) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(image.imageData, (error, result) => {
       if (error) errorInfo = error;
+
+      let year = parseInt(image.year);
 
       mongoClient
         .db("albumParadyz")
@@ -463,7 +528,8 @@ uploadImage = (image) => {
             public_id: result.public_id,
             url: result.url,
             description: image.description,
-            year: image.year,
+            year: year,
+            category: Math.floor(year / 10) * 10,
             isHighlighted: image.isHighlighted,
           },
           (err, res) => {
