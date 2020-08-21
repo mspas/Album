@@ -12,9 +12,9 @@ import { hideHeader, hideLogo } from "../../actions";
 function AdminPanel(props) {
   const dispatch = useDispatch();
   const [optionPanel, setOptionPanel] = useState(false);
+  const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isHiddenBtn, setIsHiddenBtn] = useState(false);
-  const [images, setImages] = useState([]);
 
   useEffect(() => {
     fetchData();

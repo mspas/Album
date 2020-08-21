@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import styles from "./styles/Home.module.sass";
 import AuthService from "../../services/auth.service";
-import HighlightedImagesList from "./HighlightedImagesList";
+import ImagesListAlbum from "./ImagesListAlbum";
 import ImageSlider from "./ImageSlider";
 import { hideHeader, hideLogo, showLogo } from "../../actions";
 import Header from "../Header";
@@ -87,9 +87,8 @@ function Home() {
         <p className={styles.origin}>{welcomeArticle.origin}</p>
       </article>
       <div className={styles.content}>
-        <HighlightedImagesList
+        <ImagesListAlbum
           isLoading={isLoading}
-          welcomeArticle={welcomeArticle}
           images={images}
           handleImageClick={(index) => {
             setActiveIndex(index);

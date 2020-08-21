@@ -1,3 +1,53 @@
 @import '../../../_variables'
 @import '../../../_mixins'
 @import '../../../_animations'
+
+.albumContainer
+    padding: 120px 10vw
+    @media screen and ( max-width: 455px )
+        padding: 0 20px
+    .filters
+        @include default-box()
+        p
+            margin-bottom: 10px
+        .yearsList
+            display: flex
+            flex-wrap: wrap
+            .year
+                position: relative
+                flex: 1
+                box-sizing: border-box
+                text-align: center
+                padding: 5px
+                cursor: pointer
+                .dunno
+                    position: relative
+                    z-index: 2
+                    border-bottom: solid 2px white
+                    span
+                        position: relative
+                        z-index: 2
+                    &::before
+                        content: ''
+                        position: absolute
+                        bottom: -5px
+                        left: 0
+                        height: 5px
+                        width: 50%
+                        background: #1c1e29
+                        transition: 0.1s ease-out
+                        z-index: 0
+                    &:hover::before
+                        width: 0px
+                    &::after
+                        content: ''
+                        position: absolute
+                        bottom: -5px
+                        right: 0
+                        height: 5px
+                        width: 50%
+                        background: #1c1e29
+                        transition: 0.1s ease-out
+                        z-index: 0
+                    &:hover::after
+                        width: 0px

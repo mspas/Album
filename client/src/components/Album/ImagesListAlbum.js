@@ -2,9 +2,9 @@ import React from "react";
 import { Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import styles from "./styles/HighlightedImagesList.module.sass";
+import styles from "./styles/ImagesListAlbum.module.sass";
 
-function HighlightedImagesList(props) {
+function ImagesListAlbum(props) {
   return (
     <div className={styles.imagesContainer}>
       {props.isLoading ? (
@@ -40,4 +40,4 @@ function HighlightedImagesList(props) {
   );
 }
 
-export default HighlightedImagesList;
+export default ImagesListAlbum;
