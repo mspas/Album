@@ -20,7 +20,8 @@ function ImagesListAlbum(props) {
                   <div
                     className={styles.imageBlock}
                     onClick={() => {
-                      props.handleImageClick(index);
+                      console.log(props.yearIndex);
+                      props.handleImageClick(index, props.yearIndex);
                     }}
                   >
                     <div className={styles.imageWrap}>

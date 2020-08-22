@@ -251,7 +251,7 @@ app.get("/api/get-all-images", (req, res) => {
     });
 });
 
-app.get("/api/get-images", async (req, res) => {
+app.post("/api/get-images", async (req, res) => {
   let years = req.body.years;
   let limit = req.body.limit;
 
@@ -465,7 +465,6 @@ getImages = (years, limit) => {
     let resultArray = [];
     let resultCount = 0;
     let errorInfo = "";
-    console.log("hello");
 
     for (let i = 0; i < years.length; i++) {
       const year = years[i];
@@ -479,7 +478,6 @@ getImages = (years, limit) => {
         });
 
       resultCount += results.results.length;
-      console.log(resultCount, year, i);
       resultArray.push({ year: year, results: results.results });
       if (resultCount >= limit || i > years.length - 2)
         resolve({

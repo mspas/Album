@@ -95,6 +95,7 @@ function Home() {
             setModalShow(true);
             dispatch(hideLogo());
           }}
+          yearIndex={0}
         />
       </div>
       <ImageSlider

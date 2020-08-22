@@ -39,6 +39,8 @@
                         z-index: 0
                     &:hover::before
                         width: 0px
+                    &:focus::before
+                        width: 0px
                     &::after
                         content: ''
                         position: absolute
@@ -51,3 +53,11 @@
                         z-index: 0
                     &:hover::after
                         width: 0px
+                    &:focus::before
+                        width: 0px
+    .content
+        width: 100%
+        .spinner
+            display: block
+            width: 25px
+            margin: 50px auto 0 auto

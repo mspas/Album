@@ -19,14 +19,18 @@ const ImageSlider = (props) => {
 
   const moveSlide = (direction) => {
     let value = 100 * direction;
-    sliderRef.current.style.transitionDuration = "1s";
-    sliderRef.current.style.transform = `translate( ${value}vw,0)`;
+    if (sliderRef.current) {
+      sliderRef.current.style.transitionDuration = "1s";
+      sliderRef.current.style.transform = `translate( ${value}vw,0)`;
+    }
     setBtnsDisabled(true);
   };
 
   const setStartingPos = () => {
-    sliderRef.current.style.transitionDuration = "0s";
-    sliderRef.current.style.transform = "translate(0,0)";
+    if (sliderRef.current) {
+      sliderRef.current.style.transitionDuration = "0s";
+      sliderRef.current.style.transform = "translate(0,0)";
+    }
     setBtnsDisabled(false);
   };
 
