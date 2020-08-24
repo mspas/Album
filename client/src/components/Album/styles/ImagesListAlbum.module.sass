@@ -2,9 +2,30 @@
 @import '../../../_mixins'
 @import '../../../_animations'
 
-$width: 350px
-$height: 450px
+$width: 200px
+$height: 200px
 $size: 200px
+
+.bigBlock
+    height: 450px
+    width: 350px
+    .imageWrap
+        img
+            height: 450px
+            width: 350px
+            @media screen and ( max-width: 410px )
+                margin: 0
+                width: 90%
+.smallBlock
+    height: $height
+    width: $width
+    .imageWrap
+        img
+            height: $height
+            width: $width
+            @media screen and ( max-width: 276px )
+                margin: 0
+                width: 60vw 
 
 .imagesContainer
     position: relative
@@ -16,38 +37,36 @@ $size: 200px
         left: 49%
     .content
         .list
-            margin-top: 50px
             display: flex
             flex-wrap: wrap
             padding: 0
+            @media screen and ( max-width: 410px )
+                justify-content: center
+                align-items: center
             .imageBox
                 flex: 1
                 box-sizing: border-box
                 position: relative
                 display: inline-block
                 margin: 50px 10px
+                max-width: 100%
                 .imageBlock
                     display: block
                     margin: 0 auto
-                    height: $height
-                    width: $width
+                    max-width: 100%
                     .imageWrap
                         position: relative
                         height: 100%
                         width: 100%
+                        max-width: 100%
                         img 
                             display: block
                             margin: 0 auto
-                            height: $height
-                            width: $width
                             object-fit: cover
                             cursor: pointer
                             border-radius: 5px
                             border: solid 3px white
                             transition: 0.3s
-                            @media screen and ( max-width: 455px )
-                                width: calc( 100vw - 60px )
-                                height: auto
                         &::before
                             content: ''
                             position: absolute
@@ -65,8 +84,8 @@ $size: 200px
                                 opacity: 1
                         .detailsIcon
                             position: absolute
-                            left: 47%
-                            top: 45%
+                            left: 45%
+                            top: 43%
                             font-size: 2em         
                             opacity: 0
                             transition: 0.5s

@@ -18,9 +18,12 @@ function ImagesListAlbum(props) {
               return (
                 <li key={index} className={styles.imageBox}>
                   <div
-                    className={styles.imageBlock}
+                    className={
+                      props.isHighlighted
+                        ? `${styles.imageBlock} ${styles.bigBlock}`
+                        : `${styles.imageBlock} ${styles.smallBlock}`
+                    }
                     onClick={() => {
-                      console.log(props.yearIndex);
                       props.handleImageClick(index, props.yearIndex);
                     }}
                   >

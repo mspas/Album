@@ -19,7 +19,7 @@ const Header = (props) => {
       if (!showLogo) c += styles.hideBehind;
     }
     setHeaderClass(c);
-  }, [showHeader, showLogo]);
+  }, [showHeader, showLogo, props.sticky]);
 
   return (
     <header className={headerClass}>

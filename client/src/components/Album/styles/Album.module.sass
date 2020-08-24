@@ -8,22 +8,27 @@
         padding: 0 20px
     .filters
         @include default-box()
+        .btnSend
+            display: block
+            margin: 20px 0 0 auto
+            padding: 5px 15px
         p
             margin-bottom: 10px
         .yearsList
             display: flex
             flex-wrap: wrap
-            .year
+            .yearBox
                 position: relative
                 flex: 1
                 box-sizing: border-box
                 text-align: center
                 padding: 5px
                 cursor: pointer
-                .dunno
+                .year
                     position: relative
                     z-index: 2
                     border-bottom: solid 2px white
+                    @include color-opacity-font($color: white, $opacity: 0.5)
                     span
                         position: relative
                         z-index: 2
@@ -39,8 +44,6 @@
                         z-index: 0
                     &:hover::before
                         width: 0px
-                    &:focus::before
-                        width: 0px
                     &::after
                         content: ''
                         position: absolute
@@ -53,11 +56,24 @@
                         z-index: 0
                     &:hover::after
                         width: 0px
-                    &:focus::before
-                        width: 0px
+                .selected
+                    color: white !important
+                    &:hover::before
+                        width: 50%
+                    &:hover::after
+                        width: 50%
     .content
         width: 100%
+        margin-top: 50px
+        @include gradient-bg($color1: #ffffff09, $color2: #ffffff04, $color3: #ffffff02)
         .spinner
             display: block
             width: 25px
-            margin: 50px auto 0 auto
+            margin: 0 auto
+        .yearTitle
+            padding: 20px 20px 0 20px
+            font-size: 2em
+            letter-spacing: 3px
+            border-top: solid 1px #ffffff63
+            color: #ffffff63
+            

@@ -8,26 +8,35 @@ import ImageSlider from "./ImageSlider";
 
 function Album() {
   const YEARS = [1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990];
-  const LIMIT = 15;
+  const LIMIT = 10;
 
   const dispatch = useDispatch();
   const [images, setImages] = useState([]);
   const [imagesResults, setImagesResults] = useState([]);
   const [yearsLeftForNextPage, setYearsLeftForNextPage] = useState([]);
-  const [selectedYears, setSelectedYears] = useState(YEARS);
+  const [selectedYears, setSelectedYears] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingNewSet, setIsLoadingNewSet] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
   const [modalShow, setModalShow] = useState(false);
 
   useEffect(() => {
     dispatch(showHeader());
     dispatch(showLogo());
-    fetchData(selectedYears);
+    fetchData(YEARS, false);
+
+    let a = [];
+    for (let i = 0; i < YEARS.length; i++) {
+      a.push(false);
+    }
+    setSelectedYears(a);
   }, []);
 
-  const fetchData = (years) => {
+  const fetchData = (years, nextPage) => {
     const _auth = new AuthService();
-    setIsLoading(true);
+    if (nextPage) setIsLoading(true);
+    setIsLoadingNewSet(true);
+
     _auth
       .fetch("/api/get-images", {
         method: "POST",
@@ -37,25 +46,29 @@ function Album() {
         }),
       })
       .then((json) => {
-        console.log(JSON.stringify(json.left));
-        let currentResults = [...imagesResults];
+        let currentResults = [];
+        let currentImages = [];
+
+        if (nextPage) {
+          currentResults = [...imagesResults];
+          currentImages = [...images];
+          setIsLoading(false);
+        }
+
         setImagesResults(currentResults.concat(json.results));
 
-        let currentImages = [...images];
         for (let i = 0; i < json.results.length; i++) {
           const element = json.results[i];
-          console.log(json.left, json.results.length);
           currentImages = currentImages.concat(element.results);
         }
         setImages(currentImages);
 
         setYearsLeftForNextPage(json.left);
-        setIsLoading(false);
+        setIsLoadingNewSet(false);
       });
   };
 
   const handleImageClick = (index) => {
-    console.log(index);
     setActiveIndex(index);
     setModalShow(true);
     dispatch(hideLogo());
@@ -68,6 +81,19 @@ function Album() {
     dispatch(showHeader());
   };
 
+  const selectYear = (index) => {
+    let a = [...selectedYears];
+    a[index] = !a[index];
+    setSelectedYears(a);
+  };
+
+  const getImages = () => {
+    let a = [];
+    for (let i = 0; i < selectedYears.length; i++)
+      if (selectedYears[i]) a.push(YEARS[i]);
+    fetchData(a, false);
+  };
+
   return (
     <div className={styles.albumContainer}>
       <div className={styles.filters}>
@@ -76,8 +102,15 @@ function Album() {
           <div className={styles.yearsList}>
             {YEARS.map((year, index) => {
               return (
-                <div key={index} className={styles.year}>
-                  <span className={styles.dunno}>
+                <div key={index} className={styles.yearBox}>
+                  <span
+                    className={
+                      selectedYears[index]
+                        ? `${styles.year} ${styles.selected}`
+                        : styles.year
+                    }
+                    onClick={() => selectYear(index)}
+                  >
                     <span>{year}</span>
                   </span>
                 </div>
@@ -85,12 +118,16 @@ function Album() {
             })}
           </div>
         )}
+        <button className={`${styles.btnSend} button`} onClick={getImages}>
+          Zastosuj
+        </button>
       </div>
       <AlbumCategorizedList
         imagesResults={imagesResults}
         left={yearsLeftForNextPage}
         handleImageClick={handleImageClick}
         isLoading={isLoading}
+        isLoadingNewSet={isLoadingNewSet}
         fetchData={fetchData}
       />
       <ImageSlider

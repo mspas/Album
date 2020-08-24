@@ -493,21 +493,19 @@ getImagesForYear = (year, limit) => {
   return new Promise((resolve, reject) => {
     let errorInfo = "";
     let db = mongoClient.db("albumParadyz").collection("images");
-    db.find({ category: year })
-      .limit(limit)
-      .toArray((err, result) => {
-        if (err) {
-          reject({
-            results: result,
-            errorInfo: err,
-          });
-        } else {
-          resolve({
-            results: result,
-            errorInfo: errorInfo,
-          });
-        }
-      });
+    db.find({ category: year }).toArray((err, result) => {
+      if (err) {
+        reject({
+          results: result,
+          errorInfo: err,
+        });
+      } else {
+        resolve({
+          results: result,
+          errorInfo: errorInfo,
+        });
+      }
+    });
   });
 };
 
