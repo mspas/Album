@@ -32,17 +32,19 @@ function NewImage(props) {
                   }}
                 />
               </div>
-              <div className={`${styles.highlight} center`}>
-                <label htmlFor={`h${props.id}`}>Wyróżnione?</label>
-                <input
-                  id={`h-${props.id}`}
-                  className={styles.checkboxInput}
-                  type="checkbox"
-                  onChange={(event) => {
-                    props.highlightChangeHandler(event, props.id);
-                  }}
-                />
-              </div>
+              {props.admin && (
+                <div className={`${styles.highlight} center`}>
+                  <label htmlFor={`h${props.id}`}>Wyróżnione?</label>
+                  <input
+                    id={`h-${props.id}`}
+                    className={styles.checkboxInput}
+                    type="checkbox"
+                    onChange={(event) => {
+                      props.highlightChangeHandler(event, props.id);
+                    }}
+                  />
+                </div>
+              )}
               <div className={styles.closeWrap}>
                 <FontAwesomeIcon
                   className={`${styles.closeIcon} panel-icon`}
@@ -62,14 +64,16 @@ function NewImage(props) {
                 props.descriptionChangeHandler(event, props.id);
               }}
             />
-            <button
-              className={`${styles.btnShow} button`}
-              onClick={() => {
-                props.handleShow(props.id);
-              }}
-            >
-              Podgląd przed dodaniem
-            </button>
+            {props.admin && (
+              <button
+                className={`${styles.btnShow} button`}
+                onClick={() => {
+                  props.handleShow(props.id);
+                }}
+              >
+                Podgląd przed dodaniem
+              </button>
+            )}
             {props.alertText && (
               <div className={styles.mediaFooter}>
                 <p

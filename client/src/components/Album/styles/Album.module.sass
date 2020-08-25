@@ -5,13 +5,21 @@
 .albumContainer
     padding: 120px 10vw
     @media screen and ( max-width: 455px )
-        padding: 0 20px
+        padding: 120px 20px
     .filters
         @include default-box()
-        .btnSend
+        .btns
             display: block
             margin: 20px 0 0 auto
-            padding: 5px 15px
+            max-width: 350px
+            .btnAlbum
+                display: inline-block
+                margin: 0 10px
+                padding: 5px 15px
+                @media screen and ( max-width: 360px )
+                    display: block
+                    margin: 10px
+                    margin-left: auto
         p
             margin-bottom: 10px
         .yearsList

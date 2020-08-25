@@ -1,0 +1,81 @@
+@import '../../../_variables'
+@import '../../../_mixins'
+@import '../../../_animations'
+
+.contactContainer
+    min-height: 100px
+    padding: 120px 10vw 50px 10vw !important
+    @include default-box()
+    .content
+        position: relative
+        .invitationTextContainer
+            background-image: url('../../../assets/panelbg.png')
+            background-position: 15% 9%
+            background-repeat: no-repeat
+            border-radius: 5px
+            .invitationText
+                padding: 20px 50px
+                background-color: rgba(30, 31, 40, 0.3)
+                backdrop-filter: opacity(0.6) blur(2px) sepia(.4)
+                @media screen and ( max-width: 600px )
+                    padding: 20px 20px
+                p
+                    text-align: center
+                .title
+                    font-family: CountrysideTwo, Arial, serif
+                    font-size: 2.5em
+                    @media screen and ( max-width: 400px )
+                        font-size: 1.7em
+                .subtitle
+                    margin-top: 20px
+        .introductionBox
+            margin-top: 50px
+            width: 100%
+            @media screen and ( max-width: 800px )
+                margin: 50px 0 20px 0
+            .formGroup
+                display: block
+                width: 60%
+                margin: 0 auto 20px auto
+                @media screen and ( max-width: 800px )
+                    width: 100%
+                .emailInput
+                    position: relative
+                    min-width: 200px !important
+                    min-height: 30px !important
+                    padding: 10px
+                    z-index: 0
+                    opacity: 1
+                    outline: none
+                .textInput      
+                    display: block
+                    margin: 0 auto 20px auto
+                    padding: 10px
+                    outline: none
+        input
+            width: 0.1px
+            height: 0.1px
+            opacity: 0
+            overflow: hidden
+            position: absolute
+            z-index: -1
+        label
+            padding: 10px
+            cursor: pointer
+            user-select: none
+            transition: 0.2s
+            &:hover
+                .icon
+                    transform: rotate(90deg)
+        .icon
+            margin-right: 10px
+            transition: transform 1s, font-size 1s
+        .spinner
+            position: absolute
+            top: 0
+            right: 45%
+        .btnSend
+            display: block
+            margin-left: auto
+            margin-right: 15px
+            margin-top: 5%

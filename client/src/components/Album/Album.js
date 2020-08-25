@@ -24,13 +24,16 @@ function Album() {
     dispatch(showHeader());
     dispatch(showLogo());
     fetchData(YEARS, false);
+    defaultSelection();
+  }, []);
 
+  const defaultSelection = () => {
     let a = [];
     for (let i = 0; i < YEARS.length; i++) {
       a.push(false);
     }
     setSelectedYears(a);
-  }, []);
+  };
 
   const fetchData = (years, nextPage) => {
     const _auth = new AuthService();
@@ -94,33 +97,48 @@ function Album() {
     fetchData(a, false);
   };
 
+  const getAllImages = () => {
+    defaultSelection();
+    fetchData(YEARS, false);
+  };
+
   return (
     <div className={styles.albumContainer}>
-      <div className={styles.filters}>
-        <p>Wybierz lata:</p>
-        {!modalShow && (
-          <div className={styles.yearsList}>
-            {YEARS.map((year, index) => {
-              return (
-                <div key={index} className={styles.yearBox}>
-                  <span
-                    className={
-                      selectedYears[index]
-                        ? `${styles.year} ${styles.selected}`
-                        : styles.year
-                    }
-                    onClick={() => selectYear(index)}
-                  >
-                    <span>{year}</span>
-                  </span>
-                </div>
-              );
-            })}
+      <div className={styles.filtersContainer}>
+        <div className={styles.filters}>
+          <p>Wybierz lata:</p>
+          {!modalShow && (
+            <div className={styles.yearsList}>
+              {YEARS.map((year, index) => {
+                return (
+                  <div key={index} className={styles.yearBox}>
+                    <span
+                      className={
+                        selectedYears[index]
+                          ? `${styles.year} ${styles.selected}`
+                          : styles.year
+                      }
+                      onClick={() => selectYear(index)}
+                    >
+                      <span>{year}</span>
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div className={styles.btns}>
+            <button
+              className={`${styles.btnAlbum} button`}
+              onClick={getAllImages}
+            >
+              Pokaż wszystkie
+            </button>
+            <button className={`${styles.btnAlbum} button`} onClick={getImages}>
+              Zastosuj
+            </button>
           </div>
-        )}
-        <button className={`${styles.btnSend} button`} onClick={getImages}>
-          Zastosuj
-        </button>
+        </div>
       </div>
       <AlbumCategorizedList
         imagesResults={imagesResults}

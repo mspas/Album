@@ -195,6 +195,7 @@ function UploadImages(props) {
             deleteImageHandler={deleteImageHandler}
             highlightChangeHandler={highlightChangeHandler}
             handleShow={handleShow}
+            admin={true}
           />
         );
       })}
@@ -204,6 +205,7 @@ function UploadImages(props) {
         imageSelectedHandler={imageSelectedHandler}
         nullifySelector={nullifySelector}
         handleShow={handleShow}
+        admin={true}
       />
       <ImageSlider
         show={showSlider}
