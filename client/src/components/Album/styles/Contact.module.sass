@@ -3,31 +3,40 @@
 @import '../../../_animations'
 
 .contactContainer
-    min-height: 100px
+    min-height: 98vh
     padding: 120px 10vw 50px 10vw !important
-    @include default-box()
+    @include default-box()        
+    .invitationTextContainer
+        background-image: url('../../../assets/panelbg.png')
+        background-position: 15% 9%
+        background-repeat: no-repeat
+        border-radius: 5px
+        .invitationText
+            padding: 20px 50px
+            background-color: rgba(30, 31, 40, 0.3)
+            backdrop-filter: opacity(0.6) blur(2px) sepia(.4)
+            @media screen and ( max-width: 600px )
+                padding: 20px 20px
+            p
+                text-align: center
+            .title
+                font-family: CountrysideTwo, Arial, serif
+                font-size: 2.5em
+                @media screen and ( max-width: 400px )
+                    font-size: 1.7em
+            .subtitle
+                margin-top: 20px
     .content
         position: relative
-        .invitationTextContainer
-            background-image: url('../../../assets/panelbg.png')
-            background-position: 15% 9%
-            background-repeat: no-repeat
-            border-radius: 5px
-            .invitationText
-                padding: 20px 50px
-                background-color: rgba(30, 31, 40, 0.3)
-                backdrop-filter: opacity(0.6) blur(2px) sepia(.4)
-                @media screen and ( max-width: 600px )
-                    padding: 20px 20px
-                p
-                    text-align: center
-                .title
-                    font-family: CountrysideTwo, Arial, serif
-                    font-size: 2.5em
-                    @media screen and ( max-width: 400px )
-                        font-size: 1.7em
-                .subtitle
-                    margin-top: 20px
+        @include default-box()
+        .alertBox
+            .alert
+                text-align: center
+                animation: fadeIn 0.3s ease-in forwards
+            .success
+                background: $success
+            .error
+                background: $error
         .introductionBox
             margin-top: 50px
             width: 100%
@@ -52,7 +61,7 @@
                     margin: 0 auto 20px auto
                     padding: 10px
                     outline: none
-        input
+        .inputFile
             width: 0.1px
             height: 0.1px
             opacity: 0
@@ -72,7 +81,7 @@
             transition: transform 1s, font-size 1s
         .spinner
             position: absolute
-            top: 0
+            top: -40px
             right: 45%
         .btnSend
             display: block

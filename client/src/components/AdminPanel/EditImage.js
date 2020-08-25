@@ -4,11 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import styles from "../NewImage.module.sass";
 import AuthService from "../../services/auth.service";
+import ImageSlider from "../Album/ImageSlider";
 
 function EditImage(props) {
   const [imageData, setImageData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState({ alertType: true, alertText: "" });
+  const [showSlider, setShowSlider] = useState(false);
+  const [sliderImages, setSliderImages] = useState({});
 
   useEffect(() => {
     setImageData(props.image);
@@ -28,7 +31,6 @@ function EditImage(props) {
 
   const highlightChangeHandler = (event) => {
     let image = imageData;
-    console.log(event.target.checked);
     image.isHighlighted = event.target.checked;
     setImageData(image);
   };
@@ -67,9 +69,10 @@ function EditImage(props) {
     if (
       imageData.year === null ||
       imageData.year > 2020 ||
-      imageData.year < 1800
+      imageData.year < 1850
     ) {
-      alertT.alertText = "Error! Brak poprawnej daty!";
+      alertT.alertText =
+        "Error! Brak poprawnej daty! Musi być 1850 < data < 2020";
       alertT.alertType = false;
       check = false;
     }
@@ -80,6 +83,12 @@ function EditImage(props) {
     }
     setAlert(alertT);
     return check;
+  };
+
+  const handleShow = (index) => {
+    setSliderImages([imageData]);
+    setShowSlider(true);
+    props.hideLogout(true);
   };
 
   return (
@@ -156,12 +165,24 @@ function EditImage(props) {
           <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
       )}
-      <Button
+      <button className={`${styles.btnShow} button`} onClick={handleShow}>
+        Podgląd przed dodaniem
+      </button>
+      <button
         className={`${styles.buttonSend} button`}
         onClick={imageUploadHandler}
       >
         Wyślij
-      </Button>
+      </button>
+      <ImageSlider
+        show={showSlider}
+        onHide={() => {
+          setShowSlider(false);
+          props.hideLogout(false);
+        }}
+        images={sliderImages}
+        activeIndex={0}
+      />
     </div>
   );
 }

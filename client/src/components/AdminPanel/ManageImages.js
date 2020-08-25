@@ -205,6 +205,7 @@ function ManageImages(props) {
           isLoading={props.isLoading}
           image={editImage}
           onBack={onBack}
+          hideLogout={props.hideLogout}
         />
       )}
       {changeAdminShow && <ChangeAdminDetails email={email} onBack={onBack} />}

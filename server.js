@@ -406,7 +406,7 @@ app.post("/api/send-email", limiter, (req, res) => {
   let images = req.body.imagesArray;
   let contactMail = req.body.contactMail;
   let senderName = contactMail.split("@")[0];
-  let mailText = `Email do kontaktu: ${contactMail}<br>`;
+  let mailText = `Email do kontaktu: ${contactMail}<br> Treść maila: ${req.body.mailText}<br>`;
 
   let i = 0;
   let attachments = images.map((image) => {
@@ -426,7 +426,7 @@ app.post("/api/send-email", limiter, (req, res) => {
     })
     .toArray((err, result) => {
       if (err) {
-        res.status(400).send(err);
+        return res.status(400).send(err);
       } else {
         let i = 0;
         let users = result;
@@ -441,18 +441,23 @@ app.post("/api/send-email", limiter, (req, res) => {
 
           transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-              res.status(400).send({
+              console.log(error);
+              return res.status(400).send({
                 success: false,
                 message:
                   "Przepraszamy, zgłoszenie nie zostało wysłane! Prosimy spróbować później.",
               });
             }
-            if (i === users.length - 1)
-              res.status(200).send({
+            if (i === users.length - 1) {
+              let message = "Email wysłany poprawnie!";
+              if (attachments.length > 0)
+                message =
+                  "Zdjęcią wysłane! Zdjęcia pojawią się w albumie po zweryfikowaniu przez administratora. Dziękujemy za wkład w projekt albumu!";
+              return res.status(200).send({
                 success: true,
-                message:
-                  "Zdjęcią wysłane! Zdjęcia pojawią się w albumie po zweryfikowaniu przez administratora. Dziękujemy za wkład w projekt albumu!",
+                message: message,
               });
+            }
             i++;
           });
         });

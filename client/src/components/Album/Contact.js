@@ -11,10 +11,13 @@ import { showHeader, showLogo } from "../../actions";
 
 function Contact() {
   const dispatch = useDispatch();
+  const [email, setEmail] = useState("");
+  const [mailText, setMailText] = useState("");
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [showSlider, setShowSlider] = useState(false);
-  const [sliderImages, setSliderImages] = useState({});
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState({ type: true, message: "" });
+
   const _auth = new AuthService();
 
   useEffect(() => {
@@ -86,35 +89,61 @@ function Contact() {
     setImages(temp);
   };
 
-  const imagesUploadHandler = async () => {
+  const imagesSendHandler = async (event) => {
+    event.preventDefault();
+
     setIsLoading(true);
     let check = true;
+    if (mailText.length < 1) {
+      check = false;
+      setError({
+        type: false,
+        message:
+          "Jeśli nie wysyłasz zdjęć, pole wiadomości nie może być puste.",
+      });
+    }
 
     await new Promise((resolve, reject) => {
-      check = validateData([...images]);
-      resolve(images);
+      if (images.length > 0) check = validateData([...images]);
+      resolve(check);
+    }).then(() => {
+      console.log("siema", check);
+      if (check)
+        _auth
+          .fetch("/api/send-email", {
+            method: "POST",
+            body: JSON.stringify({
+              contactMail: email,
+              mailText: mailText,
+              imagesArray: images,
+            }),
+          })
+          .then((json) => {
+            setIsLoading(false);
+            setError({ type: json.success, message: json.message });
+            setShowError(true);
+          });
+      else {
+        console.log("siema", check);
+        if (mailText.length < 1) {
+          if (images.length > 0)
+            setError({
+              type: false,
+              message: "Zgłoszenie nie zostało wysłane! Popraw błędy!",
+            });
+          setShowError(true);
+        }
+        setIsLoading(false);
+      }
     });
-    if (check)
-      _auth
-        .fetch("/api/send-email", {
-          method: "POST",
-          body: JSON.stringify({
-            contactMail: "marcin123@onet.pl",
-            imagesArray: images,
-          }),
-        })
-        .then((json) => {
-          setIsLoading(false);
-        });
-    else setIsLoading(false);
   };
 
   const validateData = (array) => {
     let check = true;
     for (let index = 0; index < array.length; index++) {
       const image = array[index];
-      if (image.year === null || image.year > 2020 || image.year < 1800) {
-        image.alertText = "Error! Brak poprawnej daty!";
+      if (image.year === null || image.year > 2020 || image.year < 1850) {
+        image.alertText = "Error! Brak poprawnej daty spomiędzy lat 1850-2020!";
         image.alertType = false;
         check = false;
       }
@@ -128,57 +157,37 @@ function Contact() {
     }
   };
 
-  const setUploadResult = (resultArray) => {
-    console.log(resultArray);
-    let temp = [...images];
-    for (let index = 0; index < temp.length; index++) {
-      const image = temp[index];
-      let errorInfo = resultArray[index].resultData.errorInfo;
-      if (errorInfo.length < 1) {
-        image.alertText = "Zdjęcie dodano poprawnie!";
-        image.alertType = true;
-      } else {
-        image.alertText = `Error! ${errorInfo}`;
-        image.alertType = false;
-      }
-    }
-    return temp;
-  };
-
-  const mailTextChangeHandler = (index) => {
-    let temp = [...images];
-    let image = { ...temp[index] };
-    let img = [
-      {
-        _id: 0,
-        public_id: 0,
-        url: image.imageData,
-        description: image.description,
-        year: image.year,
-      },
-    ];
-    setSliderImages(img);
-    setShowSlider(true);
-  };
-
   return (
     <div className={styles.contactContainer}>
+      <div className={styles.invitationTextContainer}>
+        <div className={styles.invitationText}>
+          <p className={styles.title}>Wyślij zdjęcia!</p>
+          <p className={styles.subtitle}>
+            Prześlij nam zdjęcia i dołóż swoją cegiełkę do upamiętnienia naszych
+            okolic!
+          </p>
+          <p>
+            Wszystkie zgloszenia przed dodaniem weryfikowane są przez
+            administracje.
+          </p>
+        </div>
+      </div>
       <div className={styles.content}>
-        <div className={styles.invitationTextContainer}>
-          <div className={styles.invitationText}>
-            <p className={styles.title}>Wyślij zdjęcia!</p>
-            <p className={styles.subtitle}>
-              Prześlij nam zdjęcia i dołóż swoją cegiełkę do upamiętnienia
-              naszych okolic!
-            </p>
-            <p>
-              Wszystkie zgloszenia przed dodaniem weryfikowane są przez
-              administracje.
+        {showError && (
+          <div className={styles.alertBox}>
+            <p
+              className={
+                error.type
+                  ? `${styles.alert} ${styles.success}`
+                  : `${styles.alert} ${styles.error}`
+              }
+            >
+              {error.message}
             </p>
           </div>
-        </div>
+        )}
         <div className={styles.introductionBox}>
-          <Form className={styles.form} onSubmit={imagesUploadHandler}>
+          <Form className={styles.form} onSubmit={imagesSendHandler}>
             <div className={styles.body}>
               <Form.Group controlId="formEmail" className={styles.formGroup}>
                 <InputGroup>
@@ -197,7 +206,7 @@ function Contact() {
                     placeholder="Twój adres email do kontaktu"
                     aria-describedby="inputGroupPrepend"
                     onChange={(event) => {
-                      mailTextChangeHandler(event);
+                      setEmail(event.target.value);
                     }}
                     required
                   />
@@ -218,25 +227,26 @@ function Contact() {
                     rows="5"
                     placeholder="Wstęp do zgłoszenia lub pytanie, które chcesz zadać. (opcjonalne)"
                     onChange={(event) => {
-                      mailTextChangeHandler(event);
+                      setMailText(event.target.value);
                     }}
                   />
                 </InputGroup>
               </Form.Group>
 
-              <Button
+              <button
                 className={`${styles.btnSend} button`}
                 variant="primary"
                 type="submit"
               >
                 Wyślij
-              </Button>
+              </button>
             </div>
           </Form>
         </div>
         <input
           type="file"
           id="inputfile"
+          className={styles.inputFile}
           onChange={imageSelectedHandler}
           onClick={nullifySelector}
         />
@@ -273,14 +283,6 @@ function Contact() {
           );
         })}
       </div>
-      <ImageSlider
-        show={showSlider}
-        onHide={() => {
-          setShowSlider(false);
-        }}
-        images={sliderImages}
-        activeIndex={0}
-      />
     </div>
   );
 }
