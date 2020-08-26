@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Spinner, Form, Button, InputGroup } from "react-bootstrap";
+import { Spinner, Form, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import styles from "./styles/Contact.module.sass";
 import NewImage from "../NewImage";
 import AuthService from "../../services/auth.service";
-import ImageSlider from "../Album/ImageSlider";
 import { showHeader, showLogo } from "../../actions";
 
 function Contact() {

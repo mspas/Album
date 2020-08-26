@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Button, InputGroup } from "react-bootstrap";
+import { Form, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import AuthService from "../../services/auth.service";
@@ -8,6 +8,11 @@ import logo from "../../assets/logo-text.png";
 
 function SignIn(props) {
   const [password, setPassword] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState({
+    success: true,
+    message: "",
+  });
   const _auth = new AuthService();
 
   const inputChangeHandler = (event) => {
@@ -19,7 +24,11 @@ function SignIn(props) {
     _auth
       .login(password)
       .then((res) => {
-        props.history.replace("/admin");
+        if (!res.success) {
+          console.log(res);
+          setError(res);
+          setShowError(true);
+        } else props.history.replace("/admin");
       })
       .catch((err) => {
         alert(err);
@@ -57,9 +66,23 @@ function SignIn(props) {
             </InputGroup>
           </Form.Group>
 
-          <Button className="button" variant="primary" type="submit">
+          {showError && (
+            <div className={styles.alertBox}>
+              <p
+                className={
+                  error.success
+                    ? `${styles.alert} ${styles.success}`
+                    : `${styles.alert} ${styles.error}`
+                }
+              >
+                {error.message}
+              </p>
+            </div>
+          )}
+
+          <button className="button" variant="primary" type="submit">
             Zaloguj
-          </Button>
+          </button>
         </Form>
       </div>
     </div>

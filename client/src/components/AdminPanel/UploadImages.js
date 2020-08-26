@@ -123,7 +123,6 @@ function UploadImages(props) {
   };
 
   const setUploadResult = (resultArray) => {
-    console.log(resultArray);
     let temp = [...images];
     for (let index = 0; index < temp.length; index++) {
       const image = temp[index];

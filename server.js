@@ -4,11 +4,14 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv").config();
 const nodemailer = require("nodemailer");
 const rateLimit = require("express-rate-limit");
-const MongoClient = require("mongodb").MongoClient;
-const ObjectId = require("mongodb").ObjectId;
+const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
+const Images = require("./models/Image");
+const Articles = require("./models/Article");
+const Users = require("./models/User");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,21 +22,12 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
-const mongoClient = new MongoClient(process.env.DB_URI, {
+const mongoOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
-
-app.set("trust proxy", 1);
-
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(
-  bodyParser.urlencoded({
-    limit: "50mb",
-    extended: true,
-    parameterLimit: 50000,
-  })
-);
+  connectTimeoutMS: 30000,
+  keepAlive: 1,
+};
 
 const minutesTimeout = 2;
 const limiter = rateLimit({
@@ -47,6 +41,21 @@ const limiter = rateLimit({
   },
 });
 
+app.set("trust proxy", 1);
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
+
+mongoose.connect(process.env.DB_URI, mongoOptions, () => {
+  console.log("connected to db");
+});
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -54,8 +63,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.MAIL_BOT_PASS,
   },
 });
-
-mongoClient.connect();
 
 const verifyToken = (authHeader) => {
   return new Promise((resolve, reject) => {
@@ -94,57 +101,54 @@ app.post("/api/login", async (req, res) => {
   let token = "";
   let password = req.body.password;
 
-  mongoClient
-    .db("albumParadyz")
-    .collection("users")
-    .find({
-      type: "admin",
-    })
-    .toArray((err, result) => {
-      if (err) {
-        res.status(400).send(err);
-      } else {
-        let i = 0;
-        let users = result;
-        users.forEach((user) => {
-          bcrypt.compare(password, user.hash, (err, result) => {
-            if (result) {
-              token = jwt.sign({ email: user.email }, process.env.TOKEN_SECRET);
-              res.status(200).send({
-                success: true,
-                message: "Zalogowano",
-                token: token,
-              });
-            }
-            if (i === users.length - 1 && !token)
-              res.status(400).send({
-                success: false,
-                message: "Hasło niepoprawne",
-                token: null,
-              });
-            i++;
-          });
+  try {
+    let result = await Users.find({ type: "admin" }).exec();
+    if (result) {
+      let i = 0;
+      let users = result;
+      users.forEach((user) => {
+        bcrypt.compare(password, user.hash, (err, result) => {
+          if (result) {
+            token = jwt.sign({ email: user.email }, process.env.TOKEN_SECRET);
+            res.status(200).send({
+              success: true,
+              message: "Zalogowano",
+              token: token,
+            });
+          }
+          if (i === users.length - 1 && !token)
+            res.status(400).send({
+              success: false,
+              message: "Hasło niepoprawne",
+              token: null,
+            });
+          i++;
         });
-      }
+      });
+    }
+  } catch (err) {
+    res.status(400).send({
+      success: false,
+      result: null,
+      errorInfo: err,
     });
+  }
 });
 
 app.get("/api/create", async (req, res) => {
-  bcrypt.hash("albumParadyz", 10, (err, hash) => {
-    mongoClient
-      .db("albumParadyz")
-      .collection("users")
-      .insertOne(
-        {
-          email: "marcin7789@gmail.com",
-          hash: hash,
-          type: "admin",
-        },
-        (err, res) => {
-          if (err) errorInfo = err;
-          console.log(`1 document inserted id = ${res.insertedId}`);
-        }
-      );
+  bcrypt.hash("albumParadyz", 10, async (err, hash) => {
+    const newUser = new Users({
+      email: "marcin7789@gmail.com",
+      hash: hash,
+      type: "admin",
+    });
+
+    try {
+      await newUser.save();
+      console.log(`1 document inserted id = ${res.insertedId}`);
+    } catch (err) {
+      console.log(err);
+    }
   });
 });
 
@@ -154,41 +158,38 @@ app.patch("/api/change-email", authenticate, async (req, res) => {
   let oldEmail = req.body.oldEmail;
   let newEmail = req.body.newEmail;
 
-  mongoClient
-    .db("albumParadyz")
-    .collection("users")
-    .findOne(
-      {
-        email: oldEmail,
-      },
-      (err, result) => {
-        if (err) {
-          res.status(400).send(err);
+  try {
+    let result = await Users.findOne({ email: oldEmail });
+    if (result) {
+      let user = result;
+      bcrypt.compare(password, user.hash, async (err, res1) => {
+        if (!res1) {
+          res.status(400).send({
+            result: {
+              success: false,
+              result: null,
+              errorInfo: "Hasło niepoprawne",
+            },
+            token: null,
+          });
         } else {
-          let user = result;
-          bcrypt.compare(password, user.hash, async (err, result) => {
-            if (!result) {
-              res.status(400).send({
-                result: {
-                  success: false,
-                  result: null,
-                  errorInfo: "Hasło niepoprawne",
-                },
-                token: null,
-              });
-            } else {
-              let resultUpdate = await updateEmail(oldEmail, newEmail);
-              if (resultUpdate.success)
-                token = jwt.sign({ email: newEmail }, process.env.TOKEN_SECRET);
-              res.status(200).send({
-                result: resultUpdate,
-                token: token,
-              });
-            }
+          let resultUpdate = await updateEmail(oldEmail, newEmail);
+          if (resultUpdate.success)
+            token = jwt.sign({ email: newEmail }, process.env.TOKEN_SECRET);
+          res.status(200).send({
+            result: resultUpdate,
+            token: token,
           });
         }
-      }
-    );
+      });
+    }
+  } catch (err) {
+    res.status(400).send({
+      success: false,
+      result: null,
+      errorInfo: "Błąd!",
+    });
+  }
 });
 
 app.patch("/api/change-password", authenticate, async (req, res) => {
@@ -196,59 +197,51 @@ app.patch("/api/change-password", authenticate, async (req, res) => {
   let oldPassword = req.body.oldPassword;
   let newPassword = req.body.newPassword;
 
-  mongoClient
-    .db("albumParadyz")
-    .collection("users")
-    .findOne(
-      {
-        email: email,
-      },
-      (err, result) => {
-        if (err) {
-          res.status(400).send(err);
+  try {
+    let result = await Users.findOne({ email: email });
+    if (result) {
+      let user = result;
+      bcrypt.compare(oldPassword, user.hash, (err, res1) => {
+        if (!res1) {
+          return res.status(400).send({
+            success: false,
+            result: null,
+            errorInfo: "Hasło niepoprawne",
+          });
         } else {
-          let user = result;
-          bcrypt.compare(oldPassword, user.hash, (err, result) => {
-            if (!result) {
-              res.status(400).send({
+          bcrypt.hash(newPassword, 10, async (err, hash) => {
+            if (err) {
+              return res.status(400).send({
                 success: false,
                 result: null,
-                errorInfo: "Hasło niepoprawne",
+                errorInfo: "Błąd kodowania hasła!",
               });
             } else {
-              bcrypt.hash(newPassword, 10, async (err, hash) => {
-                if (err) {
-                  res.status(400).send({
-                    success: false,
-                    result: null,
-                    errorInfo: "Błąd kodowania hasła!",
-                  });
-                } else {
-                  let resultUpdate = await updatePassword(email, hash);
-                  res.status(200).send({
-                    result: resultUpdate,
-                  });
-                }
+              let resultUpdate = await updatePassword(email, hash);
+              return res.status(200).send({
+                result: resultUpdate,
               });
             }
           });
         }
-      }
-    );
+      });
+    }
+  } catch (err) {
+    res.status(400).send({
+      success: false,
+      result: null,
+      errorInfo: "Błąd!",
+    });
+  }
 });
 
-app.get("/api/get-all-images", (req, res) => {
-  mongoClient
-    .db("albumParadyz")
-    .collection("images")
-    .find({})
-    .toArray((err, result) => {
-      if (err) {
-        res.status(400).send(err);
-      } else {
-        res.send(JSON.stringify(result));
-      }
-    });
+app.get("/api/get-all-images", async (req, res) => {
+  try {
+    let result = await Images.find();
+    res.send(JSON.stringify(result));
+  } catch (err) {
+    res.status(400).send(err);
+  }
 });
 
 app.post("/api/get-images", async (req, res) => {
@@ -261,69 +254,43 @@ app.post("/api/get-images", async (req, res) => {
   res.send(results);
 });
 
-app.get("/api/get-welcome-article", (req, res) => {
-  mongoClient
-    .db("albumParadyz")
-    .collection("articles")
-    .findOne({ type: "welcome" }, (err, result) => {
-      if (err) {
-        res.status(400).send(err);
-      } else {
-        res.send(JSON.stringify(result));
-      }
-    });
-});
-
-app.patch("/api/edit-welcome-article", authenticate, (req, res) => {
-  let errorInfo = "Tekst zmodyfikowany poprawnie!";
-  let objectId = null;
-
+app.get("/api/get-welcome-article", async (req, res) => {
   try {
-    objectId = new ObjectId(req.body._id);
-  } catch (error) {
-    console.log(error);
-    res.send({
-      result: false,
-      errorInfo:
-        "Nie znaleziono artykułu! Niepoprawny format identyfikatora ID",
-    });
-  }
-
-  if (objectId) {
-    mongoClient
-      .db("albumParadyz")
-      .collection("articles")
-      .updateOne(
-        {
-          type: "welcome",
-        },
-        {
-          $set: {
-            text: req.body.text,
-            sign: req.body.sign,
-            origin: req.body.origin,
-          },
-        },
-        (err, result) => {
-          if (err) errorInfo = err;
-          res.send({ result: true, errorInfo: errorInfo });
-        }
-      );
+    let result = await Articles.findOne({ type: "welcome" });
+    res.send(JSON.stringify(result));
+  } catch (err) {
+    res.status(400).send(err);
   }
 });
 
-app.get("/api/get-highlighted-images", (req, res) => {
-  mongoClient
-    .db("albumParadyz")
-    .collection("images")
-    .find({ isHighlighted: true })
-    .toArray((err, result) => {
-      if (err) {
-        res.status(400).send(err);
-      } else {
-        res.send(JSON.stringify(result));
+app.patch("/api/edit-welcome-article", authenticate, async (req, res) => {
+  try {
+    await Articles.updateOne(
+      { type: "welcome" },
+      {
+        $set: {
+          text: req.body.text,
+          sign: req.body.sign,
+          origin: req.body.origin,
+        },
       }
+    );
+    res.send({ result: true, errorInfo: "Tekst zmodyfikowany poprawnie" });
+  } catch (error) {
+    res.status(400).send({
+      result: true,
+      errorInfo: error,
     });
+  }
+});
+
+app.get("/api/get-highlighted-images", async (req, res) => {
+  try {
+    let result = await Images.find({ isHighlighted: true }).exec();
+    res.send(JSON.stringify(result));
+  } catch (err) {
+    res.status(400).send(err);
+  }
 });
 
 app.post("/api/upload-images", authenticate, async (req, res) => {
@@ -345,18 +312,12 @@ app.post("/api/delete-images", authenticate, async (req, res) => {
 
   let i = 0;
   req.body.imagesArray.forEach(async (imageId) => {
-    let objectId = "";
     let result = {
       id: imageId,
       success: false,
       errorInfo: "Nie znaleziono zdjęcia! Niepoprawny format identyfikatora ID",
     };
-    try {
-      objectId = new ObjectId(imageId);
-      result = await deleteImage(objectId);
-    } catch (error) {
-      console.log(error);
-    }
+    result = await deleteImage(imageId);
     successCheck.push(result);
     if (i === req.body.imagesArray.length - 1) {
       res.send({ result: successCheck });
@@ -366,43 +327,32 @@ app.post("/api/delete-images", authenticate, async (req, res) => {
 });
 
 app.patch("/api/edit-image", authenticate, async (req, res) => {
-  let errorInfo = "Zdjęcie zmodyfikowane poprawnie!";
-  let objectId = null;
-
   try {
-    objectId = new ObjectId(req.body.image._id);
-  } catch (error) {
-    console.log(error);
+    const updated = await Images.updateOne(
+      { public_id: req.body.image.public_id },
+      {
+        $set: {
+          description: req.body.image.description,
+          year: req.body.image.year,
+          isHighlighted: req.body.image.isHighlighted,
+        },
+      }
+    );
     res.send({
-      result: false,
-      errorInfo: "Nie znaleziono zdjęcia! Niepoprawny format identyfikatora ID",
+      result: updated,
+      success: true,
+      errorInfo: "Zdjęcie zmodyfikowane poprawnie!",
     });
-  }
-
-  if (objectId) {
-    mongoClient
-      .db("albumParadyz")
-      .collection("images")
-      .updateOne(
-        {
-          public_id: req.body.image.public_id,
-        },
-        {
-          $set: {
-            description: req.body.image.description,
-            year: req.body.image.year,
-            isHighlighted: req.body.image.isHighlighted,
-          },
-        },
-        (err, result) => {
-          if (err) errorInfo = err;
-          res.send({ result: true, errorInfo: errorInfo });
-        }
-      );
+  } catch (error) {
+    res.status(400).send({
+      result: null,
+      success: false,
+      errorInfo: error,
+    });
   }
 });
 
-app.post("/api/send-email", limiter, (req, res) => {
+app.post("/api/send-email", limiter, async (req, res) => {
   let images = req.body.imagesArray;
   let contactMail = req.body.contactMail;
   let senderName = contactMail.split("@")[0];
@@ -418,51 +368,48 @@ app.post("/api/send-email", limiter, (req, res) => {
     };
   });
 
-  mongoClient
-    .db("albumParadyz")
-    .collection("users")
-    .find({
-      type: "admin",
-    })
-    .toArray((err, result) => {
-      if (err) {
-        return res.status(400).send(err);
-      } else {
-        let i = 0;
-        let users = result;
-        users.forEach((user) => {
-          let mailOptions = {
-            from: process.env.MAIL_BOT,
-            to: user.email,
-            subject: `Zgłoszenie zdjęć do albumu Paradyż od ${senderName}`,
-            html: mailText,
-            attachments: attachments,
-          };
+  try {
+    let users = await Users.find({ type: "admin" }).exec();
 
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.log(error);
-              return res.status(400).send({
-                success: false,
-                message:
-                  "Przepraszamy, zgłoszenie nie zostało wysłane! Prosimy spróbować później.",
-              });
-            }
-            if (i === users.length - 1) {
-              let message = "Email wysłany poprawnie!";
-              if (attachments.length > 0)
-                message =
-                  "Zdjęcią wysłane! Zdjęcia pojawią się w albumie po zweryfikowaniu przez administratora. Dziękujemy za wkład w projekt albumu!";
-              return res.status(200).send({
-                success: true,
-                message: message,
-              });
-            }
-            i++;
+    let i = 0;
+
+    users.forEach((user) => {
+      let mailOptions = {
+        from: process.env.MAIL_BOT,
+        to: user.email,
+        subject: `Zgłoszenie zdjęć do albumu Paradyż od ${senderName}`,
+        html: mailText,
+        attachments: attachments,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          return res.status(400).send({
+            success: false,
+            message:
+              "Przepraszamy, zgłoszenie nie zostało wysłane! Prosimy spróbować później.",
           });
-        });
-      }
+        }
+        if (i === users.length - 1) {
+          let message = "Email wysłany poprawnie!";
+          if (attachments.length > 0)
+            message =
+              "Zdjęcią wysłane! Zdjęcia pojawią się w albumie po zweryfikowaniu przez administratora. Dziękujemy za wkład w projekt albumu!";
+          return res.status(200).send({
+            success: true,
+            message: message,
+          });
+        }
+        i++;
+      });
     });
+  } catch (err) {
+    res.status(400).send({
+      result: null,
+      errorInfo: err,
+    });
+  }
 });
 
 getImages = (years, limit) => {
@@ -474,8 +421,7 @@ getImages = (years, limit) => {
     for (let i = 0; i < years.length; i++) {
       const year = years[i];
       let results = await getImagesForYear(year, limit);
-
-      if (results.errorInfo !== "")
+      if (results.errorInfo.length > 0)
         resolve({
           results: resultArray,
           left: years.slice(i, years.length - 1),
@@ -495,157 +441,118 @@ getImages = (years, limit) => {
 };
 
 getImagesForYear = (year, limit) => {
-  return new Promise((resolve, reject) => {
-    let errorInfo = "";
-    let db = mongoClient.db("albumParadyz").collection("images");
-    db.find({ category: year }).toArray((err, result) => {
-      if (err) {
-        reject({
-          results: result,
-          errorInfo: err,
-        });
-      } else {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = await Images.find({ category: year }).exec();
+      resolve({
+        results: result,
+        errorInfo: "",
+      });
+    } catch (err) {
+      resolve({
+        results: null,
+        errorInfo: err,
+      });
+    }
+  });
+};
+
+uploadImage = (image) => {
+  return new Promise(async (resolve, reject) => {
+    cloudinary.uploader.upload(image.imageData, async (error, result) => {
+      if (error) {
         resolve({
-          results: result,
-          errorInfo: errorInfo,
+          result: null,
+          errorInfo: error,
+        });
+      }
+
+      let year = parseInt(image.year);
+
+      const newImage = new Images({
+        public_id: result.public_id,
+        url: result.url,
+        description: image.description,
+        year: year,
+        category: Math.floor(year / 10) * 10,
+        isHighlighted: image.isHighlighted,
+      });
+
+      try {
+        await newImage.save();
+        resolve({
+          result: result,
+          errorInfo: "",
+        });
+      } catch (err) {
+        resolve({
+          result: null,
+          errorInfo: err,
         });
       }
     });
   });
 };
 
-uploadImage = (image) => {
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(image.imageData, (error, result) => {
-      if (error) errorInfo = error;
-
-      let year = parseInt(image.year);
-
-      mongoClient
-        .db("albumParadyz")
-        .collection("images")
-        .insertOne(
-          {
-            public_id: result.public_id,
-            url: result.url,
-            description: image.description,
-            year: year,
-            category: Math.floor(year / 10) * 10,
-            isHighlighted: image.isHighlighted,
-          },
-          (err, res) => {
-            if (err)
-              resolve({
-                result: null,
-                errorInfo: err,
-              });
-            else
-              resolve({
-                result: result,
-                errorInfo: "",
-              });
-          }
-        );
-    });
-  });
-};
-
-deleteImage = (objectId) => {
-  return new Promise((resolve, reject) => {
-    mongoClient
-      .db("albumParadyz")
-      .collection("images")
-      .findOne(
-        {
-          _id: objectId,
-        },
-        (err, result) => {
-          if (err) {
-            resolve({ id: objectId, success: false, errorInfo: err });
-          }
-          if (!result) {
-            errorInfo = err;
-            resolve({
-              id: objectId,
-              success: false,
-              errorInfo: "Nie znaleziono zdjęcia!",
-            });
-          } else {
-            cloudinary.uploader.destroy(result.public_id);
-
-            mongoClient
-              .db("albumParadyz")
-              .collection("images")
-              .deleteOne(
-                {
-                  _id: objectId,
-                },
-                (err, res) => {
-                  if (err) {
-                    resolve({ id: objectId, success: false, errorInfo: err });
-                  }
-                }
-              );
-          }
-          resolve({ id: objectId, success: true, errorInfo: "" });
-        }
-      );
+deleteImage = (imageId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const imageToRemove = await Images.findOne({ _id: imageId });
+      const removed = await Images.deleteOne({ _id: imageId });
+      if (removed) await cloudinary.uploader.destroy(imageToRemove.public_id);
+      resolve({ id: imageId, success: true, errorInfo: "" });
+    } catch (error) {
+      console.log(error);
+      resolve({
+        id: imageId,
+        success: false,
+        errorInfo: "Nie znaleziono zdjęcia!",
+      });
+    }
   });
 };
 
 updateEmail = (oldEmail, newEmail) => {
-  let errorInfo = "Poprawnie zmieniono email!";
-
-  return new Promise((resolve, reject) => {
-    mongoClient
-      .db("albumParadyz")
-      .collection("users")
-      .updateOne(
-        {
-          email: oldEmail,
-        },
-        {
-          $set: {
-            email: newEmail,
-          },
-        },
-        (err, result) => {
-          let check = true;
-          if (err) {
-            errorInfo = err;
-            check = false;
-          }
-          resolve({ success: check, result: result, errorInfo: errorInfo });
-        }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const updated = await Users.updateOne(
+        { email: oldEmail },
+        { $set: { email: newEmail } }
       );
+      resolve({
+        result: updated,
+        success: true,
+        errorInfo: "Poprawnie zmieniono email!",
+      });
+    } catch (error) {
+      resolve({
+        result: null,
+        success: false,
+        errorInfo: error,
+      });
+    }
   });
 };
 
 updatePassword = (email, hash) => {
-  let errorInfo = "Poprawnie zmieniono hasło!";
-
-  return new Promise((resolve, reject) => {
-    mongoClient
-      .db("albumParadyz")
-      .collection("users")
-      .updateOne(
-        {
-          email: email,
-        },
-        {
-          $set: {
-            hash: hash,
-          },
-        },
-        (err, result) => {
-          let check = true;
-          if (err) {
-            errorInfo = err;
-            check = false;
-          }
-          resolve({ success: check, result: result, errorInfo: errorInfo });
-        }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const updated = await Users.updateOne(
+        { email: email },
+        { $set: { hash: hash } }
       );
+      resolve({
+        result: email,
+        success: true,
+        errorInfo: "Poprawnie zmieniono hasło!",
+      });
+    } catch (error) {
+      resolve({
+        result: null,
+        success: false,
+        errorInfo: error,
+      });
+    }
   });
 };
 

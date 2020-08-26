@@ -54,7 +54,7 @@ function EditImage(props) {
         })
         .then((json) => {
           let temp = {
-            alertType: json.result,
+            alertType: json.result, //na nowe to json.success
             alertText: json.errorInfo,
           };
           setAlert(temp);
