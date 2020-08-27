@@ -56,6 +56,8 @@
                     z-index: 0
                     opacity: 1
                     outline: none
+                    @media screen and ( max-width: 355px )
+                        min-width: calc( 100% - 42px ) !important
                 .textInput      
                     display: block
                     margin: 0 auto 20px auto
@@ -83,8 +85,15 @@
             position: absolute
             top: -40px
             right: 45%
+        .imagesListContainer
+            margin-bottom: 80px
         .btnSend
-            display: block
-            margin-left: auto
-            margin-right: 15px
-            margin-top: 5%
+            position: absolute
+            bottom: 30px
+            right: 20px
+            @media screen and ( max-width: 450px )
+                position: relative
+                display: block
+                margin-left: auto
+                margin-right: 15px
+                margin-top: 5%

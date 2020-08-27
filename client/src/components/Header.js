@@ -28,13 +28,16 @@ const Header = (props) => {
           <img src={logo} alt="Logo" />
         </NavLink>
       )}
-      {showHeader ||
-        (props.sticky && <span className={styles.cityTitle}>Paradyż</span>)}
+      {(showHeader || props.sticky) && (
+        <span className={styles.cityTitle}>Paradyż</span>
+      )}
       {(showHeader || props.sticky) && (
         <ul className={styles.menu}>
           <li>
             <NavLink
-              className={showHeader || props.sticky ? styles.link : ""}
+              className={
+                showHeader ? styles.link : `${styles.link} ${styles.hideBehind}`
+              }
               to="/album"
             >
               <span>Przglądaj album</span>
@@ -42,7 +45,9 @@ const Header = (props) => {
           </li>
           <li>
             <NavLink
-              className={showHeader || props.sticky ? styles.link : ""}
+              className={
+                showHeader ? styles.link : `${styles.link} ${styles.hideBehind}`
+              }
               to="/kontakt"
             >
               <span>Prześlij zdjęcia</span>

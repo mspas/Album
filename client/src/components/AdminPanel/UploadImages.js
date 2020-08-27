@@ -117,9 +117,9 @@ function UploadImages(props) {
         image.alertType = false;
         check = false;
       }
-      setImages(array);
-      return check;
     }
+    setImages(array);
+    return check;
   };
 
   const setUploadResult = (resultArray) => {

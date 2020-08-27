@@ -106,7 +106,6 @@ function Contact() {
       if (images.length > 0) check = validateData([...images]);
       resolve(check);
     }).then(() => {
-      console.log("siema", check);
       if (check)
         _auth
           .fetch("/api/send-email", {
@@ -123,7 +122,6 @@ function Contact() {
             setShowError(true);
           });
       else {
-        console.log("siema", check);
         if (mailText.length < 1) {
           if (images.length > 0)
             setError({
@@ -151,9 +149,9 @@ function Contact() {
         image.alertType = false;
         check = false;
       }
-      setImages(array);
-      return check;
     }
+    setImages(array);
+    return check;
   };
 
   return (
@@ -214,7 +212,8 @@ function Contact() {
                   </Form.Control.Feedback>
                 </InputGroup>
                 <Form.Text className="text-muted">
-                  Wymagany do ew. weryfikacji zdjęć przed dodaniem do albumu
+                  Email wymagany do ew. weryfikacji zdjęć przed dodaniem do
+                  albumu
                 </Form.Text>
               </Form.Group>
 
@@ -265,22 +264,24 @@ function Contact() {
             ></Spinner>
           </div>
         )}
-        {images.map((image, index) => {
-          return (
-            <NewImage
-              key={index}
-              imageURL={image.imageData}
-              alertType={image.alertType}
-              alertText={image.alertText}
-              id={index}
-              descriptionChangeHandler={descriptionChangeHandler}
-              yearChangeHandler={yearChangeHandler}
-              deleteImageHandler={deleteImageHandler}
-              highlightChangeHandler={highlightChangeHandler}
-              admin={false}
-            />
-          );
-        })}
+        <div className={styles.imagesListContainer}>
+          {images.map((image, index) => {
+            return (
+              <NewImage
+                key={index}
+                imageURL={image.imageData}
+                alertType={image.alertType}
+                alertText={image.alertText}
+                id={index}
+                descriptionChangeHandler={descriptionChangeHandler}
+                yearChangeHandler={yearChangeHandler}
+                deleteImageHandler={deleteImageHandler}
+                highlightChangeHandler={highlightChangeHandler}
+                admin={false}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );
