@@ -40,11 +40,13 @@ function Album() {
     if (nextPage) setIsLoading(true);
     setIsLoadingNewSet(true);
 
+    const yearsToFetch = years.length < 1 ? YEARS : years;
+
     _auth
       .fetch("/api/get-images", {
         method: "POST",
         body: JSON.stringify({
-          years: years,
+          years: yearsToFetch,
           limit: LIMIT,
         }),
       })
@@ -147,6 +149,7 @@ function Album() {
         isLoading={isLoading}
         isLoadingNewSet={isLoadingNewSet}
         fetchData={fetchData}
+        imagesCount={images.length}
       />
       <ImageSlider
         show={modalShow}

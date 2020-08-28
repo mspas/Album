@@ -19,45 +19,55 @@ $size: 200px
             box-sizing: border-box
             position: relative
             display: inline-block
-            flex-basis: $size
-            height: $size
-            max-width: $size
+            max-width: 100%
             margin: 10px
-            &:hover
-                img 
-                    border: 5px solid $darkBlue
-                .iconsBox
-                    visibility: visible
-            img 
-                height: 100%
-                width: 100%
-                object-fit: cover
-                cursor: pointer
-                border-radius: 2px
-                transition: 0.3s
-            .iconsBox
-                visibility: hidden
-                position: absolute
-                bottom: 0
-                right: 0
-                background: $darkBlue
-                color: $lighterBlue
-                padding: 5px 0
-                font-size: 15px
-                border-radius: 5px 0 0 0
-                .iconWrap
+            .imageBlock
+                display: block
+                margin: 0 auto
+                max-width: 100%
+                width: $size
+                height: $size
+                .imageWrap
+                    position: relative
+                    height: 100%
                     width: 100%
-                    padding: 5px 10px
-                    background-color: transparent
-                    border: none
-                    cursor: pointer
-                    &:first-child
-                        border-radius: 5px 0 0 0
+                    max-width: 100%
                     &:hover
-                        color: $logoBlue
-                    .icon
-                        display: block
-                        margin: 0 auto
+                        img 
+                            border: 5px solid $darkBlue
+                        .iconsBox
+                            visibility: visible
+                    img 
+                        width: $size
+                        height: $size
+                        max-width: $size
+                        object-fit: cover
+                        cursor: pointer
+                        border-radius: 2px
+                        transition: 0.3s
+                    .iconsBox
+                        visibility: hidden
+                        position: absolute
+                        bottom: 0
+                        right: 0
+                        background: $darkBlue
+                        color: $lighterBlue
+                        padding: 5px 0
+                        font-size: 15px
+                        border-radius: 5px 0 0 0
+                        .iconWrap
+                            width: 100%
+                            padding: 5px 10px
+                            background-color: transparent
+                            border: none
+                            cursor: pointer
+                            &:first-child
+                                border-radius: 5px 0 0 0
+                            &:hover
+                                color: $logoBlue
+                            .icon
+                                display: block
+                                margin: 0 auto
         .selected
             img 
                 border: 5px solid $error
@@ -67,5 +77,5 @@ $size: 200px
 
     .spinner
         position: absolute
-        top: 0
-        right: 45%
+        top: 5px
+        left: 50%

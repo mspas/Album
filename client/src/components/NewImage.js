@@ -97,6 +97,7 @@ function NewImage(props) {
               id="inputfile"
               onChange={props.imageSelectedHandler}
               onClick={props.nullifySelector}
+              multiple
             />
             <label htmlFor="inputfile">
               <div className={`${styles.addNewBox} ${styles.box}`}>

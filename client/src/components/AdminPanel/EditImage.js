@@ -37,8 +37,10 @@ function EditImage(props) {
 
   const imageUploadHandler = async () => {
     const _auth = new AuthService();
-    setIsLoading(true);
     let check = true;
+
+    setIsLoading(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     await new Promise((resolve, reject) => {
       check = validateData(imageData);

@@ -33,68 +33,75 @@ function ImageList(props) {
                     : styles.imageBox
                 }
               >
-                <div className={styles.iconsBox}>
-                  <OverlayTrigger placement="right" overlay={tooltipSelect}>
-                    <Button
-                      className={`${styles.iconWrap} center`}
-                      size="sm"
-                      onClick={(event) => {
-                        props.selectImage(event, index);
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        id={`select-${index}`}
-                        className={`panel-icon ${styles.icon}`}
-                        icon={faCheckCircle}
-                      />
-                    </Button>
-                  </OverlayTrigger>
-                  <OverlayTrigger placement="right" overlay={tooltipOverview}>
-                    <Button
-                      className={`${styles.iconWrap} center`}
-                      size="sm"
-                      onClick={(event) => {
-                        props.setModal(event, index);
-                        props.hideLogout(true);
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        id={`overview-${index}`}
-                        className={`panel-icon ${styles.icon}`}
-                        icon={faEye}
-                      />
-                    </Button>
-                  </OverlayTrigger>
-                  <OverlayTrigger placement="right" overlay={tooltipEdit}>
-                    <Button
-                      className={`${styles.iconWrap} center`}
-                      size="sm"
-                      onClick={(event) => {
-                        props.setImageEdit(event, index);
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        className={`panel-icon ${styles.icon}`}
-                        icon={faEdit}
-                      />
-                    </Button>
-                  </OverlayTrigger>
-                  <OverlayTrigger placement="right" overlay={tooltipDelete}>
-                    <Button
-                      className={`${styles.iconWrap} center`}
-                      size="sm"
-                      onClick={(event) => {
-                        props.deleteImage(event, index);
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        className={`panel-icon ${styles.icon}`}
-                        icon={faTrashAlt}
-                      />
-                    </Button>
-                  </OverlayTrigger>
+                <div className={styles.imageBlock}>
+                  <div className={styles.imageWrap}>
+                    <div className={styles.iconsBox}>
+                      <OverlayTrigger placement="right" overlay={tooltipSelect}>
+                        <Button
+                          className={`${styles.iconWrap} center`}
+                          size="sm"
+                          onClick={(event) => {
+                            props.selectImage(event, index);
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            id={`select-${index}`}
+                            className={`panel-icon ${styles.icon}`}
+                            icon={faCheckCircle}
+                          />
+                        </Button>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        placement="right"
+                        overlay={tooltipOverview}
+                      >
+                        <Button
+                          className={`${styles.iconWrap} center`}
+                          size="sm"
+                          onClick={(event) => {
+                            props.setModal(event, index);
+                            props.hideLogout(true);
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            id={`overview-${index}`}
+                            className={`panel-icon ${styles.icon}`}
+                            icon={faEye}
+                          />
+                        </Button>
+                      </OverlayTrigger>
+                      <OverlayTrigger placement="right" overlay={tooltipEdit}>
+                        <Button
+                          className={`${styles.iconWrap} center`}
+                          size="sm"
+                          onClick={(event) => {
+                            props.setImageEdit(event, index);
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            className={`panel-icon ${styles.icon}`}
+                            icon={faEdit}
+                          />
+                        </Button>
+                      </OverlayTrigger>
+                      <OverlayTrigger placement="right" overlay={tooltipDelete}>
+                        <Button
+                          className={`${styles.iconWrap} center`}
+                          size="sm"
+                          onClick={(event) => {
+                            props.deleteImage(event, index);
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            className={`panel-icon ${styles.icon}`}
+                            icon={faTrashAlt}
+                          />
+                        </Button>
+                      </OverlayTrigger>
+                    </div>
+                    <img src={image.url} alt={image.public_id} />
+                  </div>
                 </div>
-                <img src={image.url} alt={image.public_id} />
               </div>
             );
           })}

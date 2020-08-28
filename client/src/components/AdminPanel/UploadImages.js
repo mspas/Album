@@ -30,17 +30,21 @@ function UploadImages(props) {
       });
     };
 
+    let files = event.target.files;
     let temp = [...images];
-    let image = {
-      index: temp.length,
-      imageData: await addImageBase64(event.target.files[0]),
-      description: null,
-      year: null,
-      isHighlighted: false,
-      alertText: null,
-      alertType: true,
-    };
-    temp.push(image);
+
+    for (let i = 0; i < files.length; i++) {
+      let image = {
+        index: temp.length,
+        imageData: await addImageBase64(files[i]),
+        description: null,
+        year: null,
+        isHighlighted: false,
+        alertText: null,
+        alertType: true,
+      };
+      temp.push(image);
+    }
     setImages(temp);
   };
 
@@ -80,6 +84,8 @@ function UploadImages(props) {
 
   const imagesUploadHandler = async () => {
     setIsLoading(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     let check = true;
 
     await new Promise((resolve, reject) => {
@@ -163,6 +169,7 @@ function UploadImages(props) {
           id="inputfile"
           onChange={imageSelectedHandler}
           onClick={nullifySelector}
+          multiple
         />
         <label className="button" htmlFor="inputfile">
           <FontAwesomeIcon

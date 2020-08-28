@@ -40,17 +40,21 @@ function Contact() {
       });
     };
 
+    let files = event.target.files;
     let temp = [...images];
-    let image = {
-      index: temp.length,
-      imageData: await addImageBase64(event.target.files[0]),
-      description: null,
-      year: null,
-      isHighlighted: false,
-      alertText: null,
-      alertType: true,
-    };
-    temp.push(image);
+
+    for (let i = 0; i < files.length; i++) {
+      let image = {
+        index: temp.length,
+        imageData: await addImageBase64(files[i]),
+        description: null,
+        year: null,
+        isHighlighted: false,
+        alertText: null,
+        alertType: true,
+      };
+      temp.push(image);
+    }
     setImages(temp);
   };
 
@@ -92,6 +96,8 @@ function Contact() {
     event.preventDefault();
 
     setIsLoading(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     let check = true;
     if (mailText.length < 1) {
       check = false;
@@ -247,6 +253,7 @@ function Contact() {
           className={styles.inputFile}
           onChange={imageSelectedHandler}
           onClick={nullifySelector}
+          multiple
         />
         <label className="button" htmlFor="inputfile">
           <FontAwesomeIcon
@@ -264,24 +271,26 @@ function Contact() {
             ></Spinner>
           </div>
         )}
-        <div className={styles.imagesListContainer}>
-          {images.map((image, index) => {
-            return (
-              <NewImage
-                key={index}
-                imageURL={image.imageData}
-                alertType={image.alertType}
-                alertText={image.alertText}
-                id={index}
-                descriptionChangeHandler={descriptionChangeHandler}
-                yearChangeHandler={yearChangeHandler}
-                deleteImageHandler={deleteImageHandler}
-                highlightChangeHandler={highlightChangeHandler}
-                admin={false}
-              />
-            );
-          })}
-        </div>
+        {images.length > 0 && (
+          <div className={styles.imagesListContainer}>
+            {images.map((image, index) => {
+              return (
+                <NewImage
+                  key={index}
+                  imageURL={image.imageData}
+                  alertType={image.alertType}
+                  alertText={image.alertText}
+                  id={index}
+                  descriptionChangeHandler={descriptionChangeHandler}
+                  yearChangeHandler={yearChangeHandler}
+                  deleteImageHandler={deleteImageHandler}
+                  highlightChangeHandler={highlightChangeHandler}
+                  admin={false}
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

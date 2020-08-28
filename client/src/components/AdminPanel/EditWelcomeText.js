@@ -32,6 +32,7 @@ function EditWelcomeText(props) {
     const _auth = new AuthService();
 
     setIsLoading(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     _auth
       .fetch("/api/edit-welcome-article", {

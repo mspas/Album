@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from "react";
 import { Spinner } from "react-bootstrap";
-import styles from "./styles/Album.module.sass";
+import styles from "./styles/AlbumCategoriesList.module.sass";
 import ImagesListAlbum from "./ImagesListAlbum";
 
 function AlbumCategoriesList({
@@ -10,6 +10,7 @@ function AlbumCategoriesList({
   handleImageClick,
   isLoadingNewSet,
   fetchData,
+  imagesCount,
 }) {
   const observer = useRef(null);
   const lastYearElementRef = useCallback(
@@ -76,6 +77,11 @@ function AlbumCategoriesList({
         <div className={styles.spinner}>
           <Spinner animation="border" role="status"></Spinner>
         </div>
+      )}
+      {imagesCount < 1 && !isLoading && !isLoadingNewSet && (
+        <p className={styles.noImagesInfo}>
+          Brak zdjęć w podanych kategoriach!
+        </p>
       )}
     </div>
   );

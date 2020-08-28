@@ -26,6 +26,7 @@ function ChangeAdminDetails(props) {
     event.preventDefault();
     let oldEmail = _auth.getEmail(_auth.getToken());
 
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setIsLoading(true);
 
     _auth
@@ -52,6 +53,7 @@ function ChangeAdminDetails(props) {
     event.preventDefault();
     let email = _auth.getEmail(_auth.getToken());
 
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setIsLoading(true);
 
     if (newPassword !== newPasswordConfirmation) {
@@ -129,7 +131,7 @@ function ChangeAdminDetails(props) {
         />
         <span>Wstecz</span>
       </Button>
-      {isLoading && (
+      {!isLoading && (
         <div className={styles.spinner}>
           <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
