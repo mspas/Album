@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styles from "./NewImage.module.sass";
+import Alert from "./Alert";
 
 function NewImage(props) {
   return (
@@ -74,19 +75,13 @@ function NewImage(props) {
                 Podgląd przed dodaniem
               </button>
             )}
-            {props.alertText && (
-              <div className={styles.mediaFooter}>
-                <p
-                  className={
-                    props.alertType
-                      ? `${styles.alert} ${styles.success}`
-                      : `${styles.alert} ${styles.error}`
-                  }
-                >
-                  {props.alertText}
-                </p>
-              </div>
-            )}
+            <div className={styles.mediaFooter}>
+              <Alert
+                show={props.alertText ? true : false}
+                type={props.alertType}
+                text={props.alertText}
+              />
+            </div>
           </div>
         </div>
       ) : (

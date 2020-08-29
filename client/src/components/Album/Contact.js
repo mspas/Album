@@ -7,6 +7,7 @@ import styles from "./styles/Contact.module.sass";
 import NewImage from "../NewImage";
 import AuthService from "../../services/auth.service";
 import { showHeader, showLogo } from "../../actions";
+import Alert from "../Alert";
 
 function Contact() {
   const dispatch = useDispatch();
@@ -176,19 +177,7 @@ function Contact() {
         </div>
       </div>
       <div className={styles.content}>
-        {showError && (
-          <div className={styles.alertBox}>
-            <p
-              className={
-                error.type
-                  ? `${styles.alert} ${styles.success}`
-                  : `${styles.alert} ${styles.error}`
-              }
-            >
-              {error.message}
-            </p>
-          </div>
-        )}
+        <Alert show={showError} type={error.type} text={error.message} />
         <div className={styles.introductionBox}>
           <Form className={styles.form} onSubmit={imagesSendHandler}>
             <div className={styles.body}>
@@ -226,9 +215,10 @@ function Contact() {
               <Form.Group controlId="formText" className={styles.formGroup}>
                 <InputGroup className={styles.input}>
                   <Form.Control
+                    className={styles.textInput}
                     as="textarea"
                     name="text"
-                    rows="5"
+                    rows="4"
                     placeholder="Wstęp do zgłoszenia lub pytanie, które chcesz zadać. (opcjonalne)"
                     onChange={(event) => {
                       setMailText(event.target.value);

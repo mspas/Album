@@ -53,7 +53,7 @@ app.use(
 );
 
 mongoose.connect(process.env.DB_URI, mongoOptions, () => {
-  console.log("connected to db");
+  console.log("Connected to DB");
 });
 
 const transporter = nodemailer.createTransport({
@@ -557,7 +557,7 @@ updatePassword = (email, hash) => {
 };
 
 process.on("SIGINT", () => {
-  mongoClient.close();
+  mongoose.connection.close();
   console.log("Mongoose disconnected on app termination");
   process.exit(0);
 });

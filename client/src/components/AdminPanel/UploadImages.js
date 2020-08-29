@@ -114,12 +114,12 @@ function UploadImages(props) {
     for (let index = 0; index < array.length; index++) {
       const image = array[index];
       if (image.year === null || image.year > 2020 || image.year < 1800) {
-        image.alertText = "Error! Brak poprawnej daty!";
+        image.alertText = "Błąd! Brak poprawnej daty!";
         image.alertType = false;
         check = false;
       }
       if (image.description === null || image.description.length < 1) {
-        image.alertText = "Error! Opis nie może być pusty!";
+        image.alertText = "Błąd! Opis nie może być pusty!";
         image.alertType = false;
         check = false;
       }
@@ -137,7 +137,7 @@ function UploadImages(props) {
         image.alertText = "Zdjęcie dodano poprawnie!";
         image.alertType = true;
       } else {
-        image.alertText = `Error! ${errorInfo}`;
+        image.alertText = `Błąd! ${errorInfo}`;
         image.alertType = false;
       }
     }

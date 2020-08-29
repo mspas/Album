@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import AuthService from "../../services/auth.service";
 import styles from "./styles/EditWelcomeText.module.sass";
+import Alert from "../Alert";
 
 function EditWelcomeText(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -73,19 +74,7 @@ function EditWelcomeText(props) {
           <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
       )}
-      {showError && (
-        <div className={styles.alert}>
-          <p
-            className={
-              error.alertType
-                ? `${styles.alert} ${styles.success}`
-                : `${styles.alert} ${styles.error}`
-            }
-          >
-            {error.alertText}
-          </p>
-        </div>
-      )}
+      <Alert show={showError} type={error.alertType} text={error.alertText} />
       <Form className={styles.form} onSubmit={onSubmit}>
         <div className={styles.body}>
           <Form.Group controlId="formText">

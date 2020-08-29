@@ -5,11 +5,13 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import styles from "../NewImage.module.sass";
 import AuthService from "../../services/auth.service";
 import ImageSlider from "../Album/ImageSlider";
+import Alert from "../Alert";
 
 function EditImage(props) {
   const [imageData, setImageData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState({ alertType: true, alertText: "" });
+  const [showAlert, setShowAlert] = useState(false);
   const [showSlider, setShowSlider] = useState(false);
   const [sliderImages, setSliderImages] = useState({});
 
@@ -60,6 +62,7 @@ function EditImage(props) {
             alertText: json.errorInfo,
           };
           setAlert(temp);
+          setShowAlert(true);
           setIsLoading(false);
         });
     else setIsLoading(false);
@@ -84,6 +87,7 @@ function EditImage(props) {
       check = false;
     }
     setAlert(alertT);
+    setShowAlert(true);
     return check;
   };
 
@@ -119,16 +123,16 @@ function EditImage(props) {
           </label>
         </div>
         <div className={`${styles.mediaBody}`}>
-          <Row className={`${styles.mediaBodyHeading} mt-0`}>
-            <Col>
+          <div className={`${styles.mediaBodyHeading} mt-0`}>
+            <div>
               <input
                 className={styles.yearInput}
                 type="number"
                 defaultValue={imageData.year}
                 onChange={yearChangeHandler}
               />
-            </Col>
-            <Col xs={6} className={`${styles.highlight} center`}>
+            </div>
+            <div className={`${styles.highlight} center`}>
               <label htmlFor={`h${props.id}`}>Wyróżnione?</label>
               <input
                 id={`h-${props.id}`}
@@ -137,8 +141,8 @@ function EditImage(props) {
                 type="checkbox"
                 onChange={highlightChangeHandler}
               />
-            </Col>
-          </Row>
+            </div>
+          </div>
           <textarea
             className={styles.description}
             defaultValue={props.image.description}
@@ -148,19 +152,7 @@ function EditImage(props) {
             onChange={descriptionChangeHandler}
           />
         </div>
-        {alert.alertText && (
-          <div className={styles.mediaFooter}>
-            <p
-              className={
-                alert.alertType
-                  ? `${styles.alert} ${styles.success}`
-                  : `${styles.alert} ${styles.error}`
-              }
-            >
-              {alert.alertText}
-            </p>
-          </div>
-        )}
+        <Alert show={showAlert} type={alert.alertType} text={alert.alertText} />
       </div>
       {isLoading && (
         <div className={styles.spinner}>

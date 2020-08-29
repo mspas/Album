@@ -6,6 +6,7 @@ const Slide = (props) => {
     <div>
       {props.image ? (
         <div className={styles.slide}>
+          <p className={styles.year}>{props.image.year}</p>
           <div className={styles.imgWrap}>
             <img
               src={props.image.url}

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { Form, InputGroup } from "react-bootstrap";
+import { Form, InputGroup, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import AuthService from "../../services/auth.service";
 import styles from "./styles/SignIn.module.sass";
 import logo from "../../assets/logo-text.png";
+import Alert from "../Alert";
 
 function SignIn(props) {
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({
     success: true,
     message: "",
@@ -21,9 +23,12 @@ function SignIn(props) {
 
   const onSubmit = (event) => {
     event.preventDefault();
+    setIsLoading(true);
+
     _auth
       .login(password)
       .then((res) => {
+        setIsLoading(false);
         if (!res.success) {
           console.log(res);
           setError(res);
@@ -41,6 +46,17 @@ function SignIn(props) {
         <div className={styles.header}>
           <img src={logo} alt="Logo" />
         </div>
+
+        {isLoading && (
+          <div className={styles.spinner}>
+            <Spinner
+              animation="border"
+              variant="primary"
+              role="status"
+            ></Spinner>
+          </div>
+        )}
+
         <Form className={styles.formSignIn} onSubmit={onSubmit}>
           <Form.Group controlId="formPassword">
             <span className={styles.info}>
@@ -66,21 +82,13 @@ function SignIn(props) {
             </InputGroup>
           </Form.Group>
 
-          {showError && (
-            <div className={styles.alertBox}>
-              <p
-                className={
-                  error.success
-                    ? `${styles.alert} ${styles.success}`
-                    : `${styles.alert} ${styles.error}`
-                }
-              >
-                {error.message}
-              </p>
-            </div>
-          )}
+          <Alert show={showError} type={error.success} text={error.message} />
 
-          <button className="button" variant="primary" type="submit">
+          <button
+            className={`${styles.btnSend} button`}
+            variant="primary"
+            type="submit"
+          >
             Zaloguj
           </button>
         </Form>

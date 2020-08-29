@@ -6,6 +6,7 @@ import AuthService from "../../services/auth.service";
 import styles from "./styles/ChangeAdminDetails.module.sass";
 import ChangeEmail from "./ChangeEmail";
 import ChangePassword from "./ChangePassword";
+import Alert from "../Alert";
 
 function ChangeAdminDetails(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -131,24 +132,12 @@ function ChangeAdminDetails(props) {
         />
         <span>Wstecz</span>
       </Button>
-      {!isLoading && (
+      {isLoading && (
         <div className={styles.spinner}>
           <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
       )}
-      {showError && (
-        <div className={styles.alert}>
-          <p
-            className={
-              error.alertType
-                ? `${styles.alert} ${styles.success}`
-                : `${styles.alert} ${styles.error}`
-            }
-          >
-            {error.alertText}
-          </p>
-        </div>
-      )}
+      <Alert show={showError} type={error.alertType} text={error.alertText} />
       {!swtichValue ? (
         <ChangeEmail
           email={props.email}

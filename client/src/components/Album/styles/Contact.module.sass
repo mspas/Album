@@ -2,16 +2,21 @@
 @import '../../../_mixins'
 @import '../../../_animations'
 
+
 .contactContainer
     min-height: 98vh
     padding: 120px 10vw 50px 10vw !important
-    @include default-box()        
+    @include default-box()
+    ::placeholder
+        letter-spacing: 1px
+        @include color-opacity-font($color: white, $opacity: 0.6)
     .invitationTextContainer
         background-image: url('../../../assets/panelbg.png')
         background-position: 15% 9%
         background-repeat: no-repeat
-        border-radius: 5px
+        border-radius: 5px 5px 0 0
         .invitationText
+            user-select: none
             padding: 20px 50px
             background-color: rgba(30, 31, 40, 0.3)
             backdrop-filter: opacity(0.6) blur(2px) sepia(.4)
@@ -28,6 +33,7 @@
                 margin-top: 20px
     .content
         position: relative
+        border-radius: 0 0 10px 10px !important
         @include default-box()
         .alertBox
             .alert
@@ -46,23 +52,21 @@
                 display: block
                 width: 60%
                 margin: 0 auto 20px auto
+                outline: none
                 @media screen and ( max-width: 800px )
                     width: 100%
                 .emailInput
                     position: relative
                     min-width: 200px !important
                     min-height: 30px !important
+                    border-radius: 0 0.25rem 0.25rem 0
                     padding: 10px
                     z-index: 0
                     opacity: 1
-                    outline: none
                     @media screen and ( max-width: 355px )
                         min-width: calc( 100% - 42px ) !important
-                .textInput      
-                    display: block
-                    margin: 0 auto 20px auto
-                    padding: 10px
-                    outline: none
+                .textInput
+                    resize: none
         .inputFile
             width: 0.1px
             height: 0.1px
