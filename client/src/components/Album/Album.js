@@ -8,7 +8,7 @@ import ImageSlider from "./ImageSlider";
 
 function Album() {
   const YEARS = [1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990];
-  const LIMIT = 10;
+  const LIMIT = 50;
 
   const dispatch = useDispatch();
   const [images, setImages] = useState([]);
@@ -17,7 +17,7 @@ function Album() {
   const [selectedYears, setSelectedYears] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingNewSet, setIsLoadingNewSet] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const [modalShow, setModalShow] = useState(false);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ function Album() {
     if (nextPage) setIsLoading(true);
     setIsLoadingNewSet(true);
 
-    const yearsToFetch = years.length < 1 ? YEARS : years;
+    const yearsToFetch = years.length < 1 && !nextPage ? YEARS : years;
 
     _auth
       .fetch("/api/get-images", {
@@ -156,6 +156,9 @@ function Album() {
         onHide={handleHideClick}
         images={images}
         activeIndex={activeIndex}
+        left={yearsLeftForNextPage}
+        fetchData={fetchData}
+        isPreview={false}
       />
     </div>
   );

@@ -92,8 +92,49 @@
                 height: 8px
             ::-webkit-scrollbar-thumb
                 background: #2e2e2e
-
-
+    .galleryContainer
+        position: absolute
+        bottom: 0
+        height: 70px
+        width: 100vw
+        background: black
+        overflow: hidden
+        @media screen and ( max-width: 800px )
+            height: 100vh
+            width: 100vw
+        .gallery
+            display: block
+            margin: 0 auto
+            padding-left: 0
+            height: 100%
+            width: 100%
+            direction: ltr
+            text-align: center
+            .galleryItem
+                display: inline-block
+                width: 100px
+                height: 100%
+                overflow: hidden
+                filter: grayscale(100%)
+                vertical-align: bottom
+                letter-spacing: normal
+                display: inline-block
+                transition: all 0.15s ease-out
+                margin: 0 2px
+                padding: 0
+                background-color: #fff
+                background-position: center
+                background-size: cover
+                background-repeat: no-repeat
+                cursor: pointer
+                opacity: 0.65
+                border-bottom: solid 5px #272834
+                &:hover
+                    filter: grayscale(0)
+                    border-bottom: solid 5px white
+            .activeItem
+                filter: grayscale(0) contrast(200%) !important
+                border-bottom: solid 5px #272834 !important
 .animationSlideLeft
     transform: translate(-100vw,0)
             

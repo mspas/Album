@@ -221,6 +221,9 @@ function UploadImages(props) {
         }}
         images={sliderImages}
         activeIndex={0}
+        left={[]}
+        fetchData={null}
+        isPreview={true}
       />
       <button className="button" onClick={imagesUploadHandler}>
         Wyślij

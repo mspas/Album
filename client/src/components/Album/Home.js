@@ -18,7 +18,7 @@ function Home() {
   const [subtitle, setSubtitle] = useState("");
   const [bodyText, setBodyText] = useState("");
   const [modalShow, setModalShow] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {
     fetchData();
@@ -108,6 +108,9 @@ function Home() {
         }}
         images={images}
         activeIndex={activeIndex}
+        left={[]}
+        fetchData={null}
+        isPreview={true}
       />
     </div>
   );

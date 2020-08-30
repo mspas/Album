@@ -10,20 +10,72 @@ import Slide from "./Slide";
 
 const ImageSlider = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [btnsDisabled, setBtnsDisabled] = useState(false);
+  const [leftIndex, setLeftIndex] = useState(0);
+  const [rightIndex, setRightIndex] = useState(0);
+  const [galleryItems, setGalleryItems] = useState([]);
+  const [moveDisabled, setMoveDisabled] = useState(false);
   const sliderRef = useRef();
+  const GALLERY_WIDTH = 8;
 
   useEffect(() => {
-    if (props.activeIndex > -1) setActiveIndex(props.activeIndex);
-  }, [props.activeIndex, props.images]);
+    if (props.activeIndex > -1) {
+      setActiveIndex(props.activeIndex);
+      setLeftIndex(props.activeIndex - 1);
+      setRightIndex(props.activeIndex + 1);
+    }
+    setGallery(props.images, props.activeIndex);
+  }, [props.activeIndex]);
+
+  const setGallery = (images, index) => {
+    if (props.left.length > 0 && !props.isPreview) {
+      if (
+        activeIndex + GALLERY_WIDTH + 2 > props.images.length ||
+        props.images.length < GALLERY_WIDTH * 2
+      ) {
+        props.fetchData(props.left, true);
+      }
+    }
+
+    let temp = [];
+
+    let start = 0;
+    if (index < GALLERY_WIDTH) {
+      start = 0;
+    } else {
+      start =
+        index + GALLERY_WIDTH > images.length
+          ? images.length - GALLERY_WIDTH * 2
+          : index - GALLERY_WIDTH;
+    }
+
+    let end = 0;
+    if (index < GALLERY_WIDTH) {
+      end =
+        GALLERY_WIDTH * 2 > images.length ? images.length : GALLERY_WIDTH * 2;
+    } else {
+      end =
+        index + GALLERY_WIDTH > images.length
+          ? images.length
+          : index + GALLERY_WIDTH;
+    }
+
+    //console.log(index, start, end, images.length);
+
+    if (images.length > 0) {
+      for (let i = start; i < end; i++) {
+        temp.push(images[i]);
+      }
+      setGalleryItems(temp);
+    }
+  };
 
   const moveSlide = (direction) => {
-    let value = 100 * direction;
+    let value = -100 * direction;
     if (sliderRef.current) {
       sliderRef.current.style.transitionDuration = "1s";
       sliderRef.current.style.transform = `translate( ${value}vw,0)`;
     }
-    setBtnsDisabled(true);
+    setMoveDisabled(true);
   };
 
   const setStartingPos = () => {
@@ -31,18 +83,43 @@ const ImageSlider = (props) => {
       sliderRef.current.style.transitionDuration = "0s";
       sliderRef.current.style.transform = "translate(0,0)";
     }
-    setBtnsDisabled(false);
+    setMoveDisabled(false);
   };
 
   const handleArrowClick = (direction) => {
     if (
-      (activeIndex < 1 && direction > 0) ||
-      (activeIndex > props.images.length - 2 && direction < 0)
+      (activeIndex < 1 && direction < 0) ||
+      (activeIndex > props.images.length - 2 && direction > 0) ||
+      moveDisabled
     )
       return false;
+
+    let nextIndex = activeIndex + 1 * direction;
+    setGallery(props.images, nextIndex);
     moveSlide(direction);
     setTimeout(() => {
-      setActiveIndex(activeIndex - 1 * direction);
+      setActiveIndex(nextIndex);
+      setLeftIndex(nextIndex - 1);
+      setRightIndex(nextIndex + 1);
+      setStartingPos();
+    }, 1000);
+  };
+
+  const handleGalleryImageClick = (image) => {
+    let nextIndex = props.images.indexOf(image);
+
+    if (activeIndex === nextIndex || moveDisabled) return false;
+    console.log(nextIndex);
+    let direction = activeIndex > nextIndex ? -1 : 1;
+    if (direction > 0) setRightIndex(nextIndex);
+    else setLeftIndex(nextIndex);
+    setGallery(props.images, nextIndex);
+
+    moveSlide(direction);
+    setTimeout(() => {
+      setActiveIndex(nextIndex);
+      setLeftIndex(nextIndex - 1);
+      setRightIndex(nextIndex + 1);
       setStartingPos();
     }, 1000);
   };
@@ -51,6 +128,23 @@ const ImageSlider = (props) => {
     let win = window.open(props.images[activeIndex].url, "_blank");
     win.focus();
   };
+
+  const galleryItemsList = galleryItems.map((image) => {
+    return (
+      <li
+        key={image.url}
+        className={
+          props.images[activeIndex]._id === image._id
+            ? `${styles.galleryItem} ${styles.activeItem}`
+            : styles.galleryItem
+        }
+        style={{ backgroundImage: `url(${image.url})` }}
+        onClick={() => {
+          handleGalleryImageClick(image);
+        }}
+      ></li>
+    );
+  });
 
   return (
     <div>
@@ -71,9 +165,9 @@ const ImageSlider = (props) => {
                 ? `${styles.btn} button`
                 : `${styles.btn} ${styles.btnDisabled} button`
             }
-            disabled={btnsDisabled}
+            disabled={moveDisabled}
             onClick={() => {
-              handleArrowClick(1);
+              handleArrowClick(-1);
             }}
           >
             <FontAwesomeIcon className={styles.abc} icon={faChevronLeft} />
@@ -84,9 +178,9 @@ const ImageSlider = (props) => {
                 ? `${styles.btn} button`
                 : `${styles.btn} ${styles.btnDisabled} button`
             }
-            disabled={btnsDisabled}
+            disabled={moveDisabled}
             onClick={() => {
-              handleArrowClick(-1);
+              handleArrowClick(1);
             }}
           >
             <FontAwesomeIcon className={styles.abc} icon={faChevronRight} />
@@ -96,8 +190,8 @@ const ImageSlider = (props) => {
               <div className={styles.sliderSection}>
                 <div className={styles.slide}>
                   <Slide
-                    image={props.images[activeIndex - 1]}
-                    i={activeIndex - 1}
+                    image={props.images[leftIndex]}
+                    i={leftIndex}
                     handleImageClick={handleImageClick}
                   />
                 </div>
@@ -114,13 +208,16 @@ const ImageSlider = (props) => {
               <div className={styles.sliderSection}>
                 <div className={styles.slide}>
                   <Slide
-                    image={props.images[activeIndex + 1]}
-                    i={activeIndex + 1}
+                    image={props.images[rightIndex]}
+                    i={rightIndex}
                     handleImageClick={handleImageClick}
                   />
                 </div>
               </div>
             </div>
+          </div>
+          <div className={styles.galleryContainer}>
+            <ul className={styles.gallery}>{galleryItemsList}</ul>
           </div>
         </div>
       )}
