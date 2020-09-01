@@ -36,12 +36,8 @@ const ImageSlider = (props) => {
       }
     }
 
-    let temp = [];
-
     let start = 0;
-    if (index < GALLERY_WIDTH) {
-      start = 0;
-    } else {
+    if (index > GALLERY_WIDTH) {
       start =
         index + GALLERY_WIDTH > images.length
           ? images.length - GALLERY_WIDTH * 2
@@ -60,6 +56,8 @@ const ImageSlider = (props) => {
     }
 
     //console.log(index, start, end, images.length);
+
+    let temp = [];
 
     if (images.length > 0) {
       for (let i = start; i < end; i++) {
@@ -109,10 +107,13 @@ const ImageSlider = (props) => {
     let nextIndex = props.images.indexOf(image);
 
     if (activeIndex === nextIndex || moveDisabled) return false;
-    console.log(nextIndex);
+    console.log(nextIndex, props.images.length);
+
     let direction = activeIndex > nextIndex ? -1 : 1;
+
     if (direction > 0) setRightIndex(nextIndex);
     else setLeftIndex(nextIndex);
+
     setGallery(props.images, nextIndex);
 
     moveSlide(direction);
@@ -129,7 +130,7 @@ const ImageSlider = (props) => {
     win.focus();
   };
 
-  const galleryItemsList = galleryItems.map((image) => {
+  const galleryItemsList = galleryItems.map((image, index) => {
     return (
       <li
         key={image.url}
@@ -159,32 +160,34 @@ const ImageSlider = (props) => {
               />
             </button>
           </div>
-          <button
-            className={
-              activeIndex > 0
-                ? `${styles.btn} button`
-                : `${styles.btn} ${styles.btnDisabled} button`
-            }
-            disabled={moveDisabled}
-            onClick={() => {
-              handleArrowClick(-1);
-            }}
-          >
-            <FontAwesomeIcon className={styles.abc} icon={faChevronLeft} />
-          </button>
-          <button
-            className={
-              activeIndex < props.images.length - 1
-                ? `${styles.btn} button`
-                : `${styles.btn} ${styles.btnDisabled} button`
-            }
-            disabled={moveDisabled}
-            onClick={() => {
-              handleArrowClick(1);
-            }}
-          >
-            <FontAwesomeIcon className={styles.abc} icon={faChevronRight} />
-          </button>
+          <div className={styles.btnWrap}>
+            <button
+              className={
+                activeIndex > 0
+                  ? `${styles.btn} button`
+                  : `${styles.btn} ${styles.btnDisabled} button`
+              }
+              disabled={moveDisabled}
+              onClick={() => {
+                handleArrowClick(-1);
+              }}
+            >
+              <FontAwesomeIcon className={styles.abc} icon={faChevronLeft} />
+            </button>
+            <button
+              className={
+                activeIndex < props.images.length - 1
+                  ? `${styles.btn} button`
+                  : `${styles.btn} ${styles.btnDisabled} button`
+              }
+              disabled={moveDisabled}
+              onClick={() => {
+                handleArrowClick(1);
+              }}
+            >
+              <FontAwesomeIcon className={styles.abc} icon={faChevronRight} />
+            </button>
+          </div>
           <div className={styles.sliderWrap}>
             <div className={styles.slider} ref={sliderRef}>
               <div className={styles.sliderSection}>

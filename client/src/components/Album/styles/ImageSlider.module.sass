@@ -18,39 +18,48 @@
         bottom: 0
         background-color: #0000008f
         z-index: 0
-    .btn
-        position: absolute
-        bottom: 45%
-        padding: 6px
-        font-size: 2.5em
-        z-index: 3
-        &:first-of-type
-            left: 50px
-        &:last-of-type
-            right: 50px
-        @media screen and ( max-width: 800px )
-            bottom: 15%
+    .btnWrap
+        @media screen and ( max-width: 1000px )
+            position: absolute
+            bottom: 0
+            height: 70px
+            width: 100vw
+            background: $darkBlue
+            box-shadow: 0px -5px 19px 1px $darkBlue
+            z-index: 3
+        .btn
+            position: absolute
+            bottom: 45%
+            padding: 6px
+            font-size: 2.5em
+            z-index: 3
             &:first-of-type
-                left: 5px
+                left: 50px
             &:last-of-type
-                right: 12px
-        @media screen and ( max-width: 600px )
-            font-size: 1.5em
-    .btnDisabled
-        color: #ffffff59
-        border-color: #ffffff59
-        cursor: default
-        &:hover
+                right: 50px
+            @media screen and ( max-width: 1000px )
+                bottom: 10px
+                width: 30%
+                font-size: 1.5em
+                &:first-of-type
+                    left: 5px
+                &:last-of-type
+                    right: 12px
+        .btnDisabled
             color: #ffffff59
             border-color: #ffffff59
-            background: transparent
+            cursor: default
+            &:hover
+                color: #ffffff59
+                border-color: #ffffff59
+                background: transparent
     .header
         position: absolute
         top: 0
         right: 5vw
         width: 100%
         padding: 10px
-        @media screen and ( max-width: 800px )
+        @media screen and ( max-width: 1000px )
             top: 10px
             z-index: 111
         .btnClose
@@ -76,6 +85,9 @@
             width: 70vw
             margin: 0 auto
             transition: all 1s ease-in-out
+            @media screen and ( max-width: 1000px )
+                height: 98vh
+                width: 100vw
             @media screen and ( max-width: 800px )
                 height: 100vh
                 width: 100vw
@@ -99,9 +111,8 @@
         width: 100vw
         background: black
         overflow: hidden
-        @media screen and ( max-width: 800px )
-            height: 100vh
-            width: 100vw
+        @media screen and ( max-width: 1000px )
+            display: none
         .gallery
             display: block
             margin: 0 auto
