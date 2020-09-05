@@ -10,20 +10,35 @@
     bottom: 0
     width: 100vw
     height: 100vh
+    &:hover
+        .btnWrap
+            transition: all 0.6s ease-in
+            opacity: 1
+        .header
+            transition: all 0.6s ease-in
+            opacity: 1
+        .galleryContainer
+            transition: all 0.6s ease-in
+            opacity: 1
+            transform: translate(0, 0)
     .overlay
         position: fixed
         top: 0
         left: 0
         right: 0
         bottom: 0
-        background-color: #0000008f
+        background-color: #000000bd
         z-index: 0
     .btnWrap
-        @media screen and ( max-width: 1000px )
+        transition: all 0.6s ease-out
+        opacity: 0
+        @media screen and ( max-width: 1024px )
+            display: inline-block
             position: absolute
             bottom: 0
             height: 70px
             width: 100vw
+            opacity: 1
             background: $darkBlue
             box-shadow: 0px -5px 19px 1px $darkBlue
             z-index: 3
@@ -37,7 +52,7 @@
                 left: 50px
             &:last-of-type
                 right: 50px
-            @media screen and ( max-width: 1000px )
+            @media screen and ( max-width: 1024px )
                 bottom: 10px
                 width: 30%
                 font-size: 1.5em
@@ -59,8 +74,12 @@
         right: 5vw
         width: 100%
         padding: 10px
-        @media screen and ( max-width: 1000px )
+        transition: all 0.6s ease-out
+        opacity: 0
+        @media screen and ( max-width: 1024px )
+            display: block
             top: 10px
+            opacity: 1
             z-index: 111
         .btnClose
             display: block
@@ -84,8 +103,7 @@
             height: 90vh
             width: 70vw
             margin: 0 auto
-            transition: all 1s ease-in-out
-            @media screen and ( max-width: 1000px )
+            @media screen and ( max-width: 1024px )
                 height: 98vh
                 width: 100vw
             @media screen and ( max-width: 800px )
@@ -111,8 +129,9 @@
         width: 100vw
         background: black
         overflow: hidden
-        @media screen and ( max-width: 1000px )
-            display: none
+        transition: all 0.6s ease-out
+        opacity: 0
+        transform: translate(0, 35px)
         .gallery
             display: block
             margin: 0 auto
@@ -130,7 +149,7 @@
                 vertical-align: bottom
                 letter-spacing: normal
                 display: inline-block
-                transition: all 0.15s ease-out
+                transition: all 0.15s ease-in-out
                 margin: 0 2px
                 padding: 0
                 background-color: #fff

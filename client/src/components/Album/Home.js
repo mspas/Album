@@ -87,6 +87,7 @@ function Home() {
         <p className={styles.origin}>{welcomeArticle.origin}</p>
       </article>
       <div className={styles.content}>
+        <p>Wyróżnione zdjęcia:</p>
         <ImagesListAlbum
           isLoading={isLoading}
           images={images}

@@ -5,17 +5,19 @@ const Slide = (props) => {
   return (
     <div>
       {props.image ? (
-        <div className={styles.slide}>
-          <p className={styles.year}>{props.image.year}</p>
-          <div className={styles.imgWrap}>
-            <img
-              src={props.image.url}
-              alt={props.image.public_id}
-              onClick={props.handleImageClick}
-            />
-          </div>
-          <div className={styles.descriptionWrap}>
-            <p>{props.image.description}</p>
+        <div className={styles.slideWrap}>
+          <div className={styles.slide}>
+            <p className={styles.year}>{props.image.year}</p>
+            <div className={styles.imgWrap}>
+              <img
+                src={props.image.url}
+                alt={props.image.public_id}
+                onClick={props.handleImageClick}
+              />
+            </div>
+            <div className={styles.descriptionWrap}>
+              <p>{props.image.description}</p>
+            </div>
           </div>
         </div>
       ) : (

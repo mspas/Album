@@ -130,7 +130,7 @@ const ImageSlider = (props) => {
     win.focus();
   };
 
-  const galleryItemsList = galleryItems.map((image, index) => {
+  const galleryItemsList = galleryItems.map((image) => {
     return (
       <li
         key={image.url}
