@@ -14,7 +14,12 @@ const ImageSlider = (props) => {
   const [rightIndex, setRightIndex] = useState(0);
   const [galleryItems, setGalleryItems] = useState([]);
   const [moveDisabled, setMoveDisabled] = useState(false);
+  const [lastPosition, setLastPosition] = useState(0);
+  const [startPosition, setStartPosition] = useState(0);
+  const [prevDirection, setPrevDirection] = useState(0);
+  const [direction, setDirection] = useState(0);
   const sliderRef = useRef();
+  const activeSlideRef = useRef();
   const GALLERY_WIDTH = 8;
 
   useEffect(() => {
@@ -92,7 +97,7 @@ const ImageSlider = (props) => {
     )
       return false;
 
-    let nextIndex = activeIndex + 1 * direction;
+    let nextIndex = activeIndex + direction;
     setGallery(props.images, nextIndex);
     moveSlide(direction);
     setTimeout(() => {
@@ -128,6 +133,74 @@ const ImageSlider = (props) => {
   const handleImageClick = () => {
     let win = window.open(props.images[activeIndex].url, "_blank");
     win.focus();
+  };
+
+  const handleTouchStart = (event) => {
+    let clientX = event.targetTouches[0].clientX;
+    setStartPosition(clientX);
+  };
+
+  const checkSwipeDirection = (clientX) => {
+    return clientX - lastPosition < 0 ? -1 : 1;
+  };
+
+  const handleTouchMove = (event) => {
+    let clientX = event.targetTouches[0].clientX;
+    let direction = checkSwipeDirection(clientX);
+
+    let start = direction !== prevDirection ? clientX : startPosition;
+
+    if (sliderRef.current && activeSlideRef.current) {
+      let value = 0;
+      let rect = activeSlideRef.current.getBoundingClientRect();
+
+      value = (rect.left + (start - clientX)) / -2;
+
+      /*console.log(
+        direction * value,
+        value,
+        "=",
+        rect.left,
+        "+ (",
+        start,
+        "-",
+        clientX,
+        ")"
+      );*/
+
+      setStartPosition(start);
+      setLastPosition(clientX);
+      setPrevDirection(direction);
+
+      if (activeIndex < 1 && direction > 0 && rect.left <= 0) value = 0;
+      if (
+        activeIndex > props.images.length - 2 &&
+        direction < 0 &&
+        rect.right > window.innerWidth - 10
+      )
+        value = 0;
+      sliderRef.current.style.transform = `translate( ${value}px,0)`;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    let rect = activeSlideRef.current.getBoundingClientRect();
+    if (activeIndex < 1 && direction > 0 && rect.left <= 0) {
+      setStartingPos();
+      return false;
+    }
+    if (rect.left > -70 && rect.right < window.innerWidth + 70)
+      setStartingPos();
+    else {
+      let nextIndex = -1 * prevDirection + activeIndex;
+      moveSlide(-1 * prevDirection);
+      setTimeout(() => {
+        setActiveIndex(nextIndex);
+        setLeftIndex(nextIndex - 1);
+        setRightIndex(nextIndex + 1);
+        setStartingPos();
+      }, 1000);
+    }
   };
 
   const galleryItemsList = galleryItems.map((image) => {
@@ -189,33 +262,33 @@ const ImageSlider = (props) => {
             </button>
           </div>
           <div className={styles.sliderWrap}>
-            <div className={styles.slider} ref={sliderRef}>
+            <div
+              className={styles.slider}
+              ref={sliderRef}
+              onTouchStart={(event) => handleTouchStart(event)}
+              onTouchMove={(event) => handleTouchMove(event)}
+              onTouchEnd={handleTouchEnd}
+            >
               <div className={styles.sliderSection}>
-                <div className={styles.slide}>
-                  <Slide
-                    image={props.images[leftIndex]}
-                    i={leftIndex}
-                    handleImageClick={handleImageClick}
-                  />
-                </div>
+                <Slide
+                  image={props.images[leftIndex]}
+                  i={leftIndex}
+                  handleImageClick={handleImageClick}
+                />
+              </div>
+              <div className={styles.sliderSection} ref={activeSlideRef}>
+                <Slide
+                  image={props.images[activeIndex]}
+                  i={activeIndex}
+                  handleImageClick={handleImageClick}
+                />
               </div>
               <div className={styles.sliderSection}>
-                <div className={styles.slide}>
-                  <Slide
-                    image={props.images[activeIndex]}
-                    i={activeIndex}
-                    handleImageClick={handleImageClick}
-                  />
-                </div>
-              </div>
-              <div className={styles.sliderSection}>
-                <div className={styles.slide}>
-                  <Slide
-                    image={props.images[rightIndex]}
-                    i={rightIndex}
-                    handleImageClick={handleImageClick}
-                  />
-                </div>
+                <Slide
+                  image={props.images[rightIndex]}
+                  i={rightIndex}
+                  handleImageClick={handleImageClick}
+                />
               </div>
             </div>
           </div>
