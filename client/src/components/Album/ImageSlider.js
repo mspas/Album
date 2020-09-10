@@ -17,7 +17,7 @@ const ImageSlider = (props) => {
   const [lastPosition, setLastPosition] = useState(0);
   const [startPosition, setStartPosition] = useState(0);
   const [prevDirection, setPrevDirection] = useState(0);
-  const [direction, setDirection] = useState(0);
+  const [isMoving, setIsMoving] = useState(false);
   const sliderRef = useRef();
   const activeSlideRef = useRef();
   const GALLERY_WIDTH = 8;
@@ -60,8 +60,6 @@ const ImageSlider = (props) => {
           : index + GALLERY_WIDTH;
     }
 
-    //console.log(index, start, end, images.length);
-
     let temp = [];
 
     if (images.length > 0) {
@@ -78,6 +76,7 @@ const ImageSlider = (props) => {
       sliderRef.current.style.transitionDuration = "1s";
       sliderRef.current.style.transform = `translate( ${value}vw,0)`;
     }
+    setIsMoving(true);
     setMoveDisabled(true);
   };
 
@@ -105,6 +104,7 @@ const ImageSlider = (props) => {
       setLeftIndex(nextIndex - 1);
       setRightIndex(nextIndex + 1);
       setStartingPos();
+      setIsMoving(false);
     }, 1000);
   };
 
@@ -127,6 +127,7 @@ const ImageSlider = (props) => {
       setLeftIndex(nextIndex - 1);
       setRightIndex(nextIndex + 1);
       setStartingPos();
+      setIsMoving(false);
     }, 1000);
   };
 
@@ -145,6 +146,8 @@ const ImageSlider = (props) => {
   };
 
   const handleTouchMove = (event) => {
+    if (isMoving) return false;
+
     let clientX = event.targetTouches[0].clientX;
     let direction = checkSwipeDirection(clientX);
 
@@ -155,18 +158,6 @@ const ImageSlider = (props) => {
       let rect = activeSlideRef.current.getBoundingClientRect();
 
       value = (rect.left + (start - clientX)) / -2;
-
-      /*console.log(
-        direction * value,
-        value,
-        "=",
-        rect.left,
-        "+ (",
-        start,
-        "-",
-        clientX,
-        ")"
-      );*/
 
       setStartPosition(start);
       setLastPosition(clientX);
@@ -184,8 +175,10 @@ const ImageSlider = (props) => {
   };
 
   const handleTouchEnd = () => {
+    if (isMoving) return false;
+
     let rect = activeSlideRef.current.getBoundingClientRect();
-    if (activeIndex < 1 && direction > 0 && rect.left <= 0) {
+    if (activeIndex < 1 && prevDirection > 0 && rect.left <= 0) {
       setStartingPos();
       return false;
     }
@@ -199,6 +192,7 @@ const ImageSlider = (props) => {
         setLeftIndex(nextIndex - 1);
         setRightIndex(nextIndex + 1);
         setStartingPos();
+        setIsMoving(false);
       }, 1000);
     }
   };

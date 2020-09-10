@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles/AdminPanel.module.sass";
-import { Col, Row } from "react-bootstrap";
 import withAuth from "../../services/auth-guard.service";
 import AuthService from "../../services/auth.service";
 import logo from "../../assets/logo-text.png";
@@ -55,8 +54,8 @@ function AdminPanel(props) {
         <img src={logo} alt="Logo" />
       </div>
       <div className={styles.adminPanel}>
-        <Row className={styles.header}>
-          <Col
+        <div className={styles.header}>
+          <div
             className={
               optionPanel === true
                 ? `${styles.col} ${styles.active}`
@@ -65,8 +64,8 @@ function AdminPanel(props) {
             onClick={() => setOptionPanel(true)}
           >
             Dodaj zdjęcia
-          </Col>
-          <Col
+          </div>
+          <div
             className={
               optionPanel === false
                 ? `${styles.col} ${styles.active}`
@@ -75,8 +74,8 @@ function AdminPanel(props) {
             onClick={() => setOptionPanel(false)}
           >
             Zarządzaj albumem
-          </Col>
-        </Row>
+          </div>
+        </div>
         <div className={styles.content}>
           <button
             className={`button ${styles.logout}`}

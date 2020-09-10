@@ -56,9 +56,9 @@ function Home() {
   };
 
   const handleScroll = (event) => {
-    let startingPos = 0;
     let value = window.scrollY;
-    let bgPos = `0% ${startingPos + value * -0.1}%`;
+    let leftPostition = window.innerWidth > 455 ? "0%" : "20%";
+    let bgPos = `${leftPostition} ${value * -0.1}%`;
 
     if (containerRef.current) {
       let element = containerRef.current;

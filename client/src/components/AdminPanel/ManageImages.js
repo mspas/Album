@@ -58,6 +58,13 @@ function ManageImages(props) {
     setSelectedImages(array);
   };
 
+  const selectAllImages = () => {
+    let array = selectedImages.map(() => {
+      return true;
+    });
+    setSelectedImages(array);
+  };
+
   const setModal = (event, index) => {
     setSelectedImage(props.images[index]);
     setModalShow(true);
@@ -182,6 +189,9 @@ function ManageImages(props) {
         }}
       >
         Usuń zaznaczone
+      </button>
+      <button className="button" onClick={selectAllImages}>
+        Zaznacz wszystkie
       </button>
       {deleteLoading && (
         <div className={styles.spinner}>

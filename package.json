@@ -1,7 +1,7 @@
 {
-  "name": "about-me-email-server",
+  "name": "album-server",
   "version": "1.0.0",
-  "description": "Front-end dev potfolio",
+  "description": "Photo album with CMS",
   "author": {
     "name": "Marcin Spasiński"
   },

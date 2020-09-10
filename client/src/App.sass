@@ -7,6 +7,7 @@
 
 .App
   min-height: 100vh
+  max-width: 100vw
   color: #fff
   @include gradient-bg($color1: #1c1e29, $color2: $primary, $color3: #000)
   footer
@@ -40,7 +41,7 @@ p
     padding: 6px 20px
   &:hover
     background-color: $lighterBlue
-    color: $darkBlue
+    color: $primary
     letter-spacing: 2px
     @media screen and ( max-width: 350px )
       right: 30px

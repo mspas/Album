@@ -22,11 +22,14 @@
         @include color-opacity-bg($color: #fff, $opacity: 0.1)
         @media screen and ( max-width: 1200px )
             width: 95%            
-        .header, .row
-            border-bottom: 2px solid $lighterBlue
+        .header
+            border-bottom: 2px solid #fff
             margin: 0 auto
             height: 60px
+            display: flex
+            flex-wrap: wrap
             .col
+                flex: 1
                 font-size: 1.2em
                 text-align: center
                 padding: 15px 0 
@@ -34,6 +37,7 @@
                 cursor: pointer
                 transition: 0.2s
                 &:hover
+                    letter-spacing: 2px
                     @include color-opacity-bg($color: #fff, $opacity: 0.02)
                 @media screen and ( max-width: 512px )
                     font-size: 0.9em
@@ -43,6 +47,7 @@
                 cursor: default
                 @include color-opacity-bg($color: #fff, $opacity: 0.1)
                 &:hover
+                    letter-spacing: 1px
                     @include color-opacity-bg($color: #fff, $opacity: 0.1)
         .content
             position: relative
@@ -53,7 +58,7 @@
                 top: 50px
                 right: 20px
                 z-index: 1
-                @media screen and ( max-width: 1225px )
+                @media screen and ( max-width: 1548px )
                     position: relative
                     top: auto
                     right: auto

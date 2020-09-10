@@ -23,14 +23,14 @@
         position: fixed
         margin: 0 auto
         background-color: $lighterBlue
-        color: $darkBlue
+        color: $primary
         z-index: 2
         @media screen and ( max-width: 400px )
             width: 95vw
         .heading
             width: 100%
             padding: 10px
-            @include color-opacity-bg($color: $darkBlue, $opacity: 0.4)
+            @include color-opacity-bg($color: $primary, $opacity: 0.4)
             .closeIcon
                 display: block
                 margin-left: auto
@@ -67,8 +67,8 @@
             button
                 display: inline-block
                 margin: 0 10px 10px 10px
-                border-color: $darkBlue
-                color: $darkBlue
+                border-color: $primary
+                color: $primary
                 @media screen and ( max-width: 400px )
                     padding: 6px 20px
                 &:last-child
@@ -77,4 +77,4 @@
                     bottom: 0
                 &:hover
                     color: #ffffff
-                    background-color: $darkBlue
+                    background-color: $primary

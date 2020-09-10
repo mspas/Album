@@ -206,7 +206,7 @@ function Contact() {
                     Niepoprawny format adresu email!
                   </Form.Control.Feedback>
                 </InputGroup>
-                <Form.Text className="text-muted">
+                <Form.Text className={`${styles.textMuted} text-muted`}>
                   Email wymagany do ew. weryfikacji zdjęć przed dodaniem do
                   albumu
                 </Form.Text>
