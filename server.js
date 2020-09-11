@@ -256,7 +256,9 @@ app.post("/api/get-images", async (req, res) => {
 
 app.get("/api/get-welcome-article", async (req, res) => {
   try {
+    console.log("request to text");
     let result = await Articles.findOne({ type: "welcome" });
+    console.log("text", result.text);
     res.send(JSON.stringify(result));
   } catch (err) {
     res.status(400).send(err);
