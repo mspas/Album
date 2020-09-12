@@ -138,7 +138,7 @@ app.post("/api/login", async (req, res) => {
 app.get("/api/create", async (req, res) => {
   bcrypt.hash("albumParadyz", 10, async (err, hash) => {
     const newUser = new Users({
-      email: "marcin7789@gmail.com",
+      email: "spasinska223@gmail.com",
       hash: hash,
       type: "admin",
     });
@@ -256,12 +256,26 @@ app.post("/api/get-images", async (req, res) => {
 
 app.get("/api/get-welcome-article", async (req, res) => {
   try {
-    console.log("request to text");
     let result = await Articles.findOne({ type: "welcome" });
-    console.log("text", result.text);
     res.send(JSON.stringify(result));
   } catch (err) {
     res.status(400).send(err);
+  }
+});
+
+app.get("/api/createw", async (req, res) => {
+  const newUser = new Articles({
+    type: "welcome",
+    text: "Lorem ipsum",
+    sign: "admin",
+    origin: "admin",
+  });
+
+  try {
+    await newUser.save();
+    console.log(`1 document inserted id = ${res.insertedId}`);
+  } catch (err) {
+    console.log(err);
   }
 });
 

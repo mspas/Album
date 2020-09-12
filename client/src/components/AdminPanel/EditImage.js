@@ -176,6 +176,9 @@ function EditImage(props) {
         }}
         images={sliderImages}
         activeIndex={0}
+        left={[]}
+        fetchData={null}
+        isPreview={true}
       />
     </div>
   );

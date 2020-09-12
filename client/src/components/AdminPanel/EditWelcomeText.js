@@ -88,7 +88,9 @@ function EditWelcomeText(props) {
                 as="textarea"
                 rows="5"
                 name="Tekst"
-                defaultValue={props.welcomeArticle.text}
+                defaultValue={
+                  props.welcomeArticle ? props.welcomeArticle.text : ""
+                }
                 onChange={(event) => {
                   setText(event.target.value);
                 }}
@@ -112,7 +114,9 @@ function EditWelcomeText(props) {
               <Form.Control
                 type="text"
                 name="Sign"
-                defaultValue={props.welcomeArticle.sign}
+                defaultValue={
+                  props.welcomeArticle ? props.welcomeArticle.sign : ""
+                }
                 onChange={(event) => {
                   setSign(event.target.value);
                 }}
@@ -136,7 +140,9 @@ function EditWelcomeText(props) {
               <Form.Control
                 type="text"
                 name="Origin"
-                defaultValue={props.welcomeArticle.origin}
+                defaultValue={
+                  props.welcomeArticle ? props.welcomeArticle.origin : ""
+                }
                 onChange={(event) => {
                   setOrigin(event.target.value);
                 }}

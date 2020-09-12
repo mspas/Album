@@ -71,9 +71,9 @@ function Home() {
       <div className={styles.welcomePanel} ref={containerRef}>
         <div className={styles.welcomeContent}>
           <p className={styles.subtitle}>
-            <span>Miejsca</span>
             <span>Ludzie</span>
-            <span>Wspomnienia</span>
+            <span>Miejsca</span>
+            <span>Wydarzenia</span>
           </p>
         </div>
       </div>
