@@ -135,7 +135,7 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.get("/api/create", async (req, res) => {
+/*app.get("/api/create", async (req, res) => {
   bcrypt.hash("albumParadyz", 10, async (err, hash) => {
     const newUser = new Users({
       email: "spasinska223@gmail.com",
@@ -150,7 +150,7 @@ app.get("/api/create", async (req, res) => {
       console.log(err);
     }
   });
-});
+});*/
 
 app.patch("/api/change-email", authenticate, async (req, res) => {
   let token = "";
@@ -263,7 +263,7 @@ app.get("/api/get-welcome-article", async (req, res) => {
   }
 });
 
-app.get("/api/createw", async (req, res) => {
+/*app.get("/api/createw", async (req, res) => {
   const newUser = new Articles({
     type: "welcome",
     text: "Lorem ipsum",
@@ -277,7 +277,7 @@ app.get("/api/createw", async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-});
+});*/
 
 app.patch("/api/edit-welcome-article", authenticate, async (req, res) => {
   try {
@@ -487,7 +487,7 @@ uploadImage = (image) => {
 
       const newImage = new Images({
         public_id: result.public_id,
-        url: result.url,
+        url: result.secure_url,
         description: image.description,
         year: year,
         category: Math.floor(year / 10) * 10,
