@@ -3,7 +3,7 @@
 
 .headerSticky
     position: sticky
-    min-height: 80px
+    min-height: 50px
     z-index: 2
 .header
     position: fixed
@@ -18,11 +18,18 @@ header
     background-image: linear-gradient(to right, transparent 0%, #101118f6 14%)
     @media screen and ( max-width: 455px )
         background: #101118f6
+    @media screen and ( max-width: 746px )
+        padding: 15px 10%
     img
+        position: absolute
+        top: 12px
         height: 40px
+        @media screen and ( max-width: 455px )
+            height: 35px
+            top: 14px
     .cityTitle
         position: absolute
-        top: 28px
+        top: 20px
         left: calc( 10% + 50px )
         font-family: CountrysideTwo, Arial, serif
         font-size: 20px
@@ -73,13 +80,14 @@ header
     .mobileNavBtn
         margin: auto 0
         margin-left: auto
-        padding: 6px 20px
+        padding: 4px 20px
+        font-size: 0.8em
         @media screen and ( min-width: 745px )
             display: none
     .mobileNav
         position: absolute
         list-style: none
-        bottom: -40px
+        top: 100%
         right: 0
         width: 100%
         height: 78px
