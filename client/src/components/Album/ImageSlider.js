@@ -220,7 +220,10 @@ const ImageSlider = (props) => {
         <div className={`${styles.modal} center`}>
           <div className={styles.overlay} onClick={props.onHide}></div>
           <div className={styles.header}>
-            <button className={styles.btnClose} onClick={props.onHide}>
+            <button
+              className={`${styles.btnClose} button`}
+              onClick={props.onHide}
+            >
               <FontAwesomeIcon
                 className={`${styles.closeIcon} panel-icon`}
                 icon={faTimes}

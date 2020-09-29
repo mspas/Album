@@ -4,14 +4,13 @@
 .slideWrap
     width: 70vw
     overflow: hidden
-    border-radius: 10px
+    border: 1px solid #e7f8f869
     box-shadow: inset 0px -12px 19px #2b2d3a
     @include gradient-bg($color1: #2b2d3a, $color2: #212229, $color3: $primary )
     @media screen and ( max-width: 1024px )
+        border: none
         width: 100vw
     .slide
-        display: flex
-        flex-flow: wrap
         height: 85vh
         overflow-y: auto
         padding: 10px 5%
@@ -26,7 +25,6 @@
             font-size: 2em
             letter-spacing: 3px
         .imgWrap
-            flex: 1
             box-sizing: border-box
             display: flex
             align-items: center
@@ -52,7 +50,6 @@
                     height: auto
                     max-width: 100%
         .descriptionWrap 
-            flex: 2
             box-sizing: border-box
             display: flex
             align-items: center
