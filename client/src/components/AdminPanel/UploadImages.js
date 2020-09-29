@@ -83,6 +83,8 @@ function UploadImages(props) {
   };
 
   const imagesUploadHandler = async () => {
+    if (images.length < 1) return true;
+
     setIsLoading(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -161,6 +163,10 @@ function UploadImages(props) {
     props.hideLogout(true);
   };
 
+  const clearImagesList = () => {
+    setImages([]);
+  };
+
   return (
     <div className={styles.uploadImages}>
       <div className={styles.box}>
@@ -178,6 +184,12 @@ function UploadImages(props) {
           />
           <span>Dodaj zdjęcie...</span>
         </label>
+        <button
+          className={`button ${styles.btnClear}`}
+          onClick={clearImagesList}
+        >
+          Wyczyść
+        </button>
         {isLoading && (
           <div className={styles.spinner}>
             <Spinner
@@ -225,7 +237,10 @@ function UploadImages(props) {
         fetchData={null}
         isPreview={true}
       />
-      <button className="button" onClick={imagesUploadHandler}>
+      <button
+        className={`button ${styles.btnSend}`}
+        onClick={imagesUploadHandler}
+      >
         Wyślij
       </button>
     </div>
