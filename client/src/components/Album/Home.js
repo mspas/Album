@@ -91,7 +91,7 @@ function Home() {
         <ImagesListAlbum
           isLoading={isLoading}
           images={images}
-          isHighlighted={true}
+          isHighlighted={false}
           handleImageClick={(index) => {
             setActiveIndex(index);
             setModalShow(true);

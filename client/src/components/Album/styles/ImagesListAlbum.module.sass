@@ -9,6 +9,15 @@
     height: 300px
     width: 225px
 
+.flexBasisSmall
+    flex: 1
+    -ms-flex-preferred-size: 225px
+    flex-basis: 225px
+.flexBasisBig
+    flex: 1
+    -ms-flex-preferred-size: 350px
+    flex-basis: 350px
+
 .imagesContainer
     position: relative
     width: 100%
@@ -19,14 +28,24 @@
         left: 49%
     .content
         .list
+            display: -webkit-box
+            display: -moz-box
+            display: -ms-flexbox
+            display: -webkit-flex
             display: flex
+            -ms-flex-wrap: wrap
             flex-wrap: wrap
             padding: 0
+            list-style-type: none
             @media screen and ( max-width: 410px )
                 justify-content: center
                 align-items: center
             .imageBox
-                flex: 1
+                -webkit-box-flex: 1
+                -moz-box-flex: 1
+                -webkit-flex: 1
+                -ms-flex: 1
+                -webkit-box-sizing: border-box
                 box-sizing: border-box
                 position: relative
                 display: inline-block
@@ -45,8 +64,8 @@
                             display: block
                             height: 100%
                             width: 100%
-                            margin: 0 auto
                             object-fit: cover
+                            margin: 0 auto
                             cursor: pointer
                             border-radius: 5px
                             border: solid 3px white
@@ -74,5 +93,3 @@
                             opacity: 0
                             transition: 0.5s
                             cursor: pointer
-                &:last-child
-                    flex: 1

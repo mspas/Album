@@ -16,7 +16,14 @@ function ImagesListAlbum(props) {
           <ul className={styles.list}>
             {props.images.map((image, index) => {
               return (
-                <li key={index} className={styles.imageBox}>
+                <li
+                  key={index}
+                  className={
+                    props.isHighlighted
+                      ? `${styles.imageBox} ${styles.flexBasisBig}`
+                      : `${styles.imageBox} ${styles.flexBasisSmall}`
+                  }
+                >
                   <div
                     className={
                       props.isHighlighted
