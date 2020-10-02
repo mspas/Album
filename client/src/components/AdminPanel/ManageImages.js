@@ -30,6 +30,8 @@ function ManageImages(props) {
     _id: "",
   });
   const [changeWelcomeTextShow, setChangeWelcomeTextShow] = useState(false);
+  const [selectAllOption, setSelectAllOption] = useState(true);
+  const [selectAllText, setSelectAllText] = useState("Zaznacz");
 
   const _auth = new AuthService();
 
@@ -59,10 +61,14 @@ function ManageImages(props) {
   };
 
   const selectAllImages = () => {
+    let text = selectAllOption ? "Odznacz" : "Zaznacz";
     let array = selectedImages.map(() => {
-      return true;
+      return selectAllOption;
     });
+
+    setSelectAllText(text);
     setSelectedImages(array);
+    setSelectAllOption(!selectAllOption);
   };
 
   const setModal = (event, index) => {
@@ -107,42 +113,64 @@ function ManageImages(props) {
     return count;
   };
 
+  const handleDeleteImages = () => {
+    if (listShow) {
+      setModalConfirmText(
+        `Czy na pewno usunąć zaznaczone zdjęcia? (${countSelected()} zaznaczono)`
+      );
+      setModalConfirmShow(true);
+      if (countSelected() < 1)
+        setAlert({
+          imageId: -1,
+          alertType: false,
+          alertText: "Nie zaznaczono żadnego zdjęcia!",
+        });
+      else
+        setAlert({
+          imageId: -1,
+          alertType: true,
+          alertText: "",
+        });
+    }
+  };
+
   const deleteImages = async () => {
     let selectedIdArray = [];
     setDeleteLoading(true);
 
-    await new Promise((resolve, reject) => {
-      for (let i = 0; i < selectedImages.length; i++) {
-        const element = selectedImages[i];
-        if (!element) continue;
-        selectedIdArray.push(props.images[i]._id);
-      }
-      resolve(selectedIdArray);
-    }).then(() => {
-      if (selectedIdArray.length > 0)
-        _auth
-          .fetch("/api/delete-images", {
-            method: "POST",
-            body: JSON.stringify({
-              imagesArray: selectedIdArray,
-            }),
-          })
-          .then((json) => {
-            let id = -1;
-            if (!json.result[0].success) id = json.result[0].id;
-            setAlert({
-              imageId: id,
-              alertType: json.result[0].success,
-              alertText: json.result[0].errorInfo,
+    if (listShow)
+      await new Promise((resolve, reject) => {
+        for (let i = 0; i < selectedImages.length; i++) {
+          const element = selectedImages[i];
+          if (!element) continue;
+          selectedIdArray.push(props.images[i]._id);
+        }
+        resolve(selectedIdArray);
+      }).then(() => {
+        if (selectedIdArray.length > 0)
+          _auth
+            .fetch("/api/delete-images", {
+              method: "POST",
+              body: JSON.stringify({
+                imagesArray: selectedIdArray,
+              }),
+            })
+            .then((json) => {
+              let id = -1;
+              if (!json.result[0].success) id = json.result[0].id;
+              setAlert({
+                imageId: id,
+                alertType: json.result[0].success,
+                alertText: json.result[0].errorInfo,
+              });
+              setDeleteLoading(false);
+              if (json.result[0].success) {
+                setModalConfirmShow(false);
+                props.fetchData();
+              }
             });
-            setDeleteLoading(false);
-            if (json.result[0].success) {
-              setModalConfirmShow(false);
-              props.fetchData();
-            }
-          });
-      else setDeleteLoading(false);
-    });
+        else setDeleteLoading(false);
+      });
   };
 
   return (
@@ -162,36 +190,18 @@ function ManageImages(props) {
         onClick={() => {
           setListShow(false);
           setChangeAdminShow(false);
+          setEditImage({});
+          setEditShow(false);
           setChangeWelcomeTextShow(true);
         }}
       >
         Zmień wstępny tekst
       </button>
-      <button
-        className="button"
-        onClick={() => {
-          setModalConfirmText(
-            `Czy na pewno usunąć zaznaczone zdjęcia? (${countSelected()} zaznaczono)`
-          );
-          setModalConfirmShow(true);
-          if (countSelected() < 1)
-            setAlert({
-              imageId: -1,
-              alertType: false,
-              alertText: "Nie zaznaczono żadnego zdjęcia!",
-            });
-          else
-            setAlert({
-              imageId: -1,
-              alertType: true,
-              alertText: "",
-            });
-        }}
-      >
+      <button className="button" onClick={handleDeleteImages}>
         Usuń zaznaczone
       </button>
       <button className="button" onClick={selectAllImages}>
-        Zaznacz wszystkie
+        {selectAllText} wszystkie
       </button>
       {deleteLoading && (
         <div className={styles.spinner}>

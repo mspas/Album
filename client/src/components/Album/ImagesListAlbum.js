@@ -35,7 +35,10 @@ function ImagesListAlbum(props) {
                     }}
                   >
                     <div className={styles.imageWrap}>
-                      <img src={image.url} alt={image.public_id} />
+                      <div
+                        className={styles.image}
+                        style={{ backgroundImage: `url(${image.url})` }}
+                      ></div>
                       <span className={styles.detailsIcon}>
                         <FontAwesomeIcon icon={faSearch} />
                       </span>

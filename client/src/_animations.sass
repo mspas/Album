@@ -26,8 +26,10 @@
 
 @keyframes blur 
     0% 
+        -webkit-backdrop-filter: opacity(1) blur(0)
         backdrop-filter: opacity(1) blur(0)
     100% 
+        -webkit-backdrop-filter: opacity(0.7) blur(3px)
         backdrop-filter: opacity(0.7) blur(3px)
 
 @keyframes scaleFadeIn 

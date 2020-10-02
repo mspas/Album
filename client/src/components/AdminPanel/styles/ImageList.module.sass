@@ -9,14 +9,25 @@ $size: 200px
     z-index: 0
     margin: 20px 0
     padding: 20px
-    background: #ffffff0a
+    background: rgba(255, 255, 255, 0.039)
     border-radius: 10px
     .imagesWrap
+        display: -webkit-box
+        display: -moz-box
+        display: -ms-flexbox
+        display: -webkit-flex
         display: flex
         flex-flow: wrap
         .imageBox
+            -webkit-box-flex: 1
+            -moz-box-flex: 1
+            -webkit-flex: 1
+            -ms-flex: 1
             flex: 1
+            -webkit-box-sizing: border-box
             box-sizing: border-box
+            -ms-flex-preferred-size: $size
+            flex-basis: $size
             position: relative
             display: inline-block
             max-width: 100%
@@ -33,15 +44,17 @@ $size: 200px
                     width: 100%
                     max-width: 100%
                     &:hover
-                        img 
+                        .image 
                             border: 5px solid $primary
                         .iconsBox
                             visibility: visible
-                    img 
+                    .image 
                         width: $size
                         height: $size
                         max-width: $size
-                        object-fit: cover
+                        background-size: cover
+                        background-repeat: no-repeat
+                        background-position: 50% 50%
                         cursor: pointer
                         border-radius: 2px
                         transition: 0.3s
@@ -69,10 +82,10 @@ $size: 200px
                                 display: block
                                 margin: 0 auto
         .selected
-            img 
+            .image 
                 border: 5px solid $error
             &:hover
-                img 
+                .image 
                     border: 5px solid $error !important
 
     .spinner

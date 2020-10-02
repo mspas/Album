@@ -99,7 +99,10 @@ function ImageList(props) {
                         </Button>
                       </OverlayTrigger>
                     </div>
-                    <img src={image.url} alt={image.public_id} />
+                    <div
+                      className={styles.image}
+                      style={{ backgroundImage: `url(${image.url})` }}
+                    ></div>
                   </div>
                 </div>
               </div>
