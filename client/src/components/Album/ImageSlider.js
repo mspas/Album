@@ -73,7 +73,7 @@ const ImageSlider = (props) => {
   const moveSlide = (direction) => {
     let value = -100 * direction;
     if (sliderRef.current) {
-      sliderRef.current.style.transitionDuration = "1s";
+      sliderRef.current.style.transitionDuration = "0.4s";
       sliderRef.current.style.transform = `translate( ${value}vw,0)`;
     }
     setIsMoving(true);
@@ -105,7 +105,7 @@ const ImageSlider = (props) => {
       setRightIndex(nextIndex + 1);
       setStartingPos();
       setIsMoving(false);
-    }, 1000);
+    }, 400);
   };
 
   const handleGalleryImageClick = (image) => {
@@ -182,7 +182,7 @@ const ImageSlider = (props) => {
       setStartingPos();
       return false;
     }
-    if (rect.left > -70 && rect.right < window.innerWidth + 70)
+    if (rect.left > -35 && rect.right < window.innerWidth + 35)
       setStartingPos();
     else {
       let nextIndex = -1 * prevDirection + activeIndex;
@@ -193,7 +193,7 @@ const ImageSlider = (props) => {
         setRightIndex(nextIndex + 1);
         setStartingPos();
         setIsMoving(false);
-      }, 1000);
+      }, 400);
     }
   };
 

@@ -60,10 +60,8 @@ function Home() {
     let leftPostition = window.innerWidth > 455 ? "0%" : "20%";
     let bgPos = `${leftPostition} ${value * -0.1}%`;
 
-    if (containerRef.current) {
-      let element = containerRef.current;
-      element.style.backgroundPosition = bgPos;
-    }
+    if (containerRef.current)
+      containerRef.current.style.backgroundPosition = bgPos;
   };
 
   return (
@@ -104,7 +102,7 @@ function Home() {
         show={modalShow}
         onHide={() => {
           setModalShow(false);
-          setActiveIndex(1);
+          setActiveIndex(0);
           dispatch(showLogo());
         }}
         images={images}
