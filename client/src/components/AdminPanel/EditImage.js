@@ -31,7 +31,7 @@ function EditImage(props) {
     setImageData(image);
   };
 
-  const highlightChangeHandler = (event) => {
+  const highlightClickHandler = (event) => {
     let image = imageData;
     image.isHighlighted = event.target.checked;
     setImageData(image);
@@ -139,7 +139,7 @@ function EditImage(props) {
                 defaultChecked={imageData.isHighlighted}
                 className={styles.checkboxInput}
                 type="checkbox"
-                onChange={highlightChangeHandler}
+                onClick={highlightClickHandler}
               />
             </div>
           </div>
