@@ -31,7 +31,7 @@ function ChangeAdminDetails(props) {
     setIsLoading(true);
 
     _auth
-      .fetch("/api/change-email", {
+      .fetch("/api/admin/change-email", {
         method: "PATCH",
         body: JSON.stringify({
           password: password,
@@ -66,7 +66,7 @@ function ChangeAdminDetails(props) {
       });
     } else
       _auth
-        .fetch("/api/change-password", {
+        .fetch("/api/admin/change-password", {
           method: "PATCH",
           body: JSON.stringify({
             email: email,

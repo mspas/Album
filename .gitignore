@@ -4,6 +4,8 @@
 node_modules
 /client/node_modules
 .env
+server.old.js
+/services/
 
 # testing
 coverage

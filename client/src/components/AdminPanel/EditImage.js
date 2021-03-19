@@ -50,7 +50,7 @@ function EditImage(props) {
     });
     if (check)
       _auth
-        .fetch("/api/edit-image", {
+        .fetch("/api/admin/edit-image", {
           method: "PATCH",
           body: JSON.stringify({
             image: imageData,

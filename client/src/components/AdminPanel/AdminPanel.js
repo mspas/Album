@@ -25,7 +25,7 @@ function AdminPanel(props) {
     const _auth = new AuthService();
     setIsLoading(true);
     _auth
-      .fetch("/api/get-all-images", {
+      .fetch("/api/admin/get-all-images", {
         method: "GET",
       })
       .then((json) => {

@@ -8,7 +8,7 @@ export default class AuthService {
   }
 
   async login(password) {
-    const res = await this.fetch(`/api/login`, {
+    const res = await this.fetch(`/api/admin/login`, {
       method: "POST",
       body: JSON.stringify({
         password,

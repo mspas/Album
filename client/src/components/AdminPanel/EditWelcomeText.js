@@ -36,7 +36,7 @@ function EditWelcomeText(props) {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     _auth
-      .fetch("/api/edit-welcome-article", {
+      .fetch("/api/admin/edit-welcome-article", {
         method: "PATCH",
         body: JSON.stringify({
           _id: props.welcomeArticle._id,

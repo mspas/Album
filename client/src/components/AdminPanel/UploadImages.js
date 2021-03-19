@@ -96,7 +96,7 @@ function UploadImages(props) {
     });
     if (check)
       _auth
-        .fetch("/api/upload-images", {
+        .fetch("/api/admin/upload-images", {
           method: "POST",
           body: JSON.stringify({
             imagesArray: images,

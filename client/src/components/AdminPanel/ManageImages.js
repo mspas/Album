@@ -149,7 +149,7 @@ function ManageImages(props) {
       }).then(() => {
         if (selectedIdArray.length > 0)
           _auth
-            .fetch("/api/delete-images", {
+            .fetch("/api/admin/delete-images", {
               method: "POST",
               body: JSON.stringify({
                 imagesArray: selectedIdArray,
